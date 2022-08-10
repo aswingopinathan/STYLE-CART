@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <title>Stexo - Responsive Admin & Dashboard Template | Themesdesign</title>
+        <meta content="Responsive admin theme build on top of Bootstrap 4" name="description" />
+        <meta content="Themesdesign" name="author" />
+    </head>
+
+    <body>
+
+        <!-- Begin page -->
+        <div id="wrapper">
+            <!-- Top Bar Start -->
+            <div class="topbar">
+                <!-- LOGO -->
+                <div class="topbar-left">
+                    <a href="/admin/adminindex" class="logo">
+                        <span class="logo-light">
+                            STYLE CART
+                        </span>
+                        <span class="logo-sm">
+                            <i class="mdi mdi-camera-control"></i>
+                        </span>
+                    </a>
+                </div>
+                
+                <nav class="navbar-custom">
+                    <ul class="navbar-right list-inline float-right mb-0">
+                        <!-- language-->
+                        <li class="dropdown notification-list list-inline-item d-none d-md-inline-block">
+                            <form class="d-flex">
+                              <a href="/admin/logout" class="btn btn-primary mt-3 " style="width: fit-content;">Logout</a>
+                            </form>
+                        </li>
+
+                        <li class="dropdown notification-list list-inline-item">
+                            <div class="dropdown notification-list nav-pro-img">
+                                <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                    <!-- item-->
+                                    <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle"></i> Profile</a>
+                                    <a class="dropdown-item" href="#"><i class="mdi mdi-wallet"></i> My Wallet</a>
+                                    <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline"></i> Lock screen</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-danger" href="/admin"><i class="mdi mdi-power text-danger"></i> Logout</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul class="list-inline menu-left mb-0">
+                        <li class="float-left">
+                            <button class="button-menu-mobile open-left waves-effect">
+                                <i class="mdi mdi-menu"></i>
+                            </button>
+                        </li>
+                        <li class="d-none d-md-inline-block">
+                            {{!-- <form role="search" class="app-search">
+                                <div class="form-group mb-0">
+                                    <input type="text" class="form-control" placeholder="Search..">
+                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form> --}}
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- Top Bar End -->
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="left side-menu">
+                <div class="slimscroll-menu" id="remove-scroll">
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+                        <!-- Left Menu Start -->
+                        <ul class="metismenu" id="side-menu">
+                            <li class="menu-title">Menu</li>
+                            <li>
+                                <a href="/admin/adminindex" class="waves-effect">
+                                    <i class="icon-accelerator"></i><span class="badge badge-success badge-pill float-right"></span> <span> Dashboard </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Users <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="submenu">
+                                    <li><a href="/admin/show-user">show user</a></li>
+                                </ul>
+                            </li>
+                             <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Products <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="submenu">
+                                    <li><a href="/admin/show-products">Show Products</a></li>
+                                    <li><a href="/admin/add-product">Add Products</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Category <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="submenu">
+                                    <li><a href="/admin/show-category">Show category</a></li>
+                                    <li><a href="/admin/show-sub-category">Show sub-category</a></li>
+                                    <li><a href="/admin/show-brands">Show brands</a></li>
+                                    {{!-- <li><a href="tables-datatable.html">Womens</a></li>
+                                    <li><a href="tables-responsive.html">Kids</a></li> --}}
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Orders <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                 <ul class="submenu">
+                                    <li><a href="/admin/show-orders">Show Orders</a></li>
+                                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Banners <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                 <ul class="submenu">
+                                    <li><a href="/admin/show-banner">Show Banner</a></li> 
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Sidebar -->
+                    <div class="clearfix"></div>
+                </div>
+                <!-- Sidebar -left -->
+            </div>
+            <!-- Left Sidebar End -->
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="content-page">
+                <!-- Start content -->
+                <div class="content">
+                    <div class="container-fluid">
+                        <!-- end page-title -->
+            </div>
+        </div>
+        <!-- END wrapper -->
+    </body>
+
+</html>

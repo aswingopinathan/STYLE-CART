@@ -1,0 +1,391 @@
+<!-- Body main wrapper start -->
+<div class="wrapper">
+    <!-- START SLIDER AREA -->
+    <div class="slider-area plr-185 mb-80 section">
+        <div class="container-fluid">
+            <div class="slider-content">
+                <div class="active-slider-1 slick-arrow-1 slick-dots-1">
+                    <!-- layer-1 Start -->
+                    {{#each bannershow}}
+                    <div class="col-lg-12">
+                        <div class="layer-1">
+                            <div class="slider-img">
+                                {{!-- <img src="images/user/img/slider/slider-1/pic3.jpg" alt=""> --}}
+                                <img src="/product-images/{{this.Images.[0]}}">
+                            </div>
+                            <div class="slider-info gray-bg">
+                                <div class="slider-info-inner">
+                                    <h1 class="slider-title-1 text-uppercase text-black-1">FASHION POINT</h1>
+                                    <div class="slider-brief text-black-2">
+                                        <p>All garments are subjected to the following tests Fabric dimensional stability test and quality inspection for colours and wash fastness. To maintain the Color please dry in shades. Usual Machine wash or Regular wash is preferable.; Machine wash cold with similar colors, gentle cycle, only non-chlorine bleach (when needed), tumble dry low, warm iron if needed, do not iron on print.</p>
+                                    </div>
+                                    <a href="#" class="button extra-small button-black">
+                                        <span class="text-uppercase">Buy now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                    <!-- layer-1 end -->
+                    <!-- layer-1 Start -->
+                    {{!-- <div class="col-lg-12">
+                        <div class="layer-1">
+                            <div class="slider-img">
+                                <img src="images/user/img/slider/slider-1/pic5.jpg" alt="">
+                            </div>
+                            <div class="slider-info gray-bg">
+                                <div class="slider-info-inner">
+                                    <h1 class="slider-title-1 text-uppercase text-black-1">FASHION POINT</h1>
+                                    <div class="slider-brief text-black-2">
+                                        <p>All garments are subjected to the following tests Fabric dimensional stability test and quality inspection for colours and wash fastness. To maintain the Color please dry in shades. Usual Machine wash or Regular wash is preferable.; Machine wash cold with similar colors, gentle cycle, only non-chlorine bleach (when needed), tumble dry low, warm iron if needed, do not iron on print.</p>
+                                    </div>
+                                    <a href="#" class="button extra-small button-black">
+                                        <span class="text-uppercase">Buy now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+
+                    <!-- layer-1 end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END SLIDER AREA -->
+
+    <!-- Start page content -->
+    <section id="page-content" class="page-wrapper section">
+
+        <!-- BY BRAND SECTION START-->
+       
+        <!-- BY BRAND SECTION END -->
+
+        <!-- FEATURED PRODUCT SECTION START -->
+        
+       
+        <!-- PRODUCT TAB SECTION START -->
+        <div class="product-tab-section mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="section-title text-left mb-40">
+                            <h2 class="uppercase">product list</h2>
+                            <h6>There are many variations of passages of brands available,</h6>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12">
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <!-- popular-product start -->
+                            <div id="popular-product" class="tab-pane active show">
+                                <div class="row">
+                                    <!-- product-item start -->
+                                    {{#each productlist}}
+                                    <div class="col-lg-3 col-md-4">
+                                        <div class="product-item">
+                                            <div class="product-img">
+                                                <a href="/product-view/{{this._id}}">
+                                                    <img src="/product-images/{{this.Images.[0]}}" alt="" style="width: 270px; height:300px" />
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <h6 class="product-title">
+                                                    <a href="/product-view/{{this._id}}">{{this.Name}}</a>
+                                                </h6>
+                                               <h6 class="product-title">
+                                                            <a href="#">{{this.Brands}} </a><br>
+                                                            {{!-- <a href="#">{{this.Category}} </a> --}}
+                                                        </h6>
+                                                        <h6 class="product-title"><a>Stock  {{this.Stock}}</a></h6>
+                                                <h3 class="pro-price">${{this.Price}}</h3>
+                                                
+                                                <ul class="action-button">
+                                                            {{!-- <li>
+                                                                <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a>
+                                                            </li> --}}
+                                                            {{!-- <li>
+                                                                <a href="#" data-bs-toggle="modal"  data-bs-target="#productModal" title="Quickview"><i class="zmdi zmdi-zoom-in"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" title="Compare"><i class="zmdi zmdi-refresh"></i></a>
+                                                            </li> --}}
+                                                            <li>
+                                                                {{!-- <a href="#" title="Add to cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
+                                                                <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                                                                
+                                                            </li>
+                                                        </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    <!-- product-item end -->
+                                    
+                                </div>
+                                
+                            </div>
+                            <!-- popular-product end -->
+                            <!-- new-arrival start -->
+                            
+                            <!-- new-arrival end -->
+                            <!-- best-seller start -->
+                            
+                            <!-- best-seller end -->
+                            <!-- special-offer start -->
+                            
+                            <!-- special-offer end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCT TAB SECTION END -->
+
+<!--2nd product section start-->
+
+ 
+
+<!-- 2nd product section end-->
+       
+        <!-- BLOG SECTION END -->
+    </section>
+    <!-- End page content -->
+
+    <!-- START FOOTER AREA -->
+    <footer id="footer" class="footer-area section">
+        <div class="footer-top">
+            <div class="container-fluid">
+                <div class="plr-185">
+                    <div class="footer-top-inner gray-bg">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-5 col-md-5">
+                                <div class="single-footer footer-about">
+                                    <div class="footer-logo">
+                                       <!-- <img src="images/user/img/logo/logo.png" alt=""> -->
+                                    </div>
+                                    <div class="footer-brief">
+                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                            Lorem Ipsum has been the subas industry's standard dummy text ever since the
+                                            1500s,</p>
+                                        <p>When an unknown printer took a galley of type and If you are going to use a
+                                            passage of Lorem Ipsum scrambled it to make.</p>
+                                    </div>
+                                    <ul class="footer-social">
+                                        <li>
+                                            <a class="facebook" href="" title="Facebook"><i
+                                                    class="zmdi zmdi-facebook"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="google-plus" href="" title="Google Plus"><i
+                                                    class="zmdi zmdi-google-plus"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="twitter" href="" title="Twitter"><i
+                                                    class="zmdi zmdi-twitter"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
+                                <div class="single-footer">
+                                    <h4 class="footer-title border-left">Shipping</h4>
+                                    <ul class="footer-menu">
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufacturers</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Special
+                                                    Products</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-3 col-md-3">
+                                <div class="single-footer">
+                                    <h4 class="footer-title border-left">my account</h4>
+                                    <ul class="footer-menu">
+                                        <li>
+                                            <a href="my-account.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Account</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="wishlist.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Wishlist</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign
+                                                    In</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="login.html"><i
+                                                    class="zmdi zmdi-circle"></i><span>Registration</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
+                                                    out</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="order.html"><i class="zmdi zmdi-circle"></i><span>Oder
+                                                    Complete</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom black-bg">
+            <div class="container-fluid">
+                <div class="plr-185">
+                    <div class="copyright">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="copyright-text">
+                                  <!--  <p class="copy-text"> © 2021 <strong>Subas</strong> Made With <i
+                                            class="zmdi zmdi-favorite" style="color: red;" aria-hidden="true"></i> By <a
+                                            class="company-name"
+                                            href="https://themeforest.net/user/codecarnival/portfolio">
+                                            <strong> CodeCarnival</strong></a>.</p>
+-->
+                                </div>
+                            </div>
+                            {{!-- <div class="col-md-6">
+                                <ul class="footer-payment text-right">
+                                    <li>
+                                        <a href="#"><img src="images/user/img/payment/1.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/user/img/payment/2.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/user/img/payment/3.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/user/img/payment/4.jpg" alt=""></a>
+                                    </li>
+                                </ul>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER AREA -->
+
+    <!-- START QUICKVIEW PRODUCT -->
+    <div id="quickview-wrapper">
+        <!-- Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-product clearfix">
+                            <div class="product-images">
+                                <div class="main-image images">
+                                    <img alt="" src="images/user/img/product/quickview.jpg">
+                                </div>
+                            </div><!-- .product-images -->
+
+                            <div class="product-info">
+                                <h1>Aenean eu tristique</h1>
+                                <div class="price-box-3">
+                                    <div class="s-price-box">
+                                        <span class="new-price">£160.00</span>
+                                        <span class="old-price">£190.00</span>
+                                    </div>
+                                </div>
+                                <a href="single-product-left-sidebar.html" class="see-all">See all features</a>
+                                <div class="quick-add-to-cart">
+                                    <form method="post" class="cart">
+                                        <div class="numbers-row">
+                                            <input type="number" id="french-hens" value="3">
+                                        </div>
+                                        <button class="single_add_to_cart_button" type="submit">Add to cart</button>
+                                    </form>
+                                </div>
+                                {{!-- <div class="quick-desc">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est
+                                    tristique auctor. Donec non est at libero.
+                                </div> --}}
+                                <div class="social-sharing">
+                                    <div class="widget widget_socialsharing_widget">
+                                        <h3 class="widget-title-modal">Share this product</h3>
+                                        <ul class="social-icons clearfix">
+                                            {{!-- <li>
+                                                <a class="facebook" href="#" target="_blank" title="Facebook">
+                                                    <i class="zmdi zmdi-facebook"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="google-plus" href="#" target="_blank" title="Google +">
+                                                    <i class="zmdi zmdi-google-plus"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="twitter" href="#" target="_blank" title="Twitter">
+                                                    <i class="zmdi zmdi-twitter"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="pinterest" href="#" target="_blank" title="Pinterest">
+                                                    <i class="zmdi zmdi-pinterest"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="rss" href="#" target="_blank" title="RSS">
+                                                    <i class="zmdi zmdi-rss"></i>
+                                                </a>
+                                            </li> --}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div><!-- .product-info -->
+                        </div><!-- .modal-product -->
+                    </div><!-- .modal-body -->
+                </div><!-- .modal-content -->
+            </div><!-- .modal-dialog -->
+        </div>
+        <!-- END Modal -->
+    </div>
+    <!-- END QUICKVIEW PRODUCT -->
+
+    <!--style-customizer start -->
+    
+    <!--style-customizer end -->
+</div>
+<!-- Body main wrapper end -->

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>STYLE CART</title>
+
+    {{#if userhead}}
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/img/icon/favicon.png">
+    <!-- All CSS Files -->
+    <!-- Bootstrap fremwork main css -->
+    <link rel="stylesheet" href="/stylesheets/user/css/bootstrap.min.css">
+    <!-- Nivo-slider css -->
+    <link rel="stylesheet" href="/stylesheets/user/lib/css/nivo-slider.css">
+    <!-- This core.css file contents all plugings css file. -->
+    <link rel="stylesheet" href="/stylesheets/user/css/core.css">
+    <!-- Theme shortcodes/elements style -->
+    <link rel="stylesheet" href="/stylesheets/user/css/shortcode/shortcodes.css">
+    <!-- Theme main style -->
+    <link rel="stylesheet" href="/stylesheets/user/style.css">
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="/stylesheets/user/css/responsive.css">
+    <!-- User style -->
+    <link rel="stylesheet" href="/stylesheets/user/css/custom.css">
+    <!-- Style customizer (Remove these two lines please) -->
+    <link rel="stylesheet" href="/stylesheets/user/css/style-customizer.css">
+    <link href="#" data-style="styles" rel="stylesheet">
+    {{/if}}
+
+    {{#if admin}}
+    <!-- Bootstrap rating css -->
+    <link href="../plugins/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/metismenu.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/style.css" rel="stylesheet" type="text/css">
+    {{/if}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
+</head>
+
+<body>
+    {{#if userhead}}
+    {{>user-header}}
+    {{/if}}
+
+    {{#if admin}}
+    {{>admin-sidebar}}
+    {{/if}}
+
+    {{{body}}}
+
+    {{#if userhead}}
+    {{!-- add to cart support script --}}
+    <script src="/javascripts/script.js"></script>
+    <!-- jquery latest version -->
+    <script src="/stylesheets/user/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="/stylesheets/user/js/vendor/jquery-migrate-3.3.2.min.js"></script>
+    <!-- Bootstrap framework js -->
+    <script src="/stylesheets/user/js/bootstrap.bundle.min.js"></script>
+    <!-- jquery.nivo.slider js -->
+    <script src="/stylesheets/user/lib/js/jquery.nivo.slider.js"></script>
+    <!-- All js plugins included in this file. -->
+    <script src="/stylesheets/user/js/plugins.js"></script>
+    <!-- Main js file that contents all jQuery plugins activation. -->
+    <script src="/stylesheets/user/js/main.js"></script>
+    {{/if}}
+
+    {{#if admin}}
+    <!-- jQuery  -->
+    <script src="/stylesheets/admin/js/jquery.min.js"></script>
+    <script src="/stylesheets/admin/js/bootstrap.bundle.min.js"></script>
+    <script src="/stylesheets/admin/js/metismenu.min.js"></script>
+    <script src="/stylesheets/admin/js/jquery.slimscroll.js"></script>
+    <script src="/stylesheets/admin/js/waves.min.js"></script>
+
+    <!-- Bootstrap rating js -->
+    <script src="../plugins/bootstrap-rating/bootstrap-rating.min.js"></script>
+    <script src="/stylesheets/admin/pages/rating-init.js"></script>
+
+    <!-- App js -->
+    <script src="/stylesheets/admin/js/app.js"></script>
+    {{/if}}
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <script>
+    $(document).ready( function () {
+    $('#productsTable').DataTable();
+    } );
+    </script>
+    
+</body>
+
+</html>

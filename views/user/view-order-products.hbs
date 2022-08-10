@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="tab-content">
+        <!-- grid-view -->
+        <div id="grid-view" class="tab-pane active show" role="tabpanel">
+            <div class="row">
+                {{#each products}}
+                <!-- product-item start -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="product-item">
+                        <div class="product-img d-flex justify-content-center">
+
+                            <div>
+                                <img src="../product-images/{{this.Images.[0]}}"
+                                    style="width: 270px;height: 300px" alt="" />
+                            </div>
+
+                        </div>
+                        <div class="product-info">
+                            <h6 class="product-title">
+                                <a>{{this.Name}}</a>
+                            </h6>
+                            <h6 class="product-title">
+                                <a href="#">{{this.Brands}} </a>
+                            </h6>
+                            {{!-- <h6 class="product-title"><a>Stock {{this.product.Stock}}</a></h6> --}}
+                            <h3 class="pro-price">${{this.Price}}</h3>
+                            <ul class="action-button">
+                                {{!-- <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to
+                                    cart</button> --}}
+                                </li>
+                                 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+
+            </div>
+        </div>
+        <!-- list-view -->
+
+    </div>
+</div>
+
+
+
+
+
+   
+

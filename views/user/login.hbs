@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<div class="row m-0">
+    <div class="col-md-6 m-auto">
+        <div class="container mt-5 pl-5">
+            <div class="container mt-5 pl-5">
+                <h2 class="text-center">Login</h2>
+
+                <form action="/login" method="POST">
+                    {{#if loginerr}}
+                    <p class="error text-center" style="color: red;">{{loginerr}}</p>
+                    {{/if}}
+
+                    <div class="form-group">
+                        <label><strong>Email Address</strong></label>
+                        <input type="text" class="form-control" name="Email" placeholder="Enter email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>Password</strong></label>
+                        <input type="password" class="form-control" name="Password" placeholder="Password" required>
+                    </div>
+
+                    {{!-- <div class="form-group">
+                        <label><strong>Mobile Number</strong></label>
+                        <input type="number" class="form-control" name="number" placeholder="mobile number" required>
+                    </div> --}}
+
+
+
+                    <a href="/signup" class="sign sign-info mt-5 "
+                        style="width: fit-content; text-decoration: none;">Sign Up</a><br><br>
+                    {{!-- <a href="/otp-login" class="sign sign-info mt-5 "
+                        style="width: fit-content; text-decoration: none;">Login with OTP</a> --}}
+                    <div class="mx-auto mt-3" style=" width: fit-content;">
+
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>

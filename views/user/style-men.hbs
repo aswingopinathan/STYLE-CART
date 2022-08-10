@@ -1,0 +1,320 @@
+
+<body>
+        <!-- BREADCRUMBS SETCTION START -->
+        <div    class="pb-4">
+            {{!-- <div class="breadcrumbs overlay-bg"> --}}
+                <div >
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12 img-fluid text-center" >
+                                <img src="product-images/layout.webp" class="img-fluid text-center" style="width: 100% height:3px " alt="">
+                                
+                                {{!-- <ul >
+                                    <li><a href="index.html">Home</a></li>
+                                    
+                                </ul> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- BREADCRUMBS SETCTION END -->
+
+        <!-- Start page content -->
+        <div id="page-content" class="page-wrapper section">
+
+            <!-- SHOP SECTION START -->
+            <div class="shop-section mb-80">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9 order-lg-2 order-1">
+                            <div class="shop-content">
+                                <!-- shop-option start -->
+                                <div class="shop-option box-shadow mb-30 clearfix">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav shop-tab f-left" role="tablist">
+                                        <li>
+                                            <a class="active" href="#grid-view" data-bs-toggle="tab"><i class="zmdi zmdi-view-module"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#list-view" data-bs-toggle="tab"><i class="zmdi zmdi-view-list-alt"></i></a>
+                                        </li>
+                                    </ul>
+                                    <!-- short-by -->
+                                   
+                                    <!-- showing -->
+                                                                      
+                                </div>
+                                <!-- shop-option end -->
+                                <!-- Tab Content start -->
+                                <div class="tab-content">
+                                    <!-- grid-view -->
+                                    <div id="grid-view" class="tab-pane active show" role="tabpanel">
+                                        <div class="row">
+                                            {{#each productlist}}
+                                            <!-- product-item start -->
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="product-item" >
+                                                    <div class="product-img">
+                                                        <a href="/product-view/{{this._id}}">
+                                                            <img src="product-images/{{this.Images.[0]}}" style="width: 270px;height: 300px"alt=""/>
+                                                        </a>
+                                                    </div>
+                                                    {{!-- <div class="product-info">
+                                                        <h3>{{this.Name}}</h3>
+                                                        <h6 class="product-title">
+                                                            <a href="single-product.html">{{this.Brands}} </a>
+                                                        </h6>
+                                                        
+                                                        <h3 class="pro-price">$ {{this.Price}}</h3>
+                                                       <ul class="action-button"> --}}
+                                                         <div class="product-info">
+                                                <h6 class="product-title">
+                                                    <a href="/product-view/{{this._id}}">{{this.Name}}</a>
+                                                </h6>
+                                               <h6 class="product-title">
+                                                            <a href="#">{{this.Brands}} </a>
+                                                        </h6>
+                                                        <h6 class="product-title"><a>Stock  {{this.Stock}}</a></h6>
+                                                <h3 class="pro-price">${{this.Price}}</h3>
+                                                <ul class="action-button">
+                                                            {{!-- <li>
+                                                                <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a>
+                                                            </li> --}}
+                                                            {{!-- <li>
+                                                                <a href="#" data-bs-toggle="modal"  data-bs-target="#productModal" title="Quickview"><i class="zmdi zmdi-zoom-in"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" title="Compare"><i class="zmdi zmdi-refresh"></i></a>
+                                                            </li> --}}
+                                                            <li>
+                                                                {{!-- <a href="/add-to-cart/{{this._id}}" title="Add to cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
+                                                                <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{/each}}
+                                           
+                                        </div>
+                                    </div>
+                                    <!-- list-view -->
+                                    
+                                </div>
+                                <!-- Tab Content end -->
+                                <!-- shop-pagination start -->
+                                <ul class="shop-pagination box-shadow text-center ptblr-10-30">
+                                    <li><a href="#"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                                    <li><a href="#">01</a></li>
+                                    <li><a href="#">02</a></li>
+                                    <li><a href="#">03</a></li>
+                                    <li><a href="#">...</a></li>
+                                    <li><a href="#">05</a></li>
+                                    <li class="active"><a href="#"><i class="zmdi zmdi-chevron-right"></i></a></li>
+                                </ul>
+                                <!-- shop-pagination end -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3 order-lg-1 order-2">
+                            <!-- widget-search -->
+                            <aside class="widget-search mb-30">
+                                <form action="#">
+                                    <input type="text" placeholder="Search here...">
+                                    <button type="submit"><i class="zmdi zmdi-search"></i></button>
+                                </form>
+                            </aside>
+                            <!-- widget-categories -->
+                            <aside class="widget widget-categories box-shadow mb-30">
+                                <h6 class="widget-title border-left mb-20">Categories</h6>
+                                <div id="cat-treeview" class="product-cat">
+                                    <ul>
+                                        <li class="closed"><a href="style-men" >Mens category</a>
+                                         <!--    <ul>
+                                                <li><a href="#"></a>formal shoe</li>
+                                                <li><a href="#"></a>casual shoe</li>
+                                                <li><a href="#">sport shoe</a></li>
+                                               
+                                            </ul> -->
+                                        </li>                                       
+                                        <li class="open"><a href="style-women">Womens category</a>
+                                          <!--  <ul>
+                                                <li><a href="#">formal shoe</a></li>
+                                                <li><a href="#">casual shoe</a></li>
+                                                <li><a href="#">sport wear</a></li>
+                                               
+                                            </ul> -->
+                                        </li>
+                                        <li class="closed"><a href="style-kid">Kids category</a>
+                                         <!--   <ul>
+                                                <li><a href="#">formal shoe</a></li>
+                                                <li><a href="#">casual shoe</a></li>
+                                                <li><a href="#">sport wear</a></li>
+                                               
+                                            </ul> -->
+                                        </li>
+                                       
+                                        
+                                    </ul>
+                                </div>
+                            </aside>
+                            <!-- shop-filter -->
+                            {{!-- <aside class="widget shop-filter box-shadow mb-30">
+                                <h6 class="widget-title border-left mb-20">Price</h6>
+                                <div class="price_filter">
+                                    <div class="price_slider_amount">
+                                        <input type="submit"  value="You range :"/> 
+                                        <input type="text" id="amount" name="price"  placeholder="Add Your Price" /> 
+                                    </div>
+                                    <div id="slider-range"></div>
+                                </div>
+                            </aside> --}}
+                            <!-- widget-color -->
+                            {{!-- <aside class="widget widget-color box-shadow mb-30">
+                                <h6 class="widget-title border-left mb-20">color</h6>
+                                <ul>
+                                    <li class="color-1"><a href="#">LightSalmon</a></li>
+                                    <li class="color-2"><a href="#">Dark Salmon</a></li>
+                                    <li class="color-3"><a href="#">Tomato</a></li>
+                                    <li class="color-4"><a href="#">Deep Sky Blue</a></li>
+                                    <li class="color-5"><a href="#">Electric Purple</a></li>
+                                    <li class="color-6"><a href="#">Atlantis</a></li>
+                                </ul>
+                            </aside> --}}
+                           
+                            
+                               
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SHOP SECTION END -->             
+
+        </div>
+        <!-- End page content -->
+
+        <!-- START FOOTER AREA -->
+        <footer id="footer" class="footer-area section">
+            <div class="footer-top">
+                <div class="container-fluid">
+                    <div class="plr-185">
+                        <div class="footer-top-inner gray-bg">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-5 col-md-5">
+                                    <div class="single-footer footer-about">
+                                        <div class="footer-logo">
+                                            <img src="img/logo/logo.png" alt="">
+                                        </div>
+                                        <div class="footer-brief">
+                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                                Ipsum has been the subas industry's standard dummy text ever since the 1500s,
+                                            </p>
+                                            <p>When an unknown printer took a galley of type and If you are going to use a
+                                                passage of Lorem Ipsum scrambled it to make.</p>
+                                        </div>
+                                        <ul class="footer-social">
+                                            <li>
+                                                <a class="facebook" href="" title="Facebook"><i
+                                                        class="zmdi zmdi-facebook"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="google-plus" href="" title="Google Plus"><i
+                                                        class="zmdi zmdi-google-plus"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="twitter" href="" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
+                                    <div class="single-footer">
+                                        <h4 class="footer-title border-left">Shipping</h4>
+                                        <ul class="footer-menu">
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Special Products</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-3 col-md-3">
+                                    <div class="single-footer">
+                                        <h4 class="footer-title border-left">my account</h4>
+                                        <ul class="footer-menu">
+                                            <li>
+                                                <a href="my-account.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                        Account</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="wishlist.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                        Wishlist</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign In</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="login.html"><i
+                                                        class="zmdi zmdi-circle"></i><span>Registration</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
+                                                        out</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="order.html"><i class="zmdi zmdi-circle"></i><span>Oder
+                                                        Complete</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </footer>
+        <!-- END FOOTER AREA -->
+
+ {{!-- <script>
+    //sending from client to server side
+     function addToCart(proId){
+        $.ajax({
+            url:'/add-to-cart/'+proId,
+            method:'get',
+            success:(response)=>{
+                alert(response)
+            }
+        })
+     }
+
+ </script> --}}
+
+</body>
+
