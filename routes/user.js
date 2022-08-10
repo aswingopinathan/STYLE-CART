@@ -5,6 +5,7 @@ const { TaskRouterGrant } = require('twilio/lib/jwt/AccessToken');
 var router = express.Router();
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers')
+const paypal = require('paypal-rest-sdk');
 
 const verifyLogin = (req, res, next) => {
   if (req.session.loggedIn) {
@@ -20,13 +21,14 @@ const verifyCartCount = async (req, res, next) => {
     cartCount = await userHelpers.getCartCount(req.session.user._id)
     next()
   } else {
-    next()
+    next() 
   } 
 }
 
 /* GET home page. */
 let userlog;
 router.get('/', async function (req, res, next) {
+ try{
   userlog = req.session.user;
   if (req.session.loggedIn) {
     cartCount = await userHelpers.getCartCount(req.session.user._id)
@@ -39,9 +41,12 @@ router.get('/', async function (req, res, next) {
       userHelpers.getBanners().then((banner)=>{
         res.render('user/index', { userhead: true, productlist ,bannershow:banner})
       })
-     
     })
-  }
+  } 
+ }catch(err){ 
+  console.log(err);
+  res.send("Something went wrong")
+ }
 })
 
 router.get('/allproducts', verifyCartCount, function (req, res, next) {
@@ -190,16 +195,21 @@ router.get('/place-order',verifyLogin,async(req,res)=>{
 router.post('/place-order',async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
   let totalPrice=await userHelpers.getTotalAmount(req.body.userId)
+  req.session.deletecartproduct=req.body.userId
+  req.session.total=totalPrice
   userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
+    req.session.neworderId=orderId
     if(req.body['payment-method']==='COD'){
-      res.json({codSuccess:true})
+      userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+        res.json({codSuccess:true})
+      })
     }else if(req.body['payment-method']==='ONLINE-RAZOR'){
       userHelpers.generateRazorpay(orderId,totalPrice).then((response)=>{
         response.razorSuccess = true
         res.json(response)
       })
     }else if(req.body['payment-method']==='ONLINE-PAYPAL'){
-      userHelpers.generatePaypal(totalPrice).then((response)=>{
+      userHelpers.generatePaypal(orderId,totalPrice).then((response)=>{
         response.paypalSuccess = true
         res.json(response)
       })
@@ -207,6 +217,47 @@ router.post('/place-order',async(req,res)=>{
   })
   console.log(req.body);
 })
+
+let amount;
+router.get('/success/:id', (req, res) => {
+  amount = req.session.total
+  console.log(req.params.id);
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+
+  const execute_payment_json = {
+    "payer_id": payerId,
+    "transactions": [{
+        "amount": {
+            "currency": "USD",
+            "total": amount
+        }
+    }]
+  }; 
+
+  paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+    if (error) {
+        console.log(error.response);
+        throw error;
+    } else {
+        //console.log(JSON.stringify(payment));
+        console.log("paypal payment succes");
+        userHelpers.changePaymentStatus(req.params.id).then(()=>{
+          userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+            res.redirect('/order-success');
+          })
+        })
+        
+    }
+});
+}); 
+
+router.get('/cancel', (req, res) => {
+  userHelpers.deleteTheOrder(req.session.neworderId).then(()=>{
+    res.redirect('/orders')
+  })
+  
+});
 
 router.get('/order-success',verifyCartCount,(req,res)=>{
   res.render('user/order-success',{userhead:true,userlog,cartCount})
@@ -229,7 +280,9 @@ console.log(req.body);
 userHelpers.verifyPayment(req.body).then(()=>{
 userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   console.log("Payment Success");
-  res.json({status:true})
+  userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+    res.json({status:true})
+  })
 }) 
 }).catch(()=>{
   console.log(err);
@@ -248,7 +301,7 @@ router.get('/profile',verifyLogin,((req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
     console.log("checking");
     console.log(profiledata);
-    res.render('user/profile',{userhead:true,cartCount,profiledata})
+    res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
   })
 }))
 
@@ -275,15 +328,14 @@ router.get('/add-address',(req,res)=>{
 })
 
 router.post('/add-address',(req,res)=>{
-  userHelpers.addAddress(req.body).then(()=>{
+  userHelpers.addNewAddress(req.body,userlog._id).then(()=>{
     res.redirect('/profile')
   })
 })
 
-router.get('/show-address',(req,res)=>{
-  userHelpers.getAddress().then((address)=>{
-    res.render('user/show-address',{userlog,userhead:true,cartCount,showaddress:address})
-  })
+router.get('/show-address',async(req,res)=>{
+  useradd=await userHelpers.getAddress(userlog._id)
+  res.render('user/show-address',{userlog,userhead:true,cartCount,useradd})
 })
 
 router.get('/edit-profile',(req,res)=>{

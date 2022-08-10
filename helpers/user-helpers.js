@@ -269,6 +269,7 @@ module.exports = {
             resolve(total[0].total)
         })
     },
+    //working
     placeOrder: (order, products, total) => {
         return new Promise((resolve, reject) => {
             console.log(order, products, total);
@@ -287,7 +288,7 @@ module.exports = {
                 date: new Date()
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
+                //db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
                 console.log('order id:'+response.insertedId);
                 resolve(response.insertedId)
             })
@@ -466,7 +467,7 @@ module.exports = {
               }
         })
     },
-    generatePaypal:(total)=>{
+    generatePaypal:(orderId,total)=>{
         return new Promise((resolve,reject)=>{
             var create_payment_json = {
                 "intent": "sale",
@@ -474,22 +475,22 @@ module.exports = {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": "http://localhost:3000/online-success",
-                    "cancel_url": "http://localhost:3000/"
+                    "return_url": "http://localhost:3000/success/"+orderId,
+                    "cancel_url": "http://localhost:3000/cancel"
                 },
                 "transactions": [{
                     "item_list": {
                         "items": [{
                             "name": "item",
                             "sku": "item",
-                            "price": "25",
+                            "price": total,
                             "currency": "USD",
                             "quantity": 1
                         }]
                     },
                     "amount": {
                         "currency": "USD",
-                        "total": "25"
+                        "total": total
                     },
                     "description": "This is the payment description."
                 }]
@@ -503,9 +504,11 @@ module.exports = {
                     resolve(payment)
                 }
             })
+           
         })
     },
-    changePaymentStatus:(orderId)=>{
+    ///working
+    changePaymentStatus:(orderId,proId)=>{
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.ORDER_COLLECTION)
             .updateOne({_id:objectId(orderId)},
@@ -518,6 +521,13 @@ module.exports = {
                 resolve()
             })
         })
+    },
+    cartClearing:(proId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(proId) })
+            resolve()
+        })
+
     },
     cancelOrder:(orderId)=>{
         return new Promise((resolve,reject)=>{
@@ -552,17 +562,37 @@ module.exports = {
             resolve(banner)
         })
     },
-    addAddress:(body)=>{
-        return new Promise(async(resolve,reject)=>{
-            let newaddress = await db.get().collection(collection.ADDRESS_COLLECTION).insertOne(body)
-            resolve()
+    addNewAddress: (userData, userId) => {
+        let addressObj = {
+            Address: userData.Address,
+            State: userData.State,
+          Pincode: userData.Pincode,
+          City: userData.City,
+         
+        };
+        return new Promise((resolve, reject) => {
+          db.get()
+            .collection(collection.USER_COLLECTION)
+            .updateOne(
+              { _id: objectId(userId) },
+              {
+                $push: { address: addressObj },
+              }
+            )
+            .then(() => {
+              resolve();
+            });
+        });
+      },
+    getAddress:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userId)}).then((response)=>{
+                console.log("getaddress");
+                resolve(response)
+            })
+           
         })
-    },
-    getAddress:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let address = await db.get().collection(collection.ADDRESS_COLLECTION).find().toArray()
-            resolve(address)
-        })
+       
     },editProfile:(body,userId)=>{
         console.log(body);
         console.log(userId);
@@ -583,6 +613,13 @@ module.exports = {
            let profiledata=await db.get().collection(collection.USER_COLLECTION).find({_id:objectId(userId)}).toArray()
            console.log(profiledata);
            resolve(profiledata)
+        })
+    },
+    deleteTheOrder:(orderId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION).deleteOne({_id:objectId(orderId)}).then(()=>{
+                resolve()
+            })
         })
     }
 }

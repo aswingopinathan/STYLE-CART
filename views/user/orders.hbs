@@ -34,18 +34,13 @@
                                 {{!-- <td><img style="width: 50px;height: 50px" src="/product-images/{{this.Images.[0]}}">
                                 </td> --}}
                                 <td>
-                                    <div>
-                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View Product
-                                        </a>
-                                    </div><br>
-                                    <div>
-                                        {{!-- <a href="/cancel-order/{{this._id}}" class="btn btn-danger btn-sm"> Cancel Order
-                                        </a> --}}
-                                        <button class="btn btn-danger btn-sm" onclick="cancelProduct('{{this._id}}')">Cancel Order</button>
-                                    </div>
+                                    <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View Product
+                                        </a><br><br>
+                                     <button class="btn btn-danger btn-sm" onclick="cancelProduct('{{this._id}}')">Cancel Order</button>
                                 </td>
                             </tr>
                             {{/each}}
+                                    <hr>
                         </tbody>
                     </table>
                 </div>

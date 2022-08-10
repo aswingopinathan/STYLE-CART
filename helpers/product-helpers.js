@@ -159,7 +159,7 @@ module.exports = {
                     Stock: proDetails.Stock,
                 }
             }).then((response) => {
-                console.log(response)
+                console.log(response) 
                 resolve()
             })
         })
@@ -189,13 +189,12 @@ module.exports = {
                     
                 }
             ]).toArray()
-            console.log(productlist);
+            
             resolve(productlist)
         })
     },
     getMenList: () => {
         return new Promise(async (resolve, reject) => {
-            // let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).find({ "Category": "Mens" }).toArray()
             let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                 {
                     $lookup:{
@@ -214,9 +213,7 @@ module.exports = {
                     }
                 },
                 {
-                
                      $project: { Name:1,Category: '$Category.Name', Brands: '$Brands.Name', Stock: 1, Price: 1, Images: 1 }
-                    
                 }
             ]).toArray()
             console.log(productlist);
