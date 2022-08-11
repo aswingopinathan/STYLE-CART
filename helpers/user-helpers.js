@@ -174,11 +174,20 @@ module.exports = {
                     }
                 },
                 {
+                    $lookup: {
+                        from: collection.BRAND_COLLECTION,
+                        localField: 'product.Brands',
+                        foreignField: '_id',
+                        as: 'Brands'
+                    }
+                },
+                {
                     $project: {
-                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }
+                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] },Brands:'$Brands.Name'
                     }
                 }
             ]).toArray()
+            console.log(cartItems);
             resolve(cartItems)
         })
     },
@@ -364,7 +373,7 @@ module.exports = {
                 },
                 {
                     $unwind: '$products'
-                },
+                }, 
                 {
                     $project: {
                         item: '$products.item',
@@ -620,6 +629,12 @@ module.exports = {
             db.get().collection(collection.ORDER_COLLECTION).deleteOne({_id:objectId(orderId)}).then(()=>{
                 resolve()
             })
+        })
+    },
+    getAllCategory: () => {
+        return new Promise(async (resolve, reject) => {
+            let category = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
+            resolve(category)
         })
     }
 }

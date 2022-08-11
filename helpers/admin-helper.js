@@ -45,17 +45,18 @@ module.exports = {
             })
         })
     },
-    getAllCategory: (catg) => {
+    getAllCategory: () => {
         return new Promise(async (resolve, reject) => {
             let category = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
             resolve(category)
         })
     },
-    deleteCategory: (catg) => {
+    deleteCategory: (catId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ _id: objectId(catg) }).then(() => {
-                resolve()
-
+            db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ _id: objectId(catId) }).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({Category: objectId(catId)}).then(()=>{
+                    resolve()
+                })
             })
         })
     },
@@ -72,10 +73,12 @@ module.exports = {
             resolve(subcategory)
         })
     },
-    deleteSubCategory: (subcatg) => {
+    deleteSubCategory: (subId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.SUB_CATEGORY_COLLECTION).deleteOne({ _id: objectId(subcatg) }).then(() => {
-                resolve()
+            db.get().collection(collection.SUB_CATEGORY_COLLECTION).deleteOne({ _id: objectId(subId) }).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({SubCategory: objectId(subId)}).then(()=>{
+                    resolve()
+                })
             })
         })
     },
@@ -92,10 +95,12 @@ module.exports = {
             resolve(brands)
         })
     },
-    deleteBrands: (brandsData) => {
+    deleteBrands: (brandId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.BRAND_COLLECTION).deleteOne({ _id: objectId(brandsData) }).then(() => {
-                resolve()
+            db.get().collection(collection.BRAND_COLLECTION).deleteOne({ _id: objectId(brandId) }).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({Brands: objectId(brandId)}).then(()=>{
+                    resolve()
+                })
             })
         })
     },

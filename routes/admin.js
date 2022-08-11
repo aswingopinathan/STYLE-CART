@@ -84,10 +84,11 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
 
 router.get('/edit-product/:id', async (req, res) => {
   let editproduct = await productHelpers.getproductDetails(req.params.id)
+  //console.log(editproduct);
   let getcategory = await adminHelpers.getAllCategory()
   let getsubcategory = await adminHelpers.getAllSubCategory()
-  let brands = await adminHelpers.getAllBrands()
-  res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, brands })
+  let getbrands = await adminHelpers.getAllBrands()
+  res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
 })
 
 router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
@@ -142,8 +143,8 @@ router.post('/add-category', (req, res) => {
 })
 
 router.get('/delete-category/:id', (req, res) => {
-  let catg = req.params.id
-  adminHelpers.deleteCategory(catg).then(() => {
+  let catId = req.params.id
+  adminHelpers.deleteCategory(catId).then(() => {
     res.redirect('/admin/show-category')
   })
 })
@@ -165,8 +166,8 @@ router.post('/add-sub-category', (req, res) => {
 })
 
 router.get('/delete-sub-category/:id', (req, res) => {
-  let catg = req.params.id
-  adminHelpers.deleteSubCategory(catg).then(() => {
+  let subId = req.params.id
+  adminHelpers.deleteSubCategory(subId).then(() => {
     res.redirect('/admin/show-sub-category')
   })
 })
@@ -189,9 +190,9 @@ router.post('/add-brands', (req, res) => {
 })
 
 router.get('/delete-brands/:id', (req, res) => {
-  let brands = req.params.id
-  console.log(brands);
-  adminHelpers.deleteBrands(brands).then(() => {
+  let brandId = req.params.id
+  console.log(brandId);
+  adminHelpers.deleteBrands(brandId).then(() => {
     res.redirect('/admin/show-brands')
   })
 })
@@ -254,8 +255,6 @@ router.get('/delete-banner/:id', (req, res) => {
   })
 })
 
-router.get('/sampledash',(req,res)=>{
-  res.render('admin/sampledash',{admin:true})
-})
+
 
 module.exports = router;

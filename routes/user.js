@@ -6,6 +6,7 @@ var router = express.Router();
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers')
 const paypal = require('paypal-rest-sdk');
+//const { getAllCategory } = require('../helpers/admin-helper');
 
 const verifyLogin = (req, res, next) => {
   if (req.session.loggedIn) {
@@ -46,12 +47,22 @@ router.get('/', async function (req, res, next) {
  }catch(err){ 
   console.log(err);
   res.send("Something went wrong")
- }
+ } 
 })
 
+let categoryHelper;
 router.get('/allproducts', verifyCartCount, function (req, res, next) {
   productHelpers.getProductList().then((productlist) => {
-    res.render('user/style-men', { userhead: true, userlog, productlist, cartCount })
+    userHelpers.getAllCategory().then((mycategory)=>{
+      categoryHelper=mycategory
+      if(req.session.loggedIn){
+        res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount,mycategory:categoryHelper })
+      }else{
+        res.render('user/category-wise', { userhead: true, userlog, productlist,mycategory:categoryHelper })
+      }
+      
+    })
+    
   })
 })
 
@@ -121,26 +132,15 @@ router.post('/otp-verify', (req, res, next) => {
       req.session.otpsignErr = "invalid otp"
       res.redirect('/otp-page')
     }
-  }) 
+  })  
 })
 
-router.get('/style-men', verifyCartCount, (req, res) => {
-  productHelpers.getMenList().then((productlist) => {
-    res.render('user/style-men', { userhead: true, productlist, cartCount, userlog })
+router.get('/category-wise/:id', verifyCartCount, (req, res) => {
+  productHelpers.getSpecificCategory(req.params.id).then((productlist) => {
+    res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog ,mycategory:categoryHelper})
   })
-})
-
-router.get('/style-women', verifyCartCount, (req, res) => {
-  productHelpers.getWomenList().then((productlist) => {
-    res.render('user/style-men', { userhead: true, productlist, userlog, cartCount })
-  })
-})
-router.get('/style-kid', verifyCartCount, (req, res) => {
-  productHelpers.getKidList().then((productlist) => {
-    res.render('user/style-men', { userhead: true, productlist, userlog, cartCount })
-  })
-})
-
+})  
+ 
 router.get('/product-view/:id', verifyCartCount, (req, res) => {
   productHelpers.productview(req.params.id).then((productview) => {
     res.render('user/product-view', { userhead: true, productview, userlog, cartCount })
@@ -159,7 +159,7 @@ router.get('/add-to-cart/:id', (req, res) => {
     res.json({ status: true })
   })
 })
-
+//getcartproducts changed
 router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)
   if(cartCount!=0){
@@ -173,7 +173,7 @@ router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
 router.post('/change-product-quantity', (req, res) => {
   userHelpers.changeProductQuantity(req.body).then(async(response) => {
     if(response.removeProduct){
-      res.json(response)
+      res.json(response) 
     }else{
       response.total=await userHelpers.getTotalAmount(req.body.user)
       res.json(response)
