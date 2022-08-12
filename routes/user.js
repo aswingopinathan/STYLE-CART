@@ -1,12 +1,11 @@
 const { response } = require('express');
 var express = require('express');
-//const { Db } = require('mongodb');
 const { TaskRouterGrant } = require('twilio/lib/jwt/AccessToken');
 var router = express.Router();
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers')
 const paypal = require('paypal-rest-sdk');
-//const { getAllCategory } = require('../helpers/admin-helper');
+
 
 const verifyLogin = (req, res, next) => {
   if (req.session.loggedIn) {
@@ -141,9 +140,11 @@ router.get('/category-wise/:id', verifyCartCount, (req, res) => {
   })
 })  
  
+//working
 router.get('/product-view/:id', verifyCartCount, (req, res) => {
   productHelpers.productview(req.params.id).then((productview) => {
-    res.render('user/product-view', { userhead: true, productview, userlog, cartCount })
+    console.log(productview);
+    res.render('user/product-view', { userhead: true, productview, userlog, cartCount,productScript:true })
   })
 })
 
@@ -159,7 +160,7 @@ router.get('/add-to-cart/:id', (req, res) => {
     res.json({ status: true })
   })
 })
-//getcartproducts changed
+
 router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)
   if(cartCount!=0){
@@ -271,7 +272,6 @@ router.get('/orders',verifyLogin,async(req,res)=>{
 router.get('/view-order-products/:id',async(req,res)=>{
   console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
-  // console.log(products);
   res.render('user/view-order-products',{userhead:true,userlog,products})
 })
 
@@ -339,14 +339,18 @@ router.get('/show-address',async(req,res)=>{
 })
 
 router.get('/edit-profile',(req,res)=>{
-  res.render('user/edit-profile',{userhead:true,cartCount,userlog})
+  userHelpers.getProfile(userlog._id).then((profiledata)=>{
+    res.render('user/edit-profile',{userhead:true,cartCount,userlog,profiledata})
+  })
 })
 
-router.post('/edit-profile',(req,res)=>{
-  userHelpers.editProfile(req.body,userlog._id).then(()=>{
+
+router.post('/edit-profile/:id',(req,res)=>{
+  userHelpers.editProfile(req.body,req.params.id).then(()=>{
     res.redirect('/profile')
   })
 })
+
 
 module.exports = router;
  

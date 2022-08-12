@@ -41,6 +41,16 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    
+    {{#if productScript}}
+    {{!-- nproduct-view css start--}}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css">
+<link href="https://w3learnpoint.com/cdn/jquery-picZoomer.css">
+{{!-- nproduct-view css end--}}
+    {{/if}}
 
 </head>
 
@@ -56,8 +66,10 @@
     {{{body}}}
 
     {{#if userhead}}
+    
     {{!-- add to cart support script --}}
     <script src="/javascripts/script.js"></script>
+
     <!-- jquery latest version -->
     <script src="/stylesheets/user/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/stylesheets/user/js/vendor/jquery-migrate-3.3.2.min.js"></script>
@@ -94,6 +106,14 @@
     } );
     </script>
     
+    {{#if productScript}}
+    {{!-- nproduct-view --}}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
+
+ <script src="/javascripts/productview-script.js"></script>
+   {{/if}}
 </body>
 
 </html>

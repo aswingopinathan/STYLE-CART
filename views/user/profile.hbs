@@ -1,30 +1,303 @@
-<div class="row m-0">
-    <div class="col-md-6 m-auto">
-        <div class="container mt-5 pl-5">
-            <h2 class="text-center">Profile</h2>
-            
-            <div class="form-group">
-                <label><strong>Username</strong></label>
-                <input type="text" class="form-control"  id="firstName" name="Username" value="{{profiledata.[0].Username}}"
-                    required>
+<div class="breadcrumb-area-3 pt-30 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-xxl-12">
+                <div class="breadcrumb-wrapper-2 text-center">
+                    <h3>Personal Information</h3>
+                </div>
             </div>
-            <div class="form-group">
-                {{emailError}}
-                <label><strong>Email</strong></label>
-                <input type="text" class="form-control"  id="email" name="Email" value="{{profiledata.[0].Email}}"
-                    id="contact-email" required>
-            </div>
-            <div class="form-group">
-                <label><strong>Mobilenumber</strong></label>
-                <input type="text" class="form-control" id="phoneNumber"  name="Mobile" value="{{profiledata.[0].Mobile}}"
-                    placeholder="Enter mobile number" required>
-            </div>
-            <div class="mt-3" style=" width: fit-content;">
-                <a href="/change-password" class="btn btn-primary">change password</a>
-                <a href="/edit-profile" class="btn btn-success" style="width: fit-content;">Edit Profile</a>
-                <a href="/show-address" class="btn btn-success" style="width: fit-content;">Show Address</a>
-            </div>
-
         </div>
     </div>
 </div>
+
+<section class="container mt-50 mb-100">
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="shadow rounded p-3 text-center">
+                <img class="userProfile"
+                    src="data:image/png;base64,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"
+                    alt="">
+                <h3 class="mt-3">Hi <span class="ms-2">{{profiledata.[0].Username}}</span> </h3>
+            </div>
+
+            <div class="shadow rounded mt-3 p-3">
+                <h3 class="text-center">Account Settings</h3>
+                <h6 class="fw-normal text-center"><a href="/orders" class="text-secondary"> My Orders </a></h6>
+                <h6 class="fw-normal text-center"><a href="/show-address" class="text-secondary">Manage Addresses</a></h6>
+                <h6 class="fw-normal text-center"><a href="#" class="text-secondary">Wallet <span
+                            class="ms-3 text-success fw-bold"> <small>RS</small> <span>{{getWallet}}</span></span></a>
+                </h6>
+                <h6 class="fw-normal text-center"><a href="/change-password" class="text-secondary">Change Password</a></h6>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+            <div class="shadow p-3 rounded">
+                <table class="table table-borderless ">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="border-0">
+                                <h3>Profile Details</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border-0 text-secondary" width="30%">Username</td>
+                            <td class="border-0 text-secondary">: <span class="ms-2">{{profiledata.[0].Username}}</span> </td>
+                        </tr>
+                        <tr>
+                            <td class="text-secondary">Email</td>
+                            <td class="text-secondary">: <span class="ms-2">{{profiledata.[0].Email}}</span> </td>
+                        </tr>
+                        <tr>
+                            <td class="text-secondary">Mobile Number</td>
+                            <td class="text-secondary">: <span class="ms-2">{{profiledata.[0].Mobile}}</span> </td>
+                        </tr>
+                        <tr>
+                            <td class=" text-center pt-5" colspan="2">
+                                <a href="/edit-profile" type="submit" class="s-btn s-btn-2">Edit
+                                    Profile</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+ <!-- START FOOTER AREA -->
+        <footer id="footer" class="footer-area section">
+            <div class="footer-top">
+                <div class="container-fluid">
+                    <div class="plr-185">
+                        <div class="footer-top-inner gray-bg">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-5 col-md-5">
+                                    <div class="single-footer footer-about">
+                                        <div class="footer-logo">
+                                            <img src="img/logo/logo.png" alt="">
+                                        </div>
+                                        <div class="footer-brief">
+                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                                Ipsum has been the subas industry's standard dummy text ever since the 1500s,
+                                            </p>
+                                            <p>When an unknown printer took a galley of type and If you are going to use a
+                                                passage of Lorem Ipsum scrambled it to make.</p>
+                                        </div>
+                                        <ul class="footer-social">
+                                            <li>
+                                                <a class="facebook" href="" title="Facebook"><i
+                                                        class="zmdi zmdi-facebook"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="google-plus" href="" title="Google Plus"><i
+                                                        class="zmdi zmdi-google-plus"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="twitter" href="" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
+                                            </li>
+                                            <li>
+                                                <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
+                                    <div class="single-footer">
+                                        <h4 class="footer-title border-left">Shipping</h4>
+                                        <ul class="footer-menu">
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular Products</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Special Products</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-3 col-md-3">
+                                    <div class="single-footer">
+                                        <h4 class="footer-title border-left">my account</h4>
+                                        <ul class="footer-menu">
+                                            <li>
+                                                <a href="my-account.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                        Account</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="wishlist.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                        Wishlist</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign In</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="login.html"><i
+                                                        class="zmdi zmdi-circle"></i><span>Registration</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
+                                                        out</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="order.html"><i class="zmdi zmdi-circle"></i><span>Oder
+                                                        Complete</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4">
+                                    <div class="single-footer">
+                                        <h4 class="footer-title border-left">Get in touch</h4>
+                                        <div class="footer-message">
+                                            <form action="#">
+                                                <input type="text" name="name" placeholder="Your name here...">
+                                                <input type="text" name="email" placeholder="Your email here...">
+                                                <textarea class="height-80" name="message"
+                                                    placeholder="Your messege here..."></textarea>
+                                                <button class="submit-btn-1 mt-20 btn-hover-1" type="submit">submit
+                                                    message</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom black-bg">
+                <div class="container-fluid">
+                    <div class="plr-185">
+                        <div class="copyright">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="footer-payment text-right">
+                                        <li>
+                                            <a href="#"><img src="img/payment/1.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="img/payment/2.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="img/payment/3.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="img/payment/4.jpg" alt=""></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- END FOOTER AREA -->
+
+        <!-- START QUICKVIEW PRODUCT -->
+        <div id="quickview-wrapper">
+            <!-- Modal -->
+            <div class="modal fade" id="productModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-product clearfix">
+                                <div class="product-images">
+                                    <div class="main-image images">
+                                        <img alt="" src="img/product/quickview.jpg">
+                                    </div>
+                                </div><!-- .product-images -->
+                                
+                                <div class="product-info">
+                                    <h1>Aenean eu tristique</h1>
+                                    <div class="price-box-3">
+                                        <div class="s-price-box">
+                                            <span class="new-price">£160.00</span>
+                                            <span class="old-price">£190.00</span>
+                                        </div>
+                                    </div>
+                                    <a href="single-product-left-sidebar.html" class="see-all">See all features</a>
+                                    <div class="quick-add-to-cart">
+                                        <form method="post" class="cart">
+                                            <div class="numbers-row">
+                                                <input type="number" id="french-hens" value="3">
+                                            </div>
+                                            <button class="single_add_to_cart_button" type="submit">Add to cart</button>
+                                        </form>
+                                    </div>
+                                    <div class="quick-desc">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero.
+                                    </div>
+                                    <div class="social-sharing">
+                                        <div class="widget widget_socialsharing_widget">
+                                            <h3 class="widget-title-modal">Share this product</h3>
+                                            <ul class="social-icons clearfix">
+                                                <li>
+                                                    <a class="facebook" href="#" target="_blank" title="Facebook">
+                                                        <i class="zmdi zmdi-facebook"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="google-plus" href="#" target="_blank" title="Google +">
+                                                        <i class="zmdi zmdi-google-plus"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="twitter" href="#" target="_blank" title="Twitter">
+                                                        <i class="zmdi zmdi-twitter"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="pinterest" href="#" target="_blank" title="Pinterest">
+                                                        <i class="zmdi zmdi-pinterest"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="rss" href="#" target="_blank" title="RSS">
+                                                        <i class="zmdi zmdi-rss"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div><!-- .product-info -->
+                            </div><!-- .modal-product -->
+                        </div><!-- .modal-body -->
+                    </div><!-- .modal-content -->
+                </div><!-- .modal-dialog -->
+            </div>
+            <!-- END Modal -->
+        </div>
+        <!-- END QUICKVIEW PRODUCT --> 

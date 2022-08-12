@@ -1,109 +1,130 @@
-<div class="container">
-    <form action="" id="checkout-form">
-        <div class="row">
-            {{!-- <div class="col-md-6">
-                <div class="coupon-discount box-shadow p-30 mb-50">
-                    <h6 class="widget-title border-left mb-20">coupon discount</h6>
-                    <p>Enter your coupon code if you have one!</p>
-                    <input type="text" name="name" placeholder="Enter your code here.">
-                    <button class="submit-btn-1 black-bg btn-hover-2" type="submit">apply coupon</button>
-                </div>
-            </div> --}}
 
-            <div class="col-md-6">
-                <div class="billing-details pr-10">
-                    <h6 class="widget-title border-left mb-20">Enter Delivery Details</h6>
-                    <label>Name</label>
-                    <input type="text" placeholder="Your Name Here..." name="name" value="">
-                    {{!-- <input type="text" placeholder="Email address here..." name="Email" value=""> --}}
-                    <label>Mobile</label>
-                    <input type="text" placeholder="10-digit mobile number" name="mobile" value="" required>
-                    <label>Pincode</label>
-                    <input type="text" placeholder="Pincode here..." name="pincode" value="" required>
-                    
-                    <input type="text" name="userId" value="{{userlog._id}}" hidden>
-                    {{!-- <input type="text" placeholder="Company neme here..."> --}}
-                    <label>Country</label>
-                    <input type="text" placeholder="Country here..." name="country" value="" required>
-                    {{!-- <select class="custom-select" name="Country" value="">
-                        <option value="defalt">country</option>
-                        <option value="c-1">Australia</option>
-                        <option value="c-2">India</option>
-                        <option value="c-3">Unitd States</option>
-                        <option value="c-4">Unitd Kingdom</option>
-                    </select> --}}
-                    <label>State</label>
-                    <input type="text" placeholder="State here..." name="state" value="" required>
-                    {{!-- <select class="custom-select" name="State" value="">
-                        <option value="defalt">State</option>
-                        <option value="c-1">Kerala</option>
-                        <option value="c-2">Dhaka</option>
-                        <option value="c-3">New York</option>
-                        <option value="c-4">London</option>
-                    </select> --}}
-                    <label>City</label>
-                    <input type="text" placeholder="City here..." name="city" value="" required>
-                    {{!-- <select class="custom-select" name="Town/City" value="">
-                        <option value="defalt">Town/City</option>
-                        <option value="c-1">Victoria</option>
-                        <option value="c-2">Chittagong</option>
-                        <option value="c-3">Boston</option>
-                        <option value="c-4">Cambridge</option>
-                    </select> --}}
-                    <label>Address</label>
-                    <textarea class="custom-textarea" placeholder="Your address here..." name="address" value="" required></textarea>
-                </div>
-            </div>
+<body>
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->  
 
-            <div class="col-md-6">
-                <div class="payment-details box-shadow p-30 mb-50">
-                    <h6 class="widget-title border-left mb-20">payment details</h6>
-                    <table>
-                        {{!-- <tr>
-                            <td class="td-title-1">Cart Subtotal</td>
-                            <td class="td-title-2">$155.00</td>
-                        </tr> --}}
-                        {{!-- <tr>
-                            <td class="td-title-1">Shipping and Handing</td>
-                            <td class="td-title-2">$15.00</td>
-                        </tr>
-                        <tr>
-                            <td class="td-title-1">Vat</td>
-                            <td class="td-title-2">$00.00</td>
-                        </tr>--}}
-                        <tr>
-                            <td class="order-total">Total Amount</td>
-                            <td class="order-total-price">$ {{total}}</td>
+    <!-- Body main wrapper start -->
+    <div class="wrapper">
 
-                        </tr>
-                        <tr>
-                        </tr>
-                    </table>
+        <!-- BREADCRUMBS SETCTION START -->
+       
+        <!-- BREADCRUMBS SETCTION END -->
 
-                    <div class="panel">
-                        <h4 class="payment-title box-shadow">
-
-                            <input type="radio" name="payment-method" value="COD" checked> COD
-                        </h4>
-                        <h4 class="payment-title box-shadow">
-
-                            <input type="radio" name="payment-method" value="ONLINE-RAZOR"> Razorpay
-                        </h4>
-                        <h4 class="payment-title box-shadow">
-
-                            <input type="radio" name="payment-method" value="ONLINE-PAYPAL"> Paypal
-                        </h4>
-                        <button class="btn btn-primary mt-3 float-right" style="width: fit-content;"
-                            type="submit">Checkout</button>
-
+        <!-- Start page content -->
+        <section id="page-content" class="page-wrapper section">
+        
+            <!-- SHOP SECTION START -->
+            <div class="shop-section mb-80">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                           
+                            <!-- single-product-area start -->
+                            <div class="single-product-area mb-80">
+                                <div class="row">
+                                    <!-- imgs-zoom-area start -->
+                                    <div class="col-lg-5">
+                                        <div class="imgs-zoom-area">
+                                            <img id="zoom_03" src="/product-images/{{productview.[0].Images.[0]}}" data-zoom-image="/product-images/{{productview.[0].Images.[0]}}"
+                                                alt="">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div id="gallery_01" class="carousel-btn slick-arrow-3 mt-30">
+                                                        <div class="p-c">
+                                                            <a href="#" data-image="img/product/2.jpg"
+                                                                data-zoom-image="img/product/2.jpg">
+                                                                <img class="zoom_03" src="/product-images/{{productview.[0].Images.[1]}}" alt="">
+                                                            </a>
+                                                        </div>
+                                                        <div class="p-c">
+                                                            <a href="#" data-image="img/product/3.jpg"
+                                                                data-zoom-image="img/product/3.jpg">
+                                                                <img class="zoom_03" src="/product-images/{{productview.[0].Images.[2]}}" alt="">
+                                                            </a>
+                                                        </div>
+                                                        <div class="p-c">
+                                                            <a href="#" data-image="img/product/4.jpg"
+                                                                data-zoom-image="img/product/4.jpg">
+                                                                <img class="zoom_03" src="/product-images/{{productview.[0].Images.[3]}}" alt="">
+                                                            </a>
+                                                        </div>
+                                                       
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- imgs-zoom-area end -->
+                                    <!-- single-product-info start -->
+                                    <div class="col-lg-7">
+                                        <div class="single-product-info">
+                                            <h1 class="text-black-1">{{productview.[0].Name}} </h1>
+                                            <h2 class="brand-name-2">{{productview.[0].Brand}}</h2>
+                                             <h4 class="brand-name-2">{{productview.[0].Description}}</h4>
+                                            <!--  hr -->
+                                            <hr>
+                                            <!-- single-pro-color-rating -->
+                                            {{!-- <div class="single-pro-color-rating clearfix">
+                                                <div class="sin-pro-color f-left">
+                                                    <p class="color-title f-left">Color</p>
+                                                    <div class="widget-color f-left">
+                                                        <ul>
+                                                            <li class="color-1"><a href="#"></a></li>
+                                                            <li class="color-2"><a href="#"></a></li>
+                                                            <li class="color-3"><a href="#"></a></li>
+                                                            <li class="color-4"><a href="#"></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div> --}}
+                                            <!-- hr -->
+                                            {{!-- <hr> --}}
+                                            <!-- plus-minus-pro-action -->
+                                            {{!-- <div class="plus-minus-pro-action clearfix">
+                                                <div class="sin-plus-minus f-left clearfix">
+                                                    <p class="color-title f-left">Qty</p>
+                                                    <div class="cart-plus-minus f-left">
+                                                        <input type="text" value="02" name="qtybutton"
+                                                            class="cart-plus-minus-box">
+                                                    </div>
+                                                </div>
+                                               
+                                            </div> --}}
+                                            <!-- plus-minus-pro-action end -->
+                                            <!-- hr -->
+                                            {{!-- <hr> --}}
+                                            <!-- single-product-price -->
+                                            <h1 class="pro-price">Price: ${{productview.[0].Price}} </h1>
+                                            <!--  hr -->
+                                            <hr>
+                                            <div>
+                                                <button onclick="addToCart('{{productview.[0]._id}}')" class="btn btn-primary">Add to cart</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- single-product-info end -->
+                                </div>
+                                <!-- single-product-tab -->
+                                
+                            </div>
+                            
+                            <!-- single-product-area end -->
+                            
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div>
-    </form>
-</div>
-<!-- START FOOTER AREA -->
+            <!-- SHOP SECTION END -->
+        
+        </section>
+        <!-- End page content -->
+        
+        <!-- START FOOTER AREA -->
         <footer id="footer" class="footer-area section">
             <div class="footer-top">
                 <div class="container-fluid">
@@ -331,77 +352,5 @@
             <!-- END Modal -->
         </div>
         <!-- END QUICKVIEW PRODUCT --> 
-<script>
-    $("#checkout-form").submit((e) => {
-        e.preventDefault()
-        $.ajax({
-            url: '/place-order',
-            method: 'post',
-            data: $('#checkout-form').serialize(),
-            success: (response) => {
-                alert(response)
-                if (response.codSuccess) {
-                    location.href = '/order-success'
-                } else if (response.razorSuccess) {
-                    razorpayPayment(response)
-                } else if (response.paypalSuccess) {
-                    //paypal
-                    for (let i = 0; i < response.links.length; i++) {
-                        if (response.links[i].rel === "approval_url") {
-                            location.href = response.links[i].href;
-                        }
-                    }
-                }
-            }
-        })
-    })
 
-    //razor section start
-    function razorpayPayment(order) {
-        var options = {
-            "key": "rzp_test_r54vlZ1MXEixsm", // Enter the Key ID generated from the Dashboard
-            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            "currency": "INR",
-            "name": "Style Cart",
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "handler": function (response) {
-
-                verifyPayment(response, order)
-            },
-            "prefill": {
-                "name": "Gaurav Kumar",
-                "email": "gaurav.kumar@example.com",
-                "contact": "9999999999"
-            },
-            "notes": {
-                "address": "Razorpay Corporate Office"
-            },
-            "theme": {
-                "color": "#3399cc"
-            }
-        };
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-    }
-    //razor section end
-    function verifyPayment(payment, order) {
-        $.ajax({
-            url: '/verify-payment',
-            data: {
-                payment,
-                order
-            },
-            method: 'post',
-            success: (response) => {
-                if (response.status) {
-                    location.href = '/order-success'
-                } else {
-                     location.href = '/cancel'
-                   // alert('Payment failed')
-                }
-            }
-        })
-    }
-</script>
+</html>

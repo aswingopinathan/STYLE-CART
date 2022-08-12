@@ -21,7 +21,7 @@ module.exports = {
             db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectId(userId) },
                 {
                     $set: {
-                        status1: false
+                        status1: false 
                     }
                 })
             resolve()

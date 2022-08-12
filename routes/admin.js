@@ -84,7 +84,6 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
 
 router.get('/edit-product/:id', async (req, res) => {
   let editproduct = await productHelpers.getproductDetails(req.params.id)
-  //console.log(editproduct);
   let getcategory = await adminHelpers.getAllCategory()
   let getsubcategory = await adminHelpers.getAllSubCategory()
   let getbrands = await adminHelpers.getAllBrands()
@@ -253,6 +252,10 @@ router.get('/delete-banner/:id', (req, res) => {
   adminHelpers.deleteBanner(banner).then(() => {
     res.redirect('/admin/show-banner')
   })
+})
+
+router.get('/sample',(req,res)=>{
+  res.render('admin/sample',{admin:true})
 })
 
 

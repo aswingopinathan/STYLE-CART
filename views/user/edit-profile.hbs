@@ -2,23 +2,26 @@
     <div class="col-md-6 m-auto">
         <div class="container mt-5 pl-5">
             <h2 class="text-center">Edit Profile</h2>
-            <form action="/edit-profile" method="post">
+            <form action="/edit-profile/{{profiledata.[0]._id}}" method="post">
             <div class="form-group">
                 <label><strong>Username</strong></label>
-                <input type="text" class="form-control"  id="firstName" name="Username" value="{{userlog.Username}}"
+                <input type="text" class="form-control"  id="firstName" name="Username" value="{{profiledata.[0].Username}}" onkeyup="validateName()"
                     required>
             </div>
+            <span id="firstName-error" class="text-danger my-auto"></span>
             <div class="form-group">
                 
                 <label><strong>Email</strong></label>
-                <input type="text" class="form-control"  id="email" name="Email" value="{{userlog.Email}}"
+                <input type="text" class="form-control"  id="email" name="Email" value="{{profiledata.[0].Email}}" onkeyup="validateEmail()"
                     id="contact-email" required>
             </div>
+            <span id="email-error" class="text-danger my-auto"></span>
             <div class="form-group">
                 <label><strong>Mobilenumber</strong></label>
-                <input type="text" class="form-control" id="phoneNumber"  name="Mobile" value="{{userlog.Mobile}}"
+                <input type="text" class="form-control" id="phoneNumber"  name="Mobile" value="{{profiledata.[0].Mobile}}" onkeyup="validatePhoneNumber()"
                     placeholder="Enter mobile number" required>
             </div>
+            <span id="phoneNumber-error" class="text-danger my-auto"></span>
             <div class="mt-3" style=" width: fit-content;">
                 <button type="submit" onclick="" value="Submit"
                         class="btn btn-primary">Submit</button>
@@ -27,3 +30,65 @@
         </div>
     </div>
 </div>
+<script>
+    var FirstNameError = document.getElementById('firstName-error');
+    var emailError = document.getElementById('email-error');
+    var phoneNumberError = document.getElementById('phoneNumber-error')
+    
+
+   function validateName(){
+    console.log("any")
+    var FirstName = document.getElementById('firstName').value;
+
+      if (FirstName.length == 0) {
+        FirstNameError.innerHTML = "Name is required";
+        return false;
+      }
+      if (!FirstName.match(/^([A-Za-z])+$/)) {
+        FirstNameError.innerHTML = "Only letters";
+        return false;
+      }
+      if (FirstName.length < 3) {
+        FirstNameError.innerHTML = "Enter a valid name";
+        return false;
+      }
+      FirstNameError.innerHTML = ""
+      return true
+   }
+    function validateEmail() {
+      var email = document.getElementById('email').value;
+
+      if (email.length == 0) {
+        emailError.innerHTML = "Email is required";
+        return false;
+
+      }
+      if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+        emailError.innerHTML = "Email is invalid";
+        return false;
+      }
+      emailError.innerHTML = ""
+      return true
+    }
+        function validatePhoneNumber() {
+      var phone = document.getElementById('phoneNumber').value
+      if (phone.length < 10) {
+        phoneNumberError.innerHTML = "Phone number is required"
+        return false
+      }
+      if (phone.match(/^([A-Za-z])+$/)) {
+        LphoneNumberError.innerHTML = "Only numbers";
+        return false;
+      }
+      if (!phone.match(/^\d{10}$/)) {
+        phoneNumberError.innerHTML = "Phone number is invalid"
+        return false
+      }
+
+      phoneNumberError.innerHTML = ""
+      return true
+    }
+     
+
+
+</script>

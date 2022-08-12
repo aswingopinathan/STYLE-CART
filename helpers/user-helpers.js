@@ -88,7 +88,6 @@ module.exports = {
     },
     doLogin: (userData) => {
         return new Promise(async (resolve, reject) => {
-            //let loginStatus = false
             let response = {}
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({ Email: userData.Email })
             if (user) {
@@ -285,9 +284,13 @@ module.exports = {
             let status = order['payment-method'] === 'COD' ? 'placed' : 'pending'
             let orderObj = {
                 deliveryDetails: {
-                    address: order.address,
+                    name: order.name,
+                    mobile: order.mobile,
                     pincode: order.pincode,
-                    mobile: order.mobile
+                    country: order.country,
+                    state: order.state,
+                    city: order.city,
+                    address: order.address
                 },
                 userId: objectId(order.userId),
                 paymentMethod: order['payment-method'],
@@ -297,7 +300,6 @@ module.exports = {
                 date: new Date()
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                //db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
                 console.log('order id:'+response.insertedId);
                 resolve(response.insertedId)
             })
@@ -315,7 +317,6 @@ module.exports = {
             let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
                     $match: { userId: objectId(userId) }
-
                 },
                 {
                     $unwind: '$products'
@@ -329,7 +330,6 @@ module.exports = {
                         status:1,
                         date:1,
                         deliveryDetails:1
-
                     }
                 }, 
                 {
@@ -338,7 +338,6 @@ module.exports = {
                         localField: 'item',
                         foreignField: '_id',
                         as: 'product'
-
                     }
                 },
                 {
@@ -348,7 +347,6 @@ module.exports = {
                         totalAmount: 1,
                         product: {
                             $arrayElemAt: ['$product', 0]
-
                         },
                         totalAmount: 1,
                         paymentMethod:1,
@@ -359,10 +357,6 @@ module.exports = {
                 },
             ]).toArray()
             resolve(orders)
-            // let orders = await db.get().collection(collection.ORDER_COLLECTION)
-            //     .find({ userId: objectId(userId) }).toArray()
-            // console.log(orders);
-            // resolve(orders)
         })
     },
     getOrderProducts: (orderId) => {
@@ -516,7 +510,6 @@ module.exports = {
            
         })
     },
-    ///working
     changePaymentStatus:(orderId,proId)=>{
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.ORDER_COLLECTION)
@@ -536,7 +529,6 @@ module.exports = {
             db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(proId) })
             resolve()
         })
-
     },
     cancelOrder:(orderId)=>{
         return new Promise((resolve,reject)=>{
@@ -577,7 +569,6 @@ module.exports = {
             State: userData.State,
           Pincode: userData.Pincode,
           City: userData.City,
-         
         };
         return new Promise((resolve, reject) => {
           db.get()
@@ -599,9 +590,7 @@ module.exports = {
                 console.log("getaddress");
                 resolve(response)
             })
-           
         })
-       
     },editProfile:(body,userId)=>{
         console.log(body);
         console.log(userId);
