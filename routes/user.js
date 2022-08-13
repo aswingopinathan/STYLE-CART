@@ -5,6 +5,7 @@ var router = express.Router();
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers')
 const paypal = require('paypal-rest-sdk');
+const CC = require("currency-converter-lt")
 
 
 const verifyLogin = (req, res, next) => {
@@ -188,9 +189,14 @@ router.post('/delete-cartproduct', (req, res) => {
   })
 })
 
-router.get('/place-order',verifyLogin,async(req,res)=>{
-  let total=await userHelpers.getTotalAmount(req.session.user._id)
+router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
+  if(cartCount!=0){
+    let total=await userHelpers.getTotalAmount(req.session.user._id)
   res.render('user/place-order',{userhead:true,cartCount,total,userlog})
+  }else{
+    res.redirect('/cart')
+  }
+  
 })
 
 router.post('/place-order',async(req,res)=>{
@@ -210,47 +216,54 @@ router.post('/place-order',async(req,res)=>{
         res.json(response)
       })
     }else if(req.body['payment-method']==='ONLINE-PAYPAL'){
-      userHelpers.generatePaypal(orderId,totalPrice).then((response)=>{
-        response.paypalSuccess = true
-        res.json(response)
+      userHelpers.converter(totalPrice).then((price)=>{
+        let converted = parseInt(price)
+        userHelpers.generatePaypal(orderId,converted).then((response)=>{
+          response.paypalSuccess = true
+          res.json(response)
+        })
       })
     }
   })
   console.log(req.body);
 })
-
+ 
+//paypal
 let amount;
 router.get('/success/:id', (req, res) => {
-  amount = req.session.total
-  console.log(req.params.id);
-  const payerId = req.query.PayerID;
-  const paymentId = req.query.paymentId;
-
-  const execute_payment_json = {
-    "payer_id": payerId,
-    "transactions": [{
-        "amount": {
-            "currency": "USD",
-            "total": amount
-        }
-    }]
-  }; 
-
-  paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-    if (error) {
-        console.log(error.response);
-        throw error;
-    } else {
-        //console.log(JSON.stringify(payment));
-        console.log("paypal payment succes");
-        userHelpers.changePaymentStatus(req.params.id).then(()=>{
-          userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
-            res.redirect('/order-success');
+  userHelpers.converter(req.session.total).then((price)=>{
+    let convertedamount = parseInt(price)
+    amount = convertedamount
+    console.log(req.params.id);
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+  
+    const execute_payment_json = {
+      "payer_id": payerId,
+      "transactions": [{
+          "amount": {
+              "currency": "USD",
+              "total": amount
+          }
+      }]
+    }; 
+  
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+      if (error) {
+          console.log(error.response);
+          throw error;
+      } else {
+          //console.log(JSON.stringify(payment));
+          console.log("paypal payment succes");
+          userHelpers.changePaymentStatus(req.params.id).then(()=>{
+            userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+              res.redirect('/order-success');
+            })
           })
-        })
-        
-    }
-});
+      }
+  });
+  })
+   
 }); 
 
 router.get('/cancel', (req, res) => {
@@ -265,8 +278,11 @@ router.get('/order-success',verifyCartCount,(req,res)=>{
 }) 
 
 router.get('/orders',verifyLogin,async(req,res)=>{ 
-    let orders=await userHelpers.getUserOrders(userlog._id)
-  res.render('user/orders',{userhead:true,userlog,orders,cartCount})
+    await userHelpers.deletePending().then(async()=>{
+      let orders=await userHelpers.getUserOrders(userlog._id)
+    res.render('user/orders',{userhead:true,userlog,orders,cartCount})
+    })
+    
 })
 
 router.get('/view-order-products/:id',async(req,res)=>{

@@ -342,7 +342,7 @@
                 alert(response)
                 if (response.codSuccess) {
                     location.href = '/order-success'
-                } else if (response.razorSuccess) {
+                } else if (response.razorSuccess) { 
                     razorpayPayment(response)
                 } else if (response.paypalSuccess) {
                     //paypal

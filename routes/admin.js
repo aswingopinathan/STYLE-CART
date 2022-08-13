@@ -254,6 +254,7 @@ router.get('/delete-banner/:id', (req, res) => {
   })
 })
 
+//testing
 router.get('/sample',(req,res)=>{
   res.render('admin/sample',{admin:true})
 })

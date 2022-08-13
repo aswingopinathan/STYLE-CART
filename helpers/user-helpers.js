@@ -12,6 +12,8 @@ const { resolve } = require('node:path');
 const paypal = require('paypal-rest-sdk');
 const { log } = require('node:console');
 
+const CC = require("currency-converter-lt");
+
 var instance = new Razorpay({
     key_id: process.env.KEY_ID,
     key_secret: process.env.KEY_SECRET,
@@ -297,7 +299,8 @@ module.exports = {
                 products: products,
                 totalAmount: total,
                 status: status,
-                date: new Date()
+                date: new Date().toDateString()
+               
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
                 console.log('order id:'+response.insertedId);
@@ -354,8 +357,9 @@ module.exports = {
                         date:1,
                         deliveryDetails:1
                     }
-                },
+                }
             ]).toArray()
+            
             resolve(orders)
         })
     },
@@ -463,7 +467,7 @@ module.exports = {
               let hmac = createHmac('sha256', process.env.KEY_SECRET);
               hmac.update(details['payment[razorpay_order_id]'] + "|" + details['payment[razorpay_payment_id]']);
               hmac=hmac.digest('hex')
-              if(hmac==details['payment[razorpay_signature]']){
+              if(hmac==details['payment[razorpay_signature]']){  
                 resolve()
               }else{
                 reject()
@@ -625,5 +629,26 @@ module.exports = {
             let category = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
             resolve(category)
         })
-    }
+    },
+    deletePending: ()=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION).deleteOne({status:'pending'})
+            resolve()
+        })
+    },
+    converter: (price) => {
+        return new Promise((resolve, reject) => {
+         
+            let currencyConverter = new CC({
+              from: "INR",
+              to: "USD",
+              amount: price,
+              isDecimalComma: false,
+            });
+          currencyConverter.convert().then((response) => {
+           resolve(response)
+          });
+        });
+     }
 }
+ 

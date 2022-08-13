@@ -92,7 +92,7 @@
                                                                     <p> Color: Black, White</p> --}}
                                                                 </div>
                                                             </td>
-                                                            <td class="product-price">{{this.product.Price}}</td>
+                                                            <td class="product-price">₹{{this.product.Price}}</td>
                                                             {{!-- {{/each}} --}}
                                                             <td >
                                                                 {{!-- <div class="cart-plus-minus f-left">
@@ -126,7 +126,7 @@
                                             <div class="d-flex justify-content-end">
                                                     <div>
                                                         {{#if cartCount}}
-                                                        <h3>TOTAL: $ <span id="total">{{totalValue}}</span></h3><br>
+                                                        <h3>TOTAL: ₹ <span id="total">{{totalValue}}</span></h3><br>
                                                         <a href="/place-order" class="btn btn-success" >Place Order</a>
                                                         {{else}}
                                                         <h3>Cart is empty</h3><br>
