@@ -259,6 +259,117 @@ router.get('/sample',(req,res)=>{
   res.render('admin/sample',{admin:true})
 })
 
+//chart section start
+router.get("/dashboard",async(req, res) => {
+  let cod =await adminHelpers.codTotal()
+  let razorpay = await adminHelpers.razorTotal();
+  let paypal = await adminHelpers.paypalTotal();
+  let orders = await adminHelpers.getAllOrders();
+  let total = orders.length
+  let clients = await productHelpers.getAlluser();
+  let users = clients.length;
+  let weekly = 0;
+  let monthly = 0;
+  let yearly = 0;
+  productManagement.getGraphDetails().then(async(data) => {
+    let temp = data;
+    // console.log(temp);
+    await temp.map((det) => {
+     
+      if (det.status != "cancelled") {
+        weekly = weekly + det.totalAmount;
+      }
+    });
 
+    productManagement.getMonthDetails().then(async (msales) => {
+    let temp2 = msales
+      await temp2.map((det) => {
+       
+        if (det.status != "cancelled") {
+          monthly = monthly + det.totalAmount;
+        }
+      });
+      
+    })
+    productManagement.getYearDetails().then(async (ysales) => {
+      let temp3 = ysales;
+      await temp3.map((det) => {
+        console.log(det.totalAmount);
+        if (det.status != "cancelled") {
+          yearly = yearly + det.totalAmount;
+        }
+      });
+      
+    });
+
+    //first try
+    await adminHelpers.getLastweekOrders().then((response) => {
+      res.render("admin/dashboard", {
+        admin: true,
+        cod,
+        razorpay,
+        paypal,
+        total,
+        users,
+        weekly,
+        monthly,
+        yearly,
+      });
+    });
+  });
+
+}) 
+//chart section end
+
+//coupon section
+router.get('/show-coupon', (req, res) => {
+  adminHelpers.getAllCoupon().then((coupon) => {
+    res.render('admin/show-coupon', { admin: true, coupon })
+  })
+})
+
+router.get('/add-coupon', (req, res) => {
+  res.render('admin/add-coupon', { admin: true })
+})
+
+router.post('/add-coupon', (req, res) => {
+  adminHelpers.addCoupon(req.body).then(() => {
+    res.redirect('/admin/show-coupon')
+  })
+})
+
+router.get('/delete-coupon/:id', (req, res) => {
+  let couponId = req.params.id
+  console.log(couponId);
+  adminHelpers.deleteCoupon(couponId).then(() => {
+    res.redirect('/admin/show-coupon')
+  })
+})
+
+//offercategory//working
+router.get('/show-offer-category', (req, res) => {
+  adminHelpers.getAllCategoryOffer().then((coupon) => {
+    res.render('admin/show-offer-category', { admin: true, coupon })
+  })
+})
+
+router.get('/add-offer-category', (req, res) => {
+  res.render('admin/add-offer-category', { admin: true })
+})
+
+router.post('/add-offer-category', (req, res) => {
+  adminHelpers.addOfferCategory(req.body).then(() => {
+    res.redirect('/admin/show-offer-category')
+  })
+})
+
+router.get('/delete-offer-category/:id', (req, res) => {
+  let couponId = req.params.id
+  console.log(couponId);
+  adminHelpers.deleteOfferCategory(couponId).then(() => {
+    res.redirect('/admin/show-offer-category')
+  })
+})
+ 
 
 module.exports = router;

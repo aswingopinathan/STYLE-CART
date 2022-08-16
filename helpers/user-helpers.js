@@ -393,7 +393,8 @@ module.exports = {
                         Brands:'$product.Brands',
                         SubCategory:'$product.SubCategory',
                         Images:'$product.Images',
-                        Price:'$product.Price'
+                        Price:'$product.Price',
+                        quantity:1
                     }
                 },
                 {
@@ -431,7 +432,8 @@ module.exports = {
                           SubCategory:'$SubCategory.Name',
                           Brands:'$Brands.Name',
                           Images:1,
-                          Price:1
+                          Price:1,
+                          quantity:1
                     }
                 }
             ]).toArray()
@@ -649,6 +651,26 @@ module.exports = {
            resolve(response)
           });
         });
-     }
+     },
+     //stock status
+    //  changeStockStatus:(proId)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         db.get().collection(collection.PRODUCT_COLLECTION)
+    //     })
+    //  },
+     stockManagement: (productData) => {
+        return new Promise((resolve, reject) => {
+          for (let i = 0; i < productData.length; i++) {
+           // console.log(productData[i].quantity);
+           // console.log(productData[i].item);
+            db.get()
+              .collection(collection.PRODUCT_COLLECTION)
+              .updateOne( 
+                { _id: objectId(productData[i].item) },
+                { $inc: { Stock: -productData[i].quantity } }
+              );
+          }resolve()
+        });
+      }
 }
  

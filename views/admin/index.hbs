@@ -1,4 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
 <body>
 
     <!-- Sidebar -->
@@ -127,192 +129,93 @@
                     </div>
                     <!-- end col -->
 
-                    {{!-- <div class="col-xl-4">
+                    <div class="col-xl-4">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <h4 class="mt-0 header-title mb-4">Donut Chart</h4>
+                                <h4 class="mt-0 header-title mb-4">Pie Chart</h4>
 
                                 <div id="morris-donut-example" class="morris-charts morris-chart-height"></div>
 
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <!-- end col -->
                 </div>
                 <!-- end row -->
-                
- <div style="width: 700px; height: 1400px;">
-        <canvas id="myChart"></canvas>
-    </div>
-    <script>
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-        </script>
+
+                <div class="d-flex">
+                    <div style="width: 700px; height: 1400px;">
+                        <canvas id="mybarChart"></canvas>
+                    </div>
+                    <div style="width: 700px; height: 1400px;">
+                        <canvas id="mypieChart"></canvas>
+                    </div>
+                </div>
+                <script>
 
 
-                <!-- START ROW 
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card m-b-30">
-                                <div class="card-body">
-                                    <h4 class="mt-0 header-title mb-4">Active Deals</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Amount</th>
-                                                    <th scope="col">Contact</th>
-                                                    <th scope="col">Location</th>
-                                                    <th scope="col" colspan="2">Date</th>
+                    //bar chart
+                    var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+                    var yValues = [55, 49, 44, 24, 15];
+                    var barColors = ["red", "green", "blue", "orange", "brown"];
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Philip Smead</td>
-                                                    <td><span class="badge badge-success">Delivered</span></td>
-                                                    <td>$9,420,000</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-2.jpg" alt="" class="thumb-md rounded-circle mr-2"> Philip Smead
-                                                        </div>
-                                                    </td>
-                                                    <td>Houston, TX 77074</td>
-                                                    <td>15/1/2018</td>
+                    new Chart("mybarChart", {
+                        type: "bar",
+                        data: {
+                            labels: xValues,
+                            datasets: [{
+                                backgroundColor: barColors,
+                                data: yValues
+                            }]
+                        },
+                        options: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "World Wine Production 2018"
+                            }
+                        }
+                    });
 
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Brent Shipley</td>
-                                                    <td><span class="badge badge-warning">Pending</span></td>
-                                                    <td>$3,120,000</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-3.jpg" alt="" class="thumb-md rounded-circle mr-2"> Brent Shipley
-                                                        </div>
-                                                    </td>
-                                                    <td>Oakland, CA 94612</td>
-                                                    <td>16/1/2019</td>
+                    //pie chart
+                    var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+                    var yValues = [55, 49, 44, 24, 15];
+                    var barColors = [
+                        "#b91d47",
+                        "#00aba9",
+                        "#2b5797",
+                        "#e8c3b9",
+                        "#1e7145"
+                    ];
 
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Robert Sitton</td>
-                                                    <td><span class="badge badge-success">Delivered</span></td>
-                                                    <td>$6,360,000</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-4.jpg" alt="" class="thumb-md rounded-circle mr-2"> Robert Sitton
-                                                        </div>
-                                                    </td>
-                                                    <td>Hebron, ME 04238</td>
-                                                    <td>17/1/2019</td>
+                    new Chart("mypieChart", {
+                        type: "pie",
+                        data: {
+                            labels: xValues,
+                            datasets: [{
+                                backgroundColor: barColors,
+                                data: yValues
+                            }]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: "World Wide Wine Production 2018"
+                            }
+                        }
+                    });
+                </script>
 
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Alberto Jackson</td>
-                                                    <td><span class="badge badge-danger">Cancel</span></td>
-                                                    <td>$5,200,000</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-5.jpg" alt="" class="thumb-md rounded-circle mr-2"> Alberto Jackson
-                                                        </div>
-                                                    </td>
-                                                    <td>Salinas, CA 93901</td>
-                                                    <td>18/1/2019</td>
 
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>David Sanchez</td>
-                                                    <td><span class="badge badge-success">Delivered</span></td>
-                                                    <td>$7,250,000</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-6.jpg" alt="" class="thumb-md rounded-circle mr-2"> David Sanchez
-                                                        </div>
-                                                    </td>
-                                                    <td>Cincinnati, OH 45202</td>
-                                                    <td>19/1/2019</td>
 
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div> 
-                     END ROW -->
+                <!-- container-fluid -->
 
             </div>
-            <!-- container-fluid -->
-
-        </div>
-        <!-- content -->
+            <!-- content -->
 
 
 
-        
+
 </body>
 
 </html>

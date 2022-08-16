@@ -202,12 +202,13 @@ router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
 router.post('/place-order',async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
   let totalPrice=await userHelpers.getTotalAmount(req.body.userId)
-  req.session.deletecartproduct=req.body.userId
+  req.session.cartProductDetails=products
   req.session.total=totalPrice
   userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
     req.session.neworderId=orderId
     if(req.body['payment-method']==='COD'){
-      userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+      userHelpers.cartClearing(userlog._id).then(()=>{
+        userHelpers.stockManagement(products)
         res.json({codSuccess:true})
       })
     }else if(req.body['payment-method']==='ONLINE-RAZOR'){
@@ -255,8 +256,9 @@ router.get('/success/:id', (req, res) => {
       } else {
           //console.log(JSON.stringify(payment));
           console.log("paypal payment succes");
+          userHelpers.stockManagement(req.session.cartProductDetails)
           userHelpers.changePaymentStatus(req.params.id).then(()=>{
-            userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+            userHelpers.cartClearing(userlog._id).then(()=>{
               res.redirect('/order-success');
             })
           })
@@ -272,7 +274,7 @@ router.get('/cancel', (req, res) => {
   })
   
 });
-
+//stockmanagement
 router.get('/order-success',verifyCartCount,(req,res)=>{
   res.render('user/order-success',{userhead:true,userlog,cartCount})
 }) 
@@ -288,18 +290,20 @@ router.get('/orders',verifyLogin,async(req,res)=>{
 router.get('/view-order-products/:id',async(req,res)=>{
   console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
+  //let orders=await userHelpers.getUserOrders(userlog._id)
   res.render('user/view-order-products',{userhead:true,userlog,products})
 })
 
-router.post('/verify-payment',(req,res)=>{
+router.post('/verify-payment',(req,res)=>{ 
 console.log(req.body);
 userHelpers.verifyPayment(req.body).then(()=>{
 userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   console.log("Payment Success");
-  userHelpers.cartClearing(req.session.deletecartproduct).then(()=>{
+  userHelpers.stockManagement(req.session.cartProductDetails)
+  userHelpers.cartClearing(userlog._id).then(()=>{
     res.json({status:true})
-  })
-}) 
+  }) 
+})  
 }).catch(()=>{
   console.log(err);
   res.json({status:false,errMsg:''})
@@ -365,6 +369,10 @@ router.post('/edit-profile/:id',(req,res)=>{
   userHelpers.editProfile(req.body,req.params.id).then(()=>{
     res.redirect('/profile')
   })
+})
+
+router.get('/coupon',(req,res)=>{
+
 })
 
 

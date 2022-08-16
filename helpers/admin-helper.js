@@ -21,7 +21,7 @@ module.exports = {
             db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectId(userId) },
                 {
                     $set: {
-                        status1: false 
+                        status1: false
                     }
                 })
             resolve()
@@ -54,7 +54,7 @@ module.exports = {
     deleteCategory: (catId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ _id: objectId(catId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({Category: objectId(catId)}).then(()=>{
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Category: objectId(catId) }).then(() => {
                     resolve()
                 })
             })
@@ -76,7 +76,7 @@ module.exports = {
     deleteSubCategory: (subId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.SUB_CATEGORY_COLLECTION).deleteOne({ _id: objectId(subId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({SubCategory: objectId(subId)}).then(()=>{
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ SubCategory: objectId(subId) }).then(() => {
                     resolve()
                 })
             })
@@ -98,7 +98,7 @@ module.exports = {
     deleteBrands: (brandId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.BRAND_COLLECTION).deleteOne({ _id: objectId(brandId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({Brands: objectId(brandId)}).then(()=>{
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Brands: objectId(brandId) }).then(() => {
                     resolve()
                 })
             })
@@ -111,7 +111,7 @@ module.exports = {
             console.log(orders);
             resolve(orders)
         })
-    },getOrderProductsAdmin: (orderId) => {
+    }, getOrderProductsAdmin: (orderId) => {
         return new Promise(async (resolve, reject) => {
             let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
@@ -135,46 +135,46 @@ module.exports = {
                     }
                 },
                 {
-                    $project:{
-                        Name:'$product.Name',
-                        Category:'$product.Category',
-                        subcategory:'$product.SubCategory',
-                        Brands:'$product.Brands',
-                        Price:'$product.Price',
-                        Images:'$product.Images'
+                    $project: {
+                        Name: '$product.Name',
+                        Category: '$product.Category',
+                        subcategory: '$product.SubCategory',
+                        Brands: '$product.Brands',
+                        Price: '$product.Price',
+                        Images: '$product.Images'
 
                     }
                 },
                 {
-                    $lookup:{
-                        from:collection.CATEGORY_COLLECTION,
-                        localField:'Category',
-                        foreignField:'_id',
+                    $lookup: {
+                        from: collection.CATEGORY_COLLECTION,
+                        localField: 'Category',
+                        foreignField: '_id',
                         as: 'Category'
-                    } 
+                    }
                 },
                 {
-                    $lookup:{
-                        from:collection.SUB_CATEGORY_COLLECTION,
-                        localField:'SubCategory',
-                        foreignField:'_id',
+                    $lookup: {
+                        from: collection.SUB_CATEGORY_COLLECTION,
+                        localField: 'SubCategory',
+                        foreignField: '_id',
                         as: 'SubCategory'
                     }
                 },
                 {
-                    $lookup:{
-                        from:collection.BRAND_COLLECTION,
-                        localField:'Brands',
-                        foreignField:'_id',
+                    $lookup: {
+                        from: collection.BRAND_COLLECTION,
+                        localField: 'Brands',
+                        foreignField: '_id',
                         as: 'Brands'
                     }
                 },
                 {
-                    $unwind:'$Images' 
+                    $unwind: '$Images'
                 },
                 {
                     $project: {
-                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] },Name:1,Category:'$Category.Name',SubCategory:'SubCategory.Name',Brands:'$Brands.Name',Images:1,Price:1
+                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }, Name: 1, Category: '$Category.Name', SubCategory: 'SubCategory.Name', Brands: '$Brands.Name', Images: 1, Price: 1
                     }
                 }
             ]).toArray()
@@ -182,21 +182,21 @@ module.exports = {
             resolve(orderItems)
         })
     },
-    adminCancelOrder:(orderId)=>{
-        return new Promise((resolve,reject)=>{
+    adminCancelOrder: (orderId) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION)
-            .updateOne({_id:objectId(orderId)},
-            {
-                $set:{
-                    status:'cancelled'
-                }
-            }).then((response)=>{
-                resolve(response)
-            })
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: {
+                            status: 'cancelled'
+                        }
+                    }).then((response) => {
+                        resolve(response)
+                    })
         })
     },
-    addBanner:(body)=>{
-        return new Promise((resolve,reject)=>{
+    addBanner: (body) => {
+        return new Promise((resolve, reject) => {
             let proObj = {
                 Name: body.Name,
                 Images: body.Images
@@ -216,6 +216,198 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.BANNER_COLLECTION).deleteOne({ _id: objectId(bannerData) }).then(() => {
                 resolve()
+            })
+        })
+    },//chart section
+    getGraphDetails: () => {
+        return new Promise(async (resolve, reject) => {
+            let week = await db
+                .get()
+                .collection(collection.ORDER_COLLECTION)
+                .find({
+                    timeStamp: {
+                        $gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+                    },
+                })
+                .sort({ timeStamp: -1 })
+                .toArray();
+
+            resolve(week);
+        });
+    },
+
+    getMonthDetails: () => {
+        return new Promise(async (resolve, reject) => {
+            let month = await db
+                .get()
+                .collection(collection.ORDER_COLLECTION)
+                .find({
+                    timeStamp: {
+                        $gte: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+                    },
+                })
+                .sort({ timeStamp: -1 })
+                .toArray();
+
+            resolve(month);
+        });
+    },
+
+    getYearDetails: () => {
+        return new Promise(async (resolve, reject) => {
+            let month = await db
+                .get()
+                .collection(collection.ORDER_COLLECTION)
+                .find({
+                    timeStamp: {
+                        $gte: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
+                    },
+                })
+                .sort({ timeStamp: -1 })
+                .toArray();
+
+            resolve(month);
+        });
+    },
+    getLastweekOrders: (orderId, status) => {
+        return new Promise(async (resolve, reject) => {
+          await db
+            .get()
+            .collection(collections.ORDER_COLLECTION)
+            .find({
+              timeStamp: {
+                $gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000),
+              },
+            })
+            .toArray()
+            .then((data) => {
+              resolve(data);
+            });
+        });
+      },
+    
+      codTotal: () => {
+        return new Promise(async (resolve, reject) => {
+          var codTotal = await db
+            .get()
+            .collection(collections.ORDER_COLLECTION)
+            .aggregate([
+              {
+                $match: { paymentMethod: "COD" },
+              },
+              {
+                $unwind: "$products",
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: {
+                    $sum: { $toInt: "$totalAmount" },
+                  },
+                },
+              },
+            ])
+            .toArray();
+          resolve(codTotal[0]);
+        });
+      },
+    
+      razorTotal: () => {
+        return new Promise(async (resolve, reject) => {
+          var codTotal = await db
+            .get()
+            .collection(collections.ORDER_COLLECTION)
+            .aggregate([
+              {
+                $match: { paymentMethod: "RazorPay" },
+              },
+              {
+                $unwind: "$products",
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: {
+                    $sum: { $toInt: "$totalAmount" },
+                  },
+                },
+              },
+            ])
+            .toArray();
+          resolve(codTotal[0]);
+        });
+      },
+    
+      paypalTotal: () => {
+        return new Promise(async (resolve, reject) => {
+          var codTotal = await db
+            .get()
+            .collection(collections.ORDER_COLLECTION)
+            .aggregate([
+              {
+                $match: { paymentMethod: "PayPal"},
+              },
+              {
+                $unwind: "$products",
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: {
+                    $sum: { $toInt: "$totalAmount" },
+                  },
+                },
+              },
+            ])
+            .toArray();
+          resolve(codTotal[0]);
+        });
+      },
+    //chart section end
+
+    //coupon section start
+    addCoupon: (couponData) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).insertOne(couponData).then((data) => {
+                resolve(data.insertedId)
+            })
+        })
+    },
+    getAllCoupon: () => {
+        return new Promise(async (resolve, reject) => {
+            let coupon = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+            resolve(coupon)
+        })
+    },
+    deleteCoupon: (couponId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).deleteOne({ _id: objectId(couponId) }).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Category: objectId(couponId) }).then(() => {
+                    resolve()
+                })
+            })
+        })
+    },
+    //categoryoffer start
+    addOfferCategory: (couponData) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).insertOne(couponData).then((data) => {
+                resolve(data.insertedId)
+            })
+        })
+    },
+    getAllCategoryOffer: () => {
+        return new Promise(async (resolve, reject) => {
+            let coupon = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+            resolve(coupon)
+        })
+    },
+    deleteOfferCategory: (couponId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).deleteOne({ _id: objectId(couponId) }).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Category: objectId(couponId) }).then(() => {
+                    resolve()
+                })
             })
         })
     }

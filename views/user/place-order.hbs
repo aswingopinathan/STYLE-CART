@@ -1,14 +1,45 @@
 <div class="container">
-    <form action="" id="checkout-form">
-        <div class="row">
-            {{!-- <div class="col-md-6">
+    <div class="row">
+        <div class="col-md-6">
+            <form id="coupon-form">
                 <div class="coupon-discount box-shadow p-30 mb-50">
                     <h6 class="widget-title border-left mb-20">coupon discount</h6>
                     <p>Enter your coupon code if you have one!</p>
                     <input type="text" name="name" placeholder="Enter your code here.">
                     <button class="submit-btn-1 black-bg btn-hover-2" type="submit">apply coupon</button>
                 </div>
-            </div> --}}
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="payment-details box-shadow p-30 mb-50">
+                <h6 class="widget-title border-left mb-20">payment details</h6>
+                <table>
+                    <tr>
+                        <td class="td-title-1">Cart Subtotal</td>
+                        <td class="td-title-2">$155.00</td>
+                    </tr>
+                    <tr>
+                        <td class="td-title-1">Shipping and Handing</td>
+                        <td class="td-title-2">$15.00</td>
+                    </tr>
+                    <tr>
+                        <td class="td-title-1">Vat</td>
+                        <td class="td-title-2">$00.00</td>
+                    </tr>
+                    <tr>
+                        <td class="order-total">Order Total</td>
+                        <td class="order-total-price">$170.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <form action="" id="checkout-form">
+        <div class="row">
+           
 
             <div class="col-md-6">
                 <div class="billing-details pr-10">
@@ -20,7 +51,7 @@
                     <input type="text" placeholder="10-digit mobile number" name="mobile" value="" required>
                     <label>Pincode</label>
                     <input type="text" placeholder="Pincode here..." name="pincode" value="" required>
-                    
+
                     <input type="text" name="userId" value="{{userlog._id}}" hidden>
                     {{!-- <input type="text" placeholder="Company neme here..."> --}}
                     <label>Country</label>
@@ -51,13 +82,14 @@
                         <option value="c-4">Cambridge</option>
                     </select> --}}
                     <label>Address</label>
-                    <textarea class="custom-textarea" placeholder="Your address here..." name="address" value="" required></textarea>
+                    <textarea class="custom-textarea" placeholder="Your address here..." name="address" value=""
+                        required></textarea>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="payment-details box-shadow p-30 mb-50">
-                    <h6 class="widget-title border-left mb-20">payment details</h6>
+                    <h6 class="widget-title border-left mb-20">payment method</h6>
                     <table>
                         {{!-- <tr>
                             <td class="td-title-1">Cart Subtotal</td>
@@ -102,247 +134,256 @@
             </div>
         </div>
     </form>
+
+
+
+
 </div>
 <!-- START FOOTER AREA -->
-        <footer id="footer" class="footer-area section">
-            <div class="footer-top">
-                <div class="container-fluid">
-                    <div class="plr-185">
-                        <div class="footer-top-inner gray-bg">
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-5 col-md-5">
-                                    <div class="single-footer footer-about">
-                                        <div class="footer-logo">
-                                            <img src="img/logo/logo.png" alt="">
-                                        </div>
-                                        <div class="footer-brief">
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                                Ipsum has been the subas industry's standard dummy text ever since the 1500s,
-                                            </p>
-                                            <p>When an unknown printer took a galley of type and If you are going to use a
-                                                passage of Lorem Ipsum scrambled it to make.</p>
-                                        </div>
-                                        <ul class="footer-social">
-                                            <li>
-                                                <a class="facebook" href="" title="Facebook"><i
-                                                        class="zmdi zmdi-facebook"></i></a>
-                                            </li>
-                                            <li>
-                                                <a class="google-plus" href="" title="Google Plus"><i
-                                                        class="zmdi zmdi-google-plus"></i></a>
-                                            </li>
-                                            <li>
-                                                <a class="twitter" href="" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
-                                            </li>
-                                            <li>
-                                                <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
+<footer id="footer" class="footer-area section">
+    <div class="footer-top">
+        <div class="container-fluid">
+            <div class="plr-185">
+                <div class="footer-top-inner gray-bg">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-5">
+                            <div class="single-footer footer-about">
+                                <div class="footer-logo">
+                                    <img src="img/logo/logo.png" alt="">
                                 </div>
-                                <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
-                                    <div class="single-footer">
-                                        <h4 class="footer-title border-left">Shipping</h4>
-                                        <ul class="footer-menu">
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount Products</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell Products</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular Products</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Special Products</span></a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="footer-brief">
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                        Ipsum has been the subas industry's standard dummy text ever since the 1500s,
+                                    </p>
+                                    <p>When an unknown printer took a galley of type and If you are going to use a
+                                        passage of Lorem Ipsum scrambled it to make.</p>
                                 </div>
-                                <div class="col-xl-2 col-lg-3 col-md-3">
-                                    <div class="single-footer">
-                                        <h4 class="footer-title border-left">my account</h4>
-                                        <ul class="footer-menu">
-                                            <li>
-                                                <a href="my-account.html"><i class="zmdi zmdi-circle"></i><span>My
-                                                        Account</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="wishlist.html"><i class="zmdi zmdi-circle"></i><span>My
-                                                        Wishlist</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign In</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="login.html"><i
-                                                        class="zmdi zmdi-circle"></i><span>Registration</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
-                                                        out</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="order.html"><i class="zmdi zmdi-circle"></i><span>Oder
-                                                        Complete</span></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4">
-                                    <div class="single-footer">
-                                        <h4 class="footer-title border-left">Get in touch</h4>
-                                        <div class="footer-message">
-                                            <form action="#">
-                                                <input type="text" name="name" placeholder="Your name here...">
-                                                <input type="text" name="email" placeholder="Your email here...">
-                                                <textarea class="height-80" name="message"
-                                                    placeholder="Your messege here..."></textarea>
-                                                <button class="submit-btn-1 mt-20 btn-hover-1" type="submit">submit
-                                                    message</button>
-                                            </form>
-                                        </div>
-                                    </div>
+                                <ul class="footer-social">
+                                    <li>
+                                        <a class="facebook" href="" title="Facebook"><i
+                                                class="zmdi zmdi-facebook"></i></a>
+                                    </li>
+                                    <li>
+                                        <a class="google-plus" href="" title="Google Plus"><i
+                                                class="zmdi zmdi-google-plus"></i></a>
+                                    </li>
+                                    <li>
+                                        <a class="twitter" href="" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
+                                    </li>
+                                    <li>
+                                        <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
+                            <div class="single-footer">
+                                <h4 class="footer-title border-left">Shipping</h4>
+                                <ul class="footer-menu">
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount Products</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell Products</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular Products</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="zmdi zmdi-circle"></i><span>Special Products</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-3">
+                            <div class="single-footer">
+                                <h4 class="footer-title border-left">my account</h4>
+                                <ul class="footer-menu">
+                                    <li>
+                                        <a href="my-account.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                Account</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="wishlist.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                Wishlist</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign In</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html"><i
+                                                class="zmdi zmdi-circle"></i><span>Registration</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
+                                                out</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="order.html"><i class="zmdi zmdi-circle"></i><span>Oder
+                                                Complete</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <div class="single-footer">
+                                <h4 class="footer-title border-left">Get in touch</h4>
+                                <div class="footer-message">
+                                    <form action="#">
+                                        <input type="text" name="name" placeholder="Your name here...">
+                                        <input type="text" name="email" placeholder="Your email here...">
+                                        <textarea class="height-80" name="message"
+                                            placeholder="Your messege here..."></textarea>
+                                        <button class="submit-btn-1 mt-20 btn-hover-1" type="submit">submit
+                                            message</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom black-bg">
-                <div class="container-fluid">
-                    <div class="plr-185">
-                        <div class="copyright">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    
+        </div>
+    </div>
+    <div class="footer-bottom black-bg">
+        <div class="container-fluid">
+            <div class="plr-185">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="footer-payment text-right">
+                                <li>
+                                    <a href="#"><img src="img/payment/1.jpg" alt=""></a>
+                                </li>
+                                <li>
+                                    <a href="#"><img src="img/payment/2.jpg" alt=""></a>
+                                </li>
+                                <li>
+                                    <a href="#"><img src="img/payment/3.jpg" alt=""></a>
+                                </li>
+                                <li>
+                                    <a href="#"><img src="img/payment/4.jpg" alt=""></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- END FOOTER AREA -->
+
+<!-- START QUICKVIEW PRODUCT -->
+<div id="quickview-wrapper">
+    <!-- Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-product clearfix">
+                        <div class="product-images">
+                            <div class="main-image images">
+                                <img alt="" src="img/product/quickview.jpg">
+                            </div>
+                        </div><!-- .product-images -->
+
+                        <div class="product-info">
+                            <h1>Aenean eu tristique</h1>
+                            <div class="price-box-3">
+                                <div class="s-price-box">
+                                    <span class="new-price">£160.00</span>
+                                    <span class="old-price">£190.00</span>
                                 </div>
-                                <div class="col-md-6">
-                                    <ul class="footer-payment text-right">
+                            </div>
+                            <a href="single-product-left-sidebar.html" class="see-all">See all features</a>
+                            <div class="quick-add-to-cart">
+                                <form method="post" class="cart">
+                                    <div class="numbers-row">
+                                        <input type="number" id="french-hens" value="3">
+                                    </div>
+                                    <button class="single_add_to_cart_button" type="submit">Add to cart</button>
+                                </form>
+                            </div>
+                            <div class="quick-desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est
+                                tristique auctor. Donec non est at libero.
+                            </div>
+                            <div class="social-sharing">
+                                <div class="widget widget_socialsharing_widget">
+                                    <h3 class="widget-title-modal">Share this product</h3>
+                                    <ul class="social-icons clearfix">
                                         <li>
-                                            <a href="#"><img src="img/payment/1.jpg" alt=""></a>
+                                            <a class="facebook" href="#" target="_blank" title="Facebook">
+                                                <i class="zmdi zmdi-facebook"></i>
+                                            </a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="img/payment/2.jpg" alt=""></a>
+                                            <a class="google-plus" href="#" target="_blank" title="Google +">
+                                                <i class="zmdi zmdi-google-plus"></i>
+                                            </a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="img/payment/3.jpg" alt=""></a>
+                                            <a class="twitter" href="#" target="_blank" title="Twitter">
+                                                <i class="zmdi zmdi-twitter"></i>
+                                            </a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="img/payment/4.jpg" alt=""></a>
+                                            <a class="pinterest" href="#" target="_blank" title="Pinterest">
+                                                <i class="zmdi zmdi-pinterest"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="rss" href="#" target="_blank" title="RSS">
+                                                <i class="zmdi zmdi-rss"></i>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- END FOOTER AREA -->
-
-        <!-- START QUICKVIEW PRODUCT -->
-        <div id="quickview-wrapper">
-            <!-- Modal -->
-            <div class="modal fade" id="productModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="modal-product clearfix">
-                                <div class="product-images">
-                                    <div class="main-image images">
-                                        <img alt="" src="img/product/quickview.jpg">
-                                    </div>
-                                </div><!-- .product-images -->
-                                
-                                <div class="product-info">
-                                    <h1>Aenean eu tristique</h1>
-                                    <div class="price-box-3">
-                                        <div class="s-price-box">
-                                            <span class="new-price">£160.00</span>
-                                            <span class="old-price">£190.00</span>
-                                        </div>
-                                    </div>
-                                    <a href="single-product-left-sidebar.html" class="see-all">See all features</a>
-                                    <div class="quick-add-to-cart">
-                                        <form method="post" class="cart">
-                                            <div class="numbers-row">
-                                                <input type="number" id="french-hens" value="3">
-                                            </div>
-                                            <button class="single_add_to_cart_button" type="submit">Add to cart</button>
-                                        </form>
-                                    </div>
-                                    <div class="quick-desc">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero.
-                                    </div>
-                                    <div class="social-sharing">
-                                        <div class="widget widget_socialsharing_widget">
-                                            <h3 class="widget-title-modal">Share this product</h3>
-                                            <ul class="social-icons clearfix">
-                                                <li>
-                                                    <a class="facebook" href="#" target="_blank" title="Facebook">
-                                                        <i class="zmdi zmdi-facebook"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="google-plus" href="#" target="_blank" title="Google +">
-                                                        <i class="zmdi zmdi-google-plus"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="twitter" href="#" target="_blank" title="Twitter">
-                                                        <i class="zmdi zmdi-twitter"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="pinterest" href="#" target="_blank" title="Pinterest">
-                                                        <i class="zmdi zmdi-pinterest"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="rss" href="#" target="_blank" title="RSS">
-                                                        <i class="zmdi zmdi-rss"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div><!-- .product-info -->
-                            </div><!-- .modal-product -->
-                        </div><!-- .modal-body -->
-                    </div><!-- .modal-content -->
-                </div><!-- .modal-dialog -->
-            </div>
-            <!-- END Modal -->
-        </div>
-        <!-- END QUICKVIEW PRODUCT --> 
+                        </div><!-- .product-info -->
+                    </div><!-- .modal-product -->
+                </div><!-- .modal-body -->
+            </div><!-- .modal-content -->
+        </div><!-- .modal-dialog -->
+    </div>
+    <!-- END Modal -->
+</div>
+<!-- END QUICKVIEW PRODUCT -->
 <script>
     $("#checkout-form").submit((e) => {
         e.preventDefault()
+
         $.ajax({
             url: '/place-order',
             method: 'post',
             data: $('#checkout-form').serialize(),
             success: (response) => {
-                alert(response)
+                // alert(response)
+                //swal("order created")
+                swal("Good job!", "order created", "success");
                 if (response.codSuccess) {
                     location.href = '/order-success'
-                } else if (response.razorSuccess) { 
+                } else if (response.razorSuccess) {
                     razorpayPayment(response)
                 } else if (response.paypalSuccess) {
                     //paypal
@@ -398,10 +439,24 @@
                 if (response.status) {
                     location.href = '/order-success'
                 } else {
-                     location.href = '/cancel'
-                   // alert('Payment failed')
+                    location.href = '/cancel'
+                    // alert('Payment failed')
                 }
             }
         })
     }
+
+    $("#coupon-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+
+            url: '/coupon',
+            method: 'post',
+            data: $('#coupon-form').serialize(),
+            success: (response) => {
+                document.getElementById('offer-price').innerHTML = response.grandtotal
+                document.getElementById('total-price').innerHTML = response.discountamount
+            }
+        })
+    })
 </script>

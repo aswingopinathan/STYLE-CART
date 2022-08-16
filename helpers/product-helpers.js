@@ -56,6 +56,8 @@ module.exports = {
     },
     addproduct: (body) => {
         console.log(body);
+        Stock=parseInt(body.Stock)
+        body.Stock=Stock
         return new Promise(async (resolve, reject) => {
             let Category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ Name: body.Category })
             console.log(Category);

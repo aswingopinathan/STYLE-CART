@@ -7,5 +7,7 @@ module.exports = {
     BRAND_COLLECTION: 'brand',
     ORDER_COLLECTION: 'order',
     BANNER_COLLECTION: 'banner',
-    ADDRESS_COLLECTION: 'address'
+    ADDRESS_COLLECTION: 'address',
+    COUPON_COLLECTION: 'coupon',
+    CATEGORY_OFFER_COLLECTION: 'offercategory'
 }
