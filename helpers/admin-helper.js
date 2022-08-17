@@ -141,7 +141,8 @@ module.exports = {
                         subcategory: '$product.SubCategory',
                         Brands: '$product.Brands',
                         Price: '$product.Price',
-                        Images: '$product.Images'
+                        Images: '$product.Images',
+                        quantity:1
 
                     }
                 },
@@ -191,6 +192,7 @@ module.exports = {
                             status: 'cancelled'
                         }
                     }).then((response) => {
+                        response.cancel=true
                         resolve(response)
                     })
         })
@@ -410,5 +412,21 @@ module.exports = {
                 })
             })
         })
-    }
+    },
+    getCurrentOrderAdmin: (orderId)=>{
+        return new Promise((resolve,reject)=>{
+           let orders= db.get()
+            .collection(collection.ORDER_COLLECTION)
+            .findOne({_id:objectId(orderId)})
+            resolve(orders)
+        })
+      },
+      getOrderStatus: (orderId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get()
+            .collection(collection.ORDER_COLLECTION)
+            .findOne({status:'cancelled'})
+            resolve()
+        })
+      }
 }

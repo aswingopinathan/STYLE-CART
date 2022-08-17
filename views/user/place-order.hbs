@@ -1,45 +1,43 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <form id="coupon-form">
                 <div class="coupon-discount box-shadow p-30 mb-50">
                     <h6 class="widget-title border-left mb-20">coupon discount</h6>
                     <p>Enter your coupon code if you have one!</p>
-                    <input type="text" name="name" placeholder="Enter your code here.">
+                    <input type="text" name="coupen" placeholder="Enter your code here.">
                     <button class="submit-btn-1 black-bg btn-hover-2" type="submit">apply coupon</button>
                 </div>
             </form>
         </div>
-        <div class="col-md-6">
+        {{!-- <div class="col-md-6">
             <div class="payment-details box-shadow p-30 mb-50">
                 <h6 class="widget-title border-left mb-20">payment details</h6>
                 <table>
                     <tr>
                         <td class="td-title-1">Cart Subtotal</td>
-                        <td class="td-title-2">$155.00</td>
+                        <td class="td-title-2">{{total}}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="td-title-1">Offer discount</td>
+                        <td class="td-title-2" id="offer-price">0</td>
                     </tr>
                     <tr>
-                        <td class="td-title-1">Shipping and Handing</td>
-                        <td class="td-title-2">$15.00</td>
+                        <td class="order-total">Grand Total</td>
+                        <td class="td-title-2" id="total-price">{{total}}</td>
+
                     </tr>
-                    <tr>
-                        <td class="td-title-1">Vat</td>
-                        <td class="td-title-2">$00.00</td>
-                    </tr>
-                    <tr>
-                        <td class="order-total">Order Total</td>
-                        <td class="order-total-price">$170.00</td>
-                    </tr>
+
                 </table>
             </div>
-        </div>
+        </div> --}}
     </div>
 
 
 
     <form action="" id="checkout-form">
         <div class="row">
-           
 
             <div class="col-md-6">
                 <div class="billing-details pr-10">
@@ -86,52 +84,68 @@
                         required></textarea>
                 </div>
             </div>
-
+            {{!-- --}}
             <div class="col-md-6">
-                <div class="payment-details box-shadow p-30 mb-50">
-                    <h6 class="widget-title border-left mb-20">payment method</h6>
-                    <table>
-                        {{!-- <tr>
-                            <td class="td-title-1">Cart Subtotal</td>
-                            <td class="td-title-2">$155.00</td>
-                        </tr> --}}
-                        {{!-- <tr>
-                            <td class="td-title-1">Shipping and Handing</td>
-                            <td class="td-title-2">$15.00</td>
-                        </tr>
-                        <tr>
-                            <td class="td-title-1">Vat</td>
-                            <td class="td-title-2">$00.00</td>
-                        </tr>--}}
-                        <tr>
-                            <td class="order-total">Total Amount</td>
-                            <td class="order-total-price">$ {{total}}</td>
+                <div class="col-md-12">
+                    <div class="payment-details box-shadow p-30 mb-50">
+                        <h6 class="widget-title border-left mb-20">payment details</h6>
+                        <table>
+                            <tr>
+                                <td class="td-title-1">Cart Subtotal</td>
+                                <td class="td-title-2">{{total}}</td>
+                            </tr>
 
-                        </tr>
-                        <tr>
-                        </tr>
-                    </table>
+                            <tr>
+                                <td class="td-title-1">Offer discount</td>
+                                <td class="td-title-2" id="offer-price">0</td>
+                            </tr>
+                            <tr>
+                                <td class="order-total">Grand Total</td>
+                                <td class="td-title-2" id="total-price">{{total}}</td>
+                                {{!-- <h3 id="total-price">{{total}}</h3> --}}
+                                {{!-- <td class="order-total-price">$170.00</td> --}}
+                            </tr>
 
-                    <div class="panel">
-                        <h4 class="payment-title box-shadow">
+                        </table>
+                    </div>
+                </div>
 
-                            <input type="radio" name="payment-method" value="COD" checked> COD
-                        </h4>
-                        <h4 class="payment-title box-shadow">
+                <div class="col-md-12">
+                    <div class="payment-details box-shadow p-30 mb-50">
+                        <h6 class="widget-title border-left mb-20">payment method</h6>
+                        {{!-- <table>
 
-                            <input type="radio" name="payment-method" value="ONLINE-RAZOR"> Razorpay
-                        </h4>
-                        <h4 class="payment-title box-shadow">
+                            <tr>
+                                <td class="order-total">Total Amount</td>
+                                <td class="order-total-price">$ {{total}}</td>
 
-                            <input type="radio" name="payment-method" value="ONLINE-PAYPAL"> Paypal
-                        </h4>
-                        <button class="btn btn-primary mt-3 float-right" style="width: fit-content;"
-                            type="submit">Checkout</button>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </table> --}}
+
+                        <div class="panel">
+                            <h4 class="payment-title box-shadow">
+
+                                <input type="radio" name="payment-method" value="COD" checked> COD
+                            </h4>
+                            <h4 class="payment-title box-shadow">
+
+                                <input type="radio" name="payment-method" value="ONLINE-RAZOR"> Razorpay
+                            </h4>
+                            <h4 class="payment-title box-shadow">
+
+                                <input type="radio" name="payment-method" value="ONLINE-PAYPAL"> Paypal
+                            </h4>
+                            <button class="btn btn-primary mt-3 float-right" style="width: fit-content;"
+                                type="submit">Checkout</button>
+
+                        </div>
 
                     </div>
-
                 </div>
             </div>
+            {{!-- --}}
         </div>
     </form>
 
@@ -380,9 +394,12 @@
             success: (response) => {
                 // alert(response)
                 //swal("order created")
-                swal("Good job!", "order created", "success");
+                
                 if (response.codSuccess) {
-                    location.href = '/order-success'
+                    swal("Success!", "order created", "success").then(()=>{
+                        location.href = '/order-success'
+                    })
+                    
                 } else if (response.razorSuccess) {
                     razorpayPayment(response)
                 } else if (response.paypalSuccess) {
@@ -437,7 +454,10 @@
             method: 'post',
             success: (response) => {
                 if (response.status) {
-                    location.href = '/order-success'
+                    swal("Success!", "order created", "success").then(()=>{
+                        location.href = '/order-success'
+                    })
+                   // location.href = '/order-success'
                 } else {
                     location.href = '/cancel'
                     // alert('Payment failed')
@@ -449,13 +469,23 @@
     $("#coupon-form").submit((e) => {
         e.preventDefault()
         $.ajax({
-
             url: '/coupon',
             method: 'post',
             data: $('#coupon-form').serialize(),
-            success: (response) => {
-                document.getElementById('offer-price').innerHTML = response.grandtotal
-                document.getElementById('total-price').innerHTML = response.discountamount
+            success: (amount) => {
+                if(amount.status){
+                    swal("Success!", "Coupon Applied", "success").then(() => {
+                    document.getElementById('offer-price').innerHTML = amount.discountamount
+                    document.getElementById('total-price').innerHTML = amount.grandtotal
+                })
+                }else{
+                    swal("Oops!", "Coupon does not exist", "error").then(() => {
+                    document.getElementById('offer-price').innerHTML = 0
+                    
+                })
+                }
+                
+
             }
         })
     })

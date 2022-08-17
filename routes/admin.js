@@ -198,17 +198,24 @@ router.get('/delete-brands/:id', (req, res) => {
 //brands section end
 
 //orders section start
+//working
 router.get('/show-orders', (req, res) => {
   adminHelpers.getAllOrders().then((orders) => {
-    res.render('admin/show-orders', { admin: true,order:orders })
+    if(req.session.cancel){
+      res.render('admin/show-orders', { admin: true,order:orders,cancel:req.session.cancel })
+      req.session.cancel=false
+    }else{
+      res.render('admin/show-orders', { admin: true,order:orders })
+    }
   })
 })
 
 router.get('/view-order-products/:id',async(req,res)=>{
   console.log(req.params.id);
   let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
+  let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
   console.log(products);
-  res.render('admin/view-order-products',{admin:true,products})
+  res.render('admin/view-order-products',{admin:true,products,orders})
 })
 //orders section end
 
@@ -218,9 +225,10 @@ router.get('/logout', (req, res) => {
   req.session.check = null
   res.redirect('/admin')
 })
-
+//workin
 router.post('/admin-cancel-order',((req,res)=>{
   adminHelpers.adminCancelOrder(req.body.product).then((response)=>{
+    req.session.cancel=response.cancel
     res.json(response)
   })
 }))

@@ -3,9 +3,7 @@
         <div class="card m-b-30">
             <div class="card-body">
                 <h4 class="mt-0 header-title mb-4 text-center">All Orders</h4>
-                {{!-- <form class="d-flex justify-content-end">
-                    <a href="/admin/add-category" class="btn btn-success" style="width: fit-content;">ADD CATEGORY</a>
-                </form><br> --}}
+
                 <div class="table-responsive">
                     <table class="table table-hover" id="productsTable">
                         <thead>
@@ -18,7 +16,7 @@
                                 <th scope="col">Amount</th>
                                 <th scope="col">Payment</th>
                                 <th scope="col">Status</th>
-                                {{!-- <th scope="col">Image</th> --}}
+
                                 <th scope="col">Details</th>
                             </tr>
                         </thead>
@@ -33,13 +31,15 @@
                                 <td>{{this.totalAmount}}</td>
                                 <td>{{this.paymentMethod}}</td>
                                 <td>{{this.status}}</td>
-                                 <td>
+                                <td>
                                     <div>
-                                        <a href="/admin/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View Products
+                                        <a href="/admin/view-order-products/{{this._id}}"
+                                            class="btn btn-primary btn-sm"> View Products
                                         </a>
                                     </div><br>
                                     <div>
-                                        <button class="btn btn-danger btn-sm" onclick="admincancelProduct('{{this._id}}')">Cancel Order</button>
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="admincancelProduct('{{this._id}}')">Cancel Order</button>
                                     </div>
                                 </td>
                             </tr>
@@ -52,19 +52,28 @@
     </div>
 </div>
 <script>
-    function admincancelProduct(proId){
+    function admincancelProduct(proId) {
         console.log("cancel from orders");
-         $.ajax({
-           url: "/admin/admin-cancel-order",
-           data: {
-             product: proId
-           },
-           method: "post",
-           success: (response) => {
-            alert("Product cancelled from orders");
-               location.reload();
-             
-           },
-         });
+        swal({
+            title: "Are you sure?",
+            text: "Product will be cancelled from orders",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "/admin/admin-cancel-order",
+                        data: {
+                            product: proId
+                        },
+                        method: "post",
+                        success: (response) => {
+                            location.reload();
+                        },
+                    });
+                }
+            });
     }
 </script>

@@ -1,23 +1,21 @@
-
-
 <body>
     <!--[if lt IE 8]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->  
+    <![endif]-->
 
     <!-- Body main wrapper start -->
     <div class="wrapper">
 
         <!-- START HEADER AREA -->
-       
+
         <!-- END HEADER AREA -->
-        
+
         <!-- START MOBILE MENU AREA -->
-        
+
         <!-- END MOBILE MENU AREA -->
 
         <!-- BREADCRUMBS SETCTION START -->
-        
+
         <!-- BREADCRUMBS SETCTION END -->
 
         <!-- Start page content -->
@@ -26,8 +24,9 @@
             <!-- SHOP SECTION START -->
             <div class="shop-section mb-80">
                 <div class="container">
+                    <h1 class="text-center">SHOPPING CART</h1><br>
                     <div class="row">
-                        <div class="col-lg-2">
+                        {{!-- <div class="col-lg-2">
                             <ul class="nav cart-tab">
                                 <li>
                                     <a class="active" href="#shopping-cart" data-bs-toggle="tab">
@@ -54,14 +53,20 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
-                        <div class="col-lg-10">
+                        </div> --}}
+                        <div class="col-lg-12">
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <!-- shopping-cart start -->
                                 <div class="tab-pane active" id="shopping-cart">
                                     <div class="shopping-cart-content">
                                         {{!-- <form action="#"> --}}
+
+                                            {{#if products}}
+                                            {{else}}
+                                            <h3 class="text-center">Cart is empty</h3><br>
+                                            {{/if}}
+                                            {{#if cartTable}}
                                             <div class="table-content table-responsive mb-50">
                                                 <table class="text-center">
                                                     <thead>
@@ -77,72 +82,74 @@
                                                         <!-- tr -->
                                                         {{#each products}}
                                                         <tr>
-                                                            {{!-- {{#each product}} --}}
                                                             <td class="product-thumbnail">
                                                                 <div class="pro-thumbnail-img">
-                                                                    <img src="/product-images/{{this.product.Images.[0]}}" alt="">
+                                                                    <img src="/product-images/{{this.product.Images.[0]}}"
+                                                                        alt="">
                                                                 </div>
                                                                 <div class="pro-thumbnail-info text-left">
                                                                     <h6 class="product-title-2">
                                                                         <a href="#">{{this.product.Name}}</a>
                                                                     </h6>
-                                                                    
+
                                                                     <p>Brand: {{this.Brands}}</p>
-                                                                    {{!-- <p>Model: Grand s2</p>
-                                                                    <p> Color: Black, White</p> --}}
+
                                                                 </div>
                                                             </td>
                                                             <td class="product-price">₹{{this.product.Price}}</td>
-                                                            {{!-- {{/each}} --}}
-                                                            <td >
-                                                                {{!-- <div class="cart-plus-minus f-left">
-                                                                    <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
-                                                                     <input type="text" value="{{this.quantity}}" name="qtybutton" class="cart-plus-minus-box">
-                                                                </div>  --}}
-                                                                {{!-- <button class="cart-item-count mr-3 " onclick="changeQuantity('{{this._id}}','{{this.product._id}}','-1')">-</button>{{this.quantity}}<button class="cart-item-count ml-3 " onclick="changeQuantity('{{this._id}}','{{this.product._id}}','1')">+</button> --}}
+
+                                                            <td>
                                                                 <div class="d-flex justify-content-center">
-                                                                        <div><button class="cart-item-count mr-3 " onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../userlog._id}}','-1')">-</button></div>
-                                                                        <div id="{{this.product._id}}">{{this.quantity}}</div>
-                                                                        <div><button class="cart-item-count ml-3 " onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../userlog._id}}','1')">+</button></div>
+                                                                    <div><button class="cart-item-count mr-3 "
+                                                                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../userlog._id}}','-1')">-</button>
+                                                                    </div>
+                                                                    <div id="{{this.product._id}}">{{this.quantity}}
+                                                                    </div>
+                                                                    <div><button class="cart-item-count ml-3 "
+                                                                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../userlog._id}}','1')">+</button>
+                                                                    </div>
                                                                 </div>
-                                                                </td>
-                                                            {{!-- <td class="product-subtotal">$1020.00</td> --}} 
+                                                            </td>
+
                                                             <td class="product-remove">
-                                                           <div class="d-flex justify-content-center">
-                                                             <div>
-                                                                <button onclick="deleteProduct('{{this._id}}','{{this.product._id}}')"   class="btn btn-danger btn-md">Remove</button>
-                                                                {{!-- <a href="/delete-cartproduct/{{this._id}}" onclick="return confirm('Do you want to delete {{this.product.Name}} ?')"><i class="zmdi zmdi-close"></i></a> --}}
-                                                            </div>
-                                                           </div>
-                                                           </td>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div>
+                                                                        <button
+                                                                            onclick="deleteProduct('{{this._id}}','{{this.product._id}}')"
+                                                                            class="btn btn-danger btn-md">Remove</button>
+                                                                        {{!-- <a href="/delete-cartproduct/{{this._id}}"
+                                                                            onclick="return confirm('Do you want to delete {{this.product.Name}} ?')"><i
+                                                                                class="zmdi zmdi-close"></i></a> --}}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                         {{/each}}
-                                                    
-                                                       
+
+
                                                     </tbody>
                                                 </table>
                                             </div>
+                                            {{/if}}
                                             {{!-- total and place order section start--}}
                                             <div class="d-flex justify-content-end">
-                                                    <div>
-                                                        {{#if cartCount}}
-                                                        <h3>TOTAL: ₹ <span id="total">{{totalValue}}</span></h3><br>
-                                                        <a href="/place-order" class="btn btn-success" >Place Order</a>
-                                                        {{else}}
-                                                        <h3>Cart is empty</h3><br>
-                                                        {{/if}}
-                                                    </div>
+                                                <div>
+                                                    {{#if cartCount}}
+                                                    <h3>TOTAL: ₹ <span id="total">{{totalValue}}</span></h3><br>
+                                                    <a href="/place-order" class="btn btn-success">Place Order</a>
+                                                    {{/if}}
+
                                                 </div>
-                                           
+                                            </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- SHOP SECTION END -->             
+            <!-- SHOP SECTION END -->
 
         </section>
         <!-- End page content -->
@@ -160,10 +167,13 @@
                                             <img src="img/logo/logo.png" alt="">
                                         </div>
                                         <div class="footer-brief">
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                                Ipsum has been the subas industry's standard dummy text ever since the 1500s,
+                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry. Lorem
+                                                Ipsum has been the subas industry's standard dummy text ever since the
+                                                1500s,
                                             </p>
-                                            <p>When an unknown printer took a galley of type and If you are going to use a
+                                            <p>When an unknown printer took a galley of type and If you are going to use
+                                                a
                                                 passage of Lorem Ipsum scrambled it to make.</p>
                                         </div>
                                         <ul class="footer-social">
@@ -176,7 +186,8 @@
                                                         class="zmdi zmdi-google-plus"></i></a>
                                             </li>
                                             <li>
-                                                <a class="twitter" href="" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
+                                                <a class="twitter" href="" title="Twitter"><i
+                                                        class="zmdi zmdi-twitter"></i></a>
                                             </li>
                                             <li>
                                                 <a class="rss" href="" title="RSS"><i class="zmdi zmdi-rss"></i></a>
@@ -189,25 +200,31 @@
                                         <h4 class="footer-title border-left">Shipping</h4>
                                         <ul class="footer-menu">
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>New
+                                                        Products</span></a>
                                             </li>
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount Products</span></a>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount
+                                                        Products</span></a>
                                             </li>
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell Products</span></a>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell
+                                                        Products</span></a>
                                             </li>
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular Products</span></a>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular
+                                                        Products</span></a>
                                             </li>
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
+                                                <a href="#"><i
+                                                        class="zmdi zmdi-circle"></i><span>Manufactirers</span></a>
                                             </li>
                                             <li>
                                                 <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
                                             </li>
                                             <li>
-                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Special Products</span></a>
+                                                <a href="#"><i class="zmdi zmdi-circle"></i><span>Special
+                                                        Products</span></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -225,10 +242,12 @@
                                                         Wishlist</span></a>
                                             </li>
                                             <li>
-                                                <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                                <a href="cart.html"><i class="zmdi zmdi-circle"></i><span>My
+                                                        Cart</span></a>
                                             </li>
                                             <li>
-                                                <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign In</span></a>
+                                                <a href="login.html"><i class="zmdi zmdi-circle"></i><span>Sign
+                                                        In</span></a>
                                             </li>
                                             <li>
                                                 <a href="login.html"><i
@@ -272,8 +291,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="copyright-text">
-                                        {{!-- <p class="copy-text"> © 2021 <strong>Subas</strong> Made With <i class="zmdi zmdi-favorite" style="color: red;" aria-hidden="true"></i> By <a class="company-name" href="https://themeforest.net/user/codecarnival/portfolio">
-                                <strong> CodeCarnival</strong></a>.</p> --}}
+                                        {{!-- <p class="copy-text"> © 2021 <strong>Subas</strong> Made With <i
+                                                class="zmdi zmdi-favorite" style="color: red;" aria-hidden="true"></i>
+                                            By <a class="company-name"
+                                                href="https://themeforest.net/user/codecarnival/portfolio">
+                                                <strong> CodeCarnival</strong></a>.</p> --}}
 
                                     </div>
                                 </div>
@@ -302,59 +324,114 @@
         <!-- END FOOTER AREA -->
 
         <!--style-customizer start -->
-       
-        <!--style-customizer end --> 
+
+        <!--style-customizer end -->
     </div>
     <!-- Body main wrapper end -->
 
     {{!-- ajax for increment and decrement button --}}
     <script>
-        
-        function changeQuantity(cartId,proId,userId,count){
-    let quantity=parseInt(document.getElementById(proId).innerHTML)
-    count=parseInt(count)
-    $.ajax({
-        url:'/change-product-quantity',
-        data:{
-            cart:cartId,
-            product:proId,
-            user:userId,
-            count:count,
-            quantity:quantity
-        },
-        method:'post',
-        success:(response)=>{
-            if(response.removeProduct){
-                alert("Product removed from cart")
-                location.reload()
-            }else{
-                document.getElementById(proId).innerHTML=quantity+count
-                document.getElementById('total').innerHTML=response.total
+
+        function changeQuantity(cartId, proId, userId, count) {
+            let quantity = parseInt(document.getElementById(proId).innerHTML)
+            count = parseInt(count)
+            if (count == -1 && quantity == 1) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Product will be removed from cart!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $.ajax({
+                                url: '/change-product-quantity',
+                                data: {
+                                    cart: cartId,
+                                    product: proId,
+                                    user: userId,
+                                    count: count,
+                                    quantity: quantity
+                                },
+                                method: 'post',
+                                success: (response) => {
+                                    if (response.removeProduct) {
+                                        swal("Product removed from cart").then(() => {
+                                            location.reload()
+                                        })
+
+                                    } else {
+
+                                    }
+
+                                }
+                            })
+                        }
+                    });
+
+            } else {
+                $.ajax({
+                    url: '/change-product-quantity',
+                    data: {
+                        cart: cartId,
+                        product: proId,
+                        user: userId,
+                        count: count,
+                        quantity: quantity
+                    },
+                    method: 'post',
+                    success: (response) => {
+                        if (!response.removeProduct) {
+                            document.getElementById(proId).innerHTML = quantity + count
+                            document.getElementById('total').innerHTML = response.total
+                        } 
+
+                    }
+                })
             }
-            
         }
-    })
-}
+
+
 
         function deleteProduct(cartId, proId) {
-    console.log("delete from cart");
-         $.ajax({
-           url: "/delete-cartproduct",
-           data: {
-             cart: cartId,
-             product: proId,
-           },
-           method: "post",
-           success: (response) => {
-             if (response.removed) {
-               alert("Product Removed from cart");
-               location.reload();
-             }
-           },
-         });
-  }
+            console.log("delete from cart");
+            swal({
+                title: "Are you sure?",
+                text: "Product will be removed from cart!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: "/delete-cartproduct",
+                            data: {
+                                cart: cartId,
+                                product: proId,
+                            },
+                            method: "post",
+                            success: (response) => {
+                                if (response.removed) {
+                                    //alert("Product Removed from cart")
+                                    swal("Success!", "Product removed from cart", "success").then(() => {
+                                        location.reload();
+                                    })
 
-    
+                                }
+                            },
+
+
+                        })
+                    } else {
+                        //swal("Your imaginary file is safe!");
+                    }
+                });
+
+
+        }
+
+
     </script>
 </body>
-

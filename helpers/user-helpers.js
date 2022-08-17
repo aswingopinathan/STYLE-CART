@@ -203,12 +203,23 @@ module.exports = {
             resolve(count)
         })
     },
+    //////////////
     changeProductQuantity: (details) => {
-        details.count = parseInt(details.count)
-        details.quantity = parseInt(details.quantity)
+        // details.count = parseInt(details.count)
+        // details.quantity = parseInt(details.quantity)
         return new Promise((resolve, reject) => {
-            if (details.count == -1 && details.quantity == 1) {
-                db.get().collection(collection.CART_COLLECTION)
+            db.get().collection(collection.CART_COLLECTION)
+                    .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
+                        {
+                            $inc: { 'products.$.quantity': details.count }
+                        }).then((response) => {
+                            resolve({ status: true })
+                        })
+        })
+    },
+    removeQuantity:(details)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CART_COLLECTION)
                     .updateOne({ _id: objectId(details.cart) },
                         {
                             $pull: { products: { item: objectId(details.product) } }
@@ -216,17 +227,9 @@ module.exports = {
                             response.removeProduct = true
                             resolve(response)
                         })
-            } else {
-                db.get().collection(collection.CART_COLLECTION)
-                    .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
-                        {
-                            $inc: { 'products.$.quantity': details.count }
-                        }).then((response) => {
-                            resolve({ status: true })
-                        })
-            }
         })
     },
+    /////////////
     deleteCartProduct: (cartId, proId) => {
         return new Promise((resolve, reject) => {
             db.get()
@@ -652,12 +655,6 @@ module.exports = {
           });
         });
      },
-     //stock status
-    //  changeStockStatus:(proId)=>{
-    //     return new Promise((resolve,reject)=>{
-    //         db.get().collection(collection.PRODUCT_COLLECTION)
-    //     })
-    //  },
      stockManagement: (productData) => {
         return new Promise((resolve, reject) => {
           for (let i = 0; i < productData.length; i++) {
@@ -671,6 +668,57 @@ module.exports = {
               );
           }resolve()
         });
-      }
+      },getCurrentOrder: (orderId)=>{
+        return new Promise((resolve,reject)=>{
+           let orders= db.get()
+            .collection(collection.ORDER_COLLECTION)
+            .findOne({_id:objectId(orderId)})
+            resolve(orders)
+        })
+      },
+      coupencheck: (userId, data) => {
+       
+        let response={}
+        return new Promise(async (resolve, reject) => {
+            let coupenn = await db.get().collection(collection.COUPON_COLLECTION).findOne({ name: data.coupen })
+            console.log(coupenn);
+            if (coupenn) {
+                user = await db.get().collection(collection.COUPON_COLLECTION).findOne({ name: data.coupen, user: objectId(userId) })
+                if (user) {
+                    response.coupen=false
+                    resolve(response)
+                    console.log('failed');
+                } else {
+                    let date = new Date()
+                    let expdate = new Date(coupenn.edate)
+                    console.log(expdate);
+                    if (date <= expdate) {
+                        await db.get().collection(collection.COUPON_COLLECTION).updateOne(
+                            {
+                                name: data.coupen
+                            },
+                            {
+                                $push: {
+                                     user: objectId(userId)
+                                    
+                                }
+                            })
+                            response.coupenn = coupenn
+                            response.coupen=true
+                            resolve(response)
+                    } else {
+                        response.coupen=false
+                        resolve(response)
+                        console.log('expire');
+                    }
+                }
+
+            }else{
+                resolve(response.coupen=false)
+                console.log('invalid coupen');
+            }
+        }
+       )
+    },
 }
  

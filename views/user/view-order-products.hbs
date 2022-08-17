@@ -45,7 +45,7 @@
 
 {{!-- working --}}
 <section class="h-100 gradient-custom">
-  <div class="container py-5 h-100">
+  <div class="container-fluid py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-lg-10 col-xl-8">
         <div class="card" style="border-radius: 10px;">
@@ -97,7 +97,7 @@
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
                     </div>
                     <div class="d-flex justify-content-end mb-1">
-                      <a href="/Return-Item/{{this._id}}">Return Item</a>
+                      {{!-- <a href="/Return-Item/{{this._id}}">Return Item</a> --}}
                     </div>
 
                   </div>
@@ -105,19 +105,19 @@
               </div>
             </div>
             {{/each}}
-          {{#each orders}}
+          {{!-- {{#each orders}} --}}
             <div class="d-flex justify-content-between pt-2">
               <p class="fw-bold mb-0">Order Details</p>
-              <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>₹{{this.totalPrice}}.00</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>₹{{orders.totalAmount}}.00</p>
             </div>
 
             <div class="d-flex justify-content-between pt-2">
-              <p class="text-muted mb-0">Invoice Number : {{this._id}}</p>
+              <p class="text-muted mb-0">Invoice Number : {{orders._id}}</p>
               <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $00.00</p>
             </div>
 
             <div class="d-flex justify-content-between">
-              <p class="text-muted mb-0">Invoice Date : {{this.date}}</p>
+              <p class="text-muted mb-0">Invoice Date : {{orders.date}}</p>
               {{!-- <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p> --}}
             </div>
 
@@ -129,9 +129,9 @@
           <div class="card-footer border-0 px-4 py-5"
             style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
             <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
-              : <span class="h2 mb-0 ms-2">₹{{this.totalAmount}}.00</span></h5>
+              : <span class="h2 mb-0 ms-2">₹{{orders.totalAmount}}.00</span></h5>
           </div>
-          {{/each}} 
+          {{!-- {{/each}}  --}}
         </div>
       </div>
     </div>
