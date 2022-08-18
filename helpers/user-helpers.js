@@ -301,8 +301,9 @@ module.exports = {
                 paymentMethod: order['payment-method'],
                 products: products,
                 totalAmount: total,
-                status: status,
-                date: new Date().toDateString()
+                status: status, 
+                date: new Date().toDateString(),
+                cancel: false
                
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
@@ -323,43 +324,6 @@ module.exports = {
             let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
                     $match: { userId: objectId(userId) }
-                },
-                {
-                    $unwind: '$products'
-                },
-                {
-                    $project: {
-                        item: '$products.item',
-                        quantity: '$products.quantity',
-                        totalAmount: 1,
-                        paymentMethod:1,
-                        status:1,
-                        date:1,
-                        deliveryDetails:1
-                    }
-                }, 
-                {
-                    $lookup: {
-                        from: collection.PRODUCT_COLLECTION,
-                        localField: 'item',
-                        foreignField: '_id',
-                        as: 'product'
-                    }
-                },
-                {
-                    $project: {
-                        item: 1,
-                        quantity: 1,
-                        totalAmount: 1,
-                        product: {
-                            $arrayElemAt: ['$product', 0]
-                        },
-                        totalAmount: 1,
-                        paymentMethod:1,
-                        status:1,
-                        date:1,
-                        deliveryDetails:1
-                    }
                 }
             ]).toArray()
             
@@ -545,7 +509,7 @@ module.exports = {
             .updateOne({_id:objectId(orderId)},
             {
                 $set:{
-                    status:'cancelled'
+                    status:'cancelled',cancel: true
                 }
             }).then((response)=>{
                 resolve(response)
@@ -658,8 +622,6 @@ module.exports = {
      stockManagement: (productData) => {
         return new Promise((resolve, reject) => {
           for (let i = 0; i < productData.length; i++) {
-           // console.log(productData[i].quantity);
-           // console.log(productData[i].item);
             db.get()
               .collection(collection.PRODUCT_COLLECTION)
               .updateOne( 
@@ -677,7 +639,6 @@ module.exports = {
         })
       },
       coupencheck: (userId, data) => {
-       
         let response={}
         return new Promise(async (resolve, reject) => {
             let coupenn = await db.get().collection(collection.COUPON_COLLECTION).findOne({ name: data.coupen })
@@ -692,7 +653,7 @@ module.exports = {
                     let date = new Date()
                     let expdate = new Date(coupenn.edate)
                     console.log(expdate);
-                    if (date <= expdate) {
+                    if (date <= expdate) { 
                         await db.get().collection(collection.COUPON_COLLECTION).updateOne(
                             {
                                 name: data.coupen

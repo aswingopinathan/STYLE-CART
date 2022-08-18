@@ -202,12 +202,12 @@ router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
   }else{
     res.redirect('/cart')
   }
-  
 })
 
-router.post('/place-order',async(req,res)=>{
+router.post('/place-order',verifyLogin,async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
   let totalPrice=await userHelpers.getTotalAmount(req.body.userId)
+
   req.session.cartProductDetails=products
   req.session.total=totalPrice
   userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
@@ -288,6 +288,7 @@ router.get('/order-success',verifyCartCount,(req,res)=>{
 router.get('/orders',verifyLogin,async(req,res)=>{ 
     userHelpers.deletePending().then(async()=>{
       let orders=await userHelpers.getUserOrders(userlog._id)
+      console.log(orders);
     res.render('user/orders',{userhead:true,userlog,orders,cartCount})
     })
     
@@ -379,10 +380,9 @@ router.post('/edit-profile/:id',(req,res)=>{
 })
 //working on
 router.post('/coupon',async(req,res)=>{
-  //console.log(req.body);
   if (userlog) {
     let total = await userHelpers.getTotalAmount(userlog._id)
-    userHelpers.coupencheck(userlog._id, req.body).then((response) => {
+    userHelpers.coupencheck(userlog._id,req.body).then((response) => {
       if(response.coupen){
         let amount={}
         coupen=response.coupenn

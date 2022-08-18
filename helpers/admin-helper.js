@@ -2,6 +2,7 @@ var db = require('../config/connection')
 var collection = require('../config/collections');
 var objectId = require('mongodb').ObjectId
 var Handlebars = require('handlebars');
+const { response } = require('express');
 
 //index numbering for tables
 Handlebars.registerHelper("inc", function (value, options) {
@@ -183,16 +184,16 @@ module.exports = {
             resolve(orderItems)
         })
     },
+    //////////////////////////
     adminCancelOrder: (orderId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION)
                 .updateOne({ _id: objectId(orderId) },
                     {
                         $set: {
-                            status: 'cancelled'
+                            status: 'cancelled',cancel: true
                         }
                     }).then((response) => {
-                        response.cancel=true
                         resolve(response)
                     })
         })
@@ -420,13 +421,7 @@ module.exports = {
             .findOne({_id:objectId(orderId)})
             resolve(orders)
         })
-      },
-      getOrderStatus: (orderId)=>{
-        return new Promise((resolve,reject)=>{
-            db.get()
-            .collection(collection.ORDER_COLLECTION)
-            .findOne({status:'cancelled'})
-            resolve()
-        })
       }
+      
+      
 }

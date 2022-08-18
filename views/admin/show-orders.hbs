@@ -34,12 +34,17 @@
                                 <td>
                                     <div>
                                         <a href="/admin/view-order-products/{{this._id}}"
-                                            class="btn btn-primary btn-sm"> View Products
+                                            class="btn btn-primary btn-sm"> View Order
                                         </a>
                                     </div><br>
                                     <div>
+                                        {{#if cancel}}
                                         <button class="btn btn-danger btn-sm"
+                                            >Cancelled</button>
+                                        {{else}}
+                                       <button class="btn btn-warning btn-sm"
                                             onclick="admincancelProduct('{{this._id}}')">Cancel Order</button>
+                                            {{/if}}
                                     </div>
                                 </td>
                             </tr>

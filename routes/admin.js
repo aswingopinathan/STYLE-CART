@@ -3,6 +3,7 @@ var router = express.Router();
 var productHelpers = require('../helpers/product-helpers');
 var adminHelpers = require('../helpers/admin-helper');
 var multer = require("multer");
+const { response } = require('express');
 
 let userName = "admin@gmail.com"
 let Pin = "1234"
@@ -30,10 +31,11 @@ router.post('/adminindex', (req, res, next) => {
   if (userName === Email && Pin === Password) {
     req.session.isadmin = userName
     req.session.check = true
+    req.session.err = null
     console.log("admin session created");
     res.redirect('/admin/adminindex')
   }
-  else {
+  else { 
     req.session.err = "incorrect username or password"
     res.redirect('/admin')
   }
@@ -201,12 +203,7 @@ router.get('/delete-brands/:id', (req, res) => {
 //working
 router.get('/show-orders', (req, res) => {
   adminHelpers.getAllOrders().then((orders) => {
-    if(req.session.cancel){
-      res.render('admin/show-orders', { admin: true,order:orders,cancel:req.session.cancel })
-      req.session.cancel=false
-    }else{
-      res.render('admin/show-orders', { admin: true,order:orders })
-    }
+    res.render('admin/show-orders', { admin: true,order:orders })
   })
 })
 
@@ -228,7 +225,6 @@ router.get('/logout', (req, res) => {
 //workin
 router.post('/admin-cancel-order',((req,res)=>{
   adminHelpers.adminCancelOrder(req.body.product).then((response)=>{
-    req.session.cancel=response.cancel
     res.json(response)
   })
 }))

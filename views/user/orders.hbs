@@ -1,55 +1,62 @@
 <div class="container">
     <div class="row">
-    <div class="col-xl-12">
-        <div class="card m-b-30">
-            <div class="card-body">
-                <h4 class="mt-0 header-title mb-4 text-center">ORDERS</h4>
-                <div class="table-responsive">
-                    <table class="table table-hover" id="productsTable">
-                        <thead>
-                            <tr>
-                                <th scope="col">Index</th>
-                                <th scope="col">Date</th>
-                                 <th scope="col">Name</th>
-                                <th scope="col">Address</th>
-                                <th scope="col">Pincode</th>
-                                <th scope="col">Mobile</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Payment</th>
-                                <th scope="col">Status</th>
-                                {{!-- <th scope="col">Image</th> --}}
-                                <th scope="col">Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each orders}}
-                            <tr>
-                                <td>{{inc @index}}</td>
-                                <td style="width: 200px">{{this.date}}</td>
-                                <td>{{this.deliveryDetails.name}}</td>
-                                <td>{{this.deliveryDetails.address}}</td>
-                                <td>{{this.deliveryDetails.pincode}}</td>
-                                <td>{{this.deliveryDetails.mobile}}</td>
-                                <td>{{this.totalAmount}}</td>
-                                <td>{{this.paymentMethod}}</td>
-                                <td>{{this.status}}</td>
-                                {{!-- <td><img style="width: 50px;height: 50px" src="/product-images/{{this.Images.[0]}}">
-                                </td> --}}
-                                <td>
-                                    <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View Product
+        <div class="col-xl-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <h4 class="mt-0 header-title mb-4 text-center">ORDERS</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Index</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Pincode</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Payment</th>
+                                    <th scope="col">Status</th>
+                                    {{!-- <th scope="col">Image</th> --}}
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orders}}
+                                <tr>
+                                    <td>{{inc @index}}</td>
+                                    <td style="width: 200px">{{this.date}}</td>
+                                    <td>{{this.deliveryDetails.name}}</td>
+                                    <td>{{this.deliveryDetails.address}}</td>
+                                    <td>{{this.deliveryDetails.pincode}}</td>
+                                    <td>{{this.deliveryDetails.mobile}}</td>
+                                    <td>{{this.totalAmount}}</td>
+                                    <td>{{this.paymentMethod}}</td>
+                                    <td>{{this.status}}</td>
+                                    {{!-- <td><img style="width: 50px;height: 50px"
+                                            src="/product-images/{{this.Images.[0]}}">
+                                    </td> --}}
+                                    <td>
+                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View
+                                            Details
                                         </a><br><br>
-                                     <button class="btn btn-danger btn-sm" onclick="cancelProduct('{{this._id}}')">Cancel Order</button>
-                                </td>
-                            </tr>
-                            {{/each}}
-                                    <hr>
-                        </tbody>
-                    </table>
+                                        {{#if cancel}}
+                                        <button class="btn btn-danger btn-sm">Cancelled</button>
+                                        {{else}}
+                                        <button class="btn btn-warning btn-sm"
+                                            onclick="cancelProduct('{{this._id}}')">Cancel Order</button>
+                                        {{/if}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                <hr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <!-- START FOOTER AREA -->
@@ -284,19 +291,31 @@
 <!-- END QUICKVIEW PRODUCT -->
 
 <script>
-    function cancelProduct(proId){
+    function cancelProduct(proId) {
         console.log("cancel from orders");
-         $.ajax({
-           url: "/cancel-order",
-           data: {
-             product: proId
-           },
-           method: "post",
-           success: (response) => {
-            alert("Product cancelled from orders");
-               location.reload();
-             
-           },
-         });
+        swal({
+            title: "Are you sure?",
+            text: "Product will be cancelled from orders",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "/cancel-order",
+                        data: {
+                            product: proId
+                        },
+                        method: "post",
+                        success: (response) => {
+                            //alert("Product cancelled from orders");
+                            location.reload();
+
+                        },
+                    });
+                }
+            });
+
     }
 </script>
