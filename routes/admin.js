@@ -374,6 +374,12 @@ router.get('/delete-offer-category/:id', (req, res) => {
     res.redirect('/admin/show-offer-category')
   })
 })
+
+router.post('/change-status',(req,res)=>{
+  adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
+    res.json(response)
+  })
+})
  
 
 module.exports = router;

@@ -4,7 +4,7 @@
             <form id="coupon-form">
                 <div class="coupon-discount box-shadow p-30 mb-50">
                     <h6 class="widget-title border-left mb-20">coupon discount</h6>
-                    <p>Enter your coupon code if you have one!</p>
+                    <p style="font-size: 14px;">Enter your coupon code if you have one!</p>
                     <input type="text" name="coupon" placeholder="Enter your code here.">
                     <button class="submit-btn-1 black-bg btn-hover-2" type="submit">apply coupon</button>
                 </div>
@@ -436,19 +436,23 @@
             method: 'post',
             data: $('#coupon-form').serialize(),
             success: (amount) => {
+                console.log(amount)
                 if(amount.status){
                     swal("Success!", "Coupon Applied", "success").then(() => {
                     document.getElementById('offer-price').innerHTML = amount.discountamount
                     document.getElementById('total-price').innerHTML = amount.grandtotal
                 })
-                }else{
-                    swal("Oops!", "Coupon does not exist", "error").then(() => {
-                    document.getElementById('offer-price').innerHTML = 0
+                }else if(amount.small){
+                    swal("Info!", "Total amount should be within 2000 and 4000 to apply coupon", "warning").then(() => {
+                    document.getElementById('offer-price').innerHTML = 0 
                     
                 })
+                }else{
+                    swal("Oops!", "Coupon does not exist", "error").then(() => {
+                    document.getElementById('offer-price').innerHTML = 0 
+                    
+                }) 
                 }
-                
-
             }
         })
     })

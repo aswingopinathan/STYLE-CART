@@ -37,14 +37,14 @@
                                             src="/product-images/{{this.Images.[0]}}">
                                     </td> --}}
                                     <td>
-                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View
-                                            Details
+                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View ...
+                                            
                                         </a><br><br>
                                         {{#if cancel}}
                                         <button class="btn btn-danger btn-sm">Cancelled</button>
                                         {{else}}
                                         <button class="btn btn-warning btn-sm"
-                                            onclick="cancelProduct('{{this._id}}')">Cancel Order</button>
+                                            onclick="cancelProduct('{{this._id}}')">Cancel </button>
                                         {{/if}}
                                     </td>
                                 </tr>

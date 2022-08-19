@@ -421,7 +421,17 @@ module.exports = {
             .findOne({_id:objectId(orderId)})
             resolve(orders)
         })
+      },
+      changeDeliveryStatus: (orderId,status)=>{
+        return new Promise((resolve,reject)=>{
+            db.get()
+            .collection(collection.ORDER_COLLECTION)
+            .updateOne({_id:objectId(orderId)},
+            {
+                $set:{status: status}
+            })
+            resolve()
+        })
       }
-      
       
 }

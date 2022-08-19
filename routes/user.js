@@ -42,7 +42,7 @@ router.get('/', async function (req, res, next) {
       userHelpers.getBanners().then((banner)=>{
         res.render('user/index', { userhead: true, productlist ,bannershow:banner})
       })
-    })
+    }) 
   } 
  }catch(err){ 
   console.log(err);
@@ -206,15 +206,26 @@ router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
 
 router.post('/place-order',verifyLogin,async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
-  let totalPrice=await userHelpers.getTotalAmount(req.body.userId)
-
+  
+  ////
+  let totalPrice;
+  let discount;
+  if(req.session.amount){
+    totalPrice=req.session.amount.grandtotal
+    discount=req.session.amount.discountamount
+  }else{
+     totalPrice=await userHelpers.getTotalAmount(req.body.userId)
+  }
+  ////
   req.session.cartProductDetails=products
   req.session.total=totalPrice
-  userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
+  userHelpers.placeOrder(req.body,products,totalPrice,discount).then((orderId)=>{
     req.session.neworderId=orderId
+    
     if(req.body['payment-method']==='COD'){
-      userHelpers.cartClearing(userlog._id).then(()=>{
+      userHelpers.cartClearing(userlog._id).then(()=>{ 
         userHelpers.stockManagement(products)
+        userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
         res.json({codSuccess:true})
       })
     }else if(req.body['payment-method']==='ONLINE-RAZOR'){
@@ -232,6 +243,9 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
       })
     }
   })
+  req.session.amount=null
+  
+  discount=null
   console.log(req.body);
 })
  
@@ -264,6 +278,7 @@ router.get('/success/:id', (req, res) => {
           console.log("paypal payment succes");
           userHelpers.stockManagement(req.session.cartProductDetails)
           userHelpers.changePaymentStatus(req.params.id).then(()=>{
+            userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
             userHelpers.cartClearing(userlog._id).then(()=>{
               res.redirect('/order-success');
             })
@@ -282,6 +297,7 @@ router.get('/cancel', (req, res) => {
 });
 //stockmanagement
 router.get('/order-success',verifyCartCount,(req,res)=>{
+  req.session.coupondata=null
   res.render('user/order-success',{userhead:true,userlog,cartCount})
 }) 
 
@@ -302,11 +318,13 @@ router.get('/view-order-products/:id',async(req,res)=>{
   res.render('user/view-order-products',{userhead:true,userlog,products,orders})
 })
 
+//razor
 router.post('/verify-payment',(req,res)=>{ 
 console.log(req.body);
 userHelpers.verifyPayment(req.body).then(()=>{
 userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   console.log("Payment Success");
+  userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
   userHelpers.stockManagement(req.session.cartProductDetails)
   userHelpers.cartClearing(userlog._id).then(()=>{
     res.json({status:true})
@@ -379,25 +397,35 @@ router.post('/edit-profile/:id',(req,res)=>{
   })
 })
 //working on
-router.post('/coupon',async(req,res)=>{
+router.post('/coupon',verifyLogin,async(req,res)=>{
+  req.session.coupondata=req.body.coupon
+  let amount ={};
   if (userlog) {
     let total = await userHelpers.getTotalAmount(userlog._id)
-    userHelpers.coupencheck(userlog._id,req.body).then((response) => {
-      if(response.coupen){
-        let amount={}
-        coupen=response.coupenn
-        amount.discountamount= (coupen.percentage*total)/100
-        amount.grandtotal=total-amount.discountamount
-        req.session.amount = amount
-        amount.status=true
-        res.json(amount)
-      }else{
-        console.log('route failed');
-        res.redirect('/place-order')
-      }
-    })
-  }
-})
+    if( total >= 2000 && total <=4000 ){
+      userHelpers.couponCheck(userlog._id,req.body).then((response) => {
+        if(response.coupon){
+          coupon=response.couponcode
+          amount.discountamount= (coupon.percentage*total)/100
+          amount.grandtotal=total-amount.discountamount
+          req.session.amount = amount
+          amount.status=true
+          userHelpers.couponToCart(userlog._id,req.body)
+          res.json(amount)
+        }else{
+          console.log('coupon already used/invalid');
+          amount.status=false
+          res.json(amount)
+        }
+      }) 
+    }else{
+          amount.small=true
+          res.json(amount)
+    }
+   
+
+  } 
+}) 
 
 
 module.exports = router;
