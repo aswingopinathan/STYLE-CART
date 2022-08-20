@@ -4,12 +4,18 @@
             <div class="col-md-6 ml-5 m-auto">
                 <h2 class="text-center">Add Category Offer</h2>
                 <form action="/admin/add-offer-category" method="post">
-                    <label>Name</label>
-                    <input type="text" name="name" class="form-control" required><br>
-                    <label>Percentage</label>
-                    <input type="text" name="percentage" class="form-control" required><br>
-                    <label>Expiry Date</label>
-                    <input type="date" name="edate" class="form-control" required>
+                   <label>Category Offer Name</label>
+                    <input type="text" name="categoryname" class="form-control" required><br>
+                    <label>Start Date</label>
+                    <input type="date" name="startdate" class="form-control" required><br>
+                    <label>End Date</label>
+                    <input type="date" name="enddate" class="form-control" required>
+                    <label>Lower Cap</label>
+                    <input type="text" name="lowercap" class="form-control" required>
+                     <label>Upper Cap</label>
+                    <input type="text" name="uppercap" class="form-control" required>
+                     <label>Percentage</label>
+                    <input type="text" name="percentage" class="form-control" required>
                     <button type="submit" class="btn btn-success mt-4">Submit</button>
                 </form>
             </div>

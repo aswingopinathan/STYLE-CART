@@ -65,7 +65,9 @@
                                                             </li> --}}
                                                             <li>
                                                                 {{!-- <a href="/add-to-cart/{{this._id}}" title="Add to cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
+                                                                {{#if userlog}}
                                                                 <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                                                                {{/if}}
                                                             </li>
                                                         </ul>
                                                     </div>

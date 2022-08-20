@@ -265,4 +265,5 @@ module.exports = {
             resolve(productview)
         })
     }
+   
 }

@@ -1,5 +1,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+{{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script> --}}
 
 <body>
 
@@ -107,48 +108,38 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-xl-6">
-                        <div class="card m-b-30">
-                            <div class="card-body">
-                                <h4 class="mt-0 header-title mb-4">Bar Chart</h4>
-                                <div id="morris-area-example" class="morris-charts morris-chart-height"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-xl-6">
-                        <div class="card m-b-30">
-                            <div class="card-body">
-                                <h4 class="mt-0 header-title mb-4">Pie Chart</h4>
-                                <div id="morris-donut-example" class="morris-charts morris-chart-height"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
-
+               
                 <div class="d-flex">
-                    <div style="width: 700px; height: 1400px;">
-                        <canvas id="mybarChart"></canvas>
+                    <div>
+                        <canvas id="mybarChart" style="height: 300px;"></canvas>
                     </div>
-                    <div style="width: 700px; height: 1400px;">
-                        <canvas id="mypieChart"></canvas>
+                    <div>
+                        <canvas id="mypieChart" style="height: 300px;"></canvas>
                     </div>
                 </div>
+                
+
+                {{!-- script --}}
+
+
                 <script>
-
-
                     //bar chart
-                    var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-                    var yValues = [55, 49, 44, 24, 15];
-                    var barColors = ["red", "green", "blue", "orange", "brown"];
+                    var xValues = ["week", "month", "threemonth", "sixmonth", "year"];
+                    var yValues = [{{ week.[0].sum }},
+                                   {{ month.[0].sum }},
+                                   {{threeMonth.[0].sum}},
+                                   {{sixMonth.[0].sum}},
+                                   {{ year.[0].sum }}];
+                    var barColors = [
+                        "#b91d47",
+                        "#00aba9",
+                        "#2b5797",
+                        "#e8c3b9",
+                        "#1e7145"
+                        ];
 
                     new Chart("mybarChart", {
-                        type: "bar",
+                        type: "bar",//bar,hirozontalBar,pie,doughnut,radar,polarArea,line
                         data: {
                             labels: xValues,
                             datasets: [{
@@ -161,27 +152,26 @@
                             title: {
                                 display: true,
                                 text: "Sales Report"
+                                // fontSize:false
                             }
                         }
                     });
 
                     //pie chart
-                    var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-                    var yValues = [55, 49, 44, 24, 15];
-                    var barColors = [
+                    var xValues = ["COD", "ONLINE-RAZOR", "ONLINE-PAYPAL"];
+                    var yValues = [{{cod.[0].count}}, {{razorpay.[0].count}}, {{paypal.[0].count}}];
+                    var pieColors = [
                         "#b91d47",
                         "#00aba9",
-                        "#2b5797",
-                        "#e8c3b9",
-                        "#1e7145"
+                        "#2b5797"
                     ];
 
                     new Chart("mypieChart", {
-                        type: "pie",
+                        type: "doughnut",
                         data: {
                             labels: xValues,
                             datasets: [{
-                                backgroundColor: barColors,
+                                backgroundColor: pieColors,
                                 data: yValues
                             }]
                         },
@@ -189,12 +179,13 @@
                             title: {
                                 display: true,
                                 text: "Payment Report"
+                               
                             }
                         }
                     });
                 </script>
             </div>
-            <!-- content -->
+           
 
 
 

@@ -18,9 +18,22 @@ router.get('/', function (req, res, next) {
   }
 });
 
-router.get('/adminindex', function (req, res, next) {
+router.get('/adminindex',async function (req, res, next) {
   if (req.session.isadmin) {
-    res.render('admin/index', { admin: true });
+    let cod = await adminHelpers.getPaymentMethodNums('COD')
+    let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
+    let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
+
+    let year = await adminHelpers.getRevenue('year',1);
+    let sixMonth =await adminHelpers.getRevenue('month',6)
+    let threeMonth = await adminHelpers.getRevenue('month',3)
+    let month = await adminHelpers.getRevenue('month',1);
+    let week = await adminHelpers.getRevenue('day',7);
+    console.log(year);
+    console.log(sixMonth);
+    console.log(threeMonth);
+    console.log(week);
+    res.render('admin/index', { admin: true,cod, razorpay, paypal, year, sixMonth, threeMonth, month,week });
   } else {
     res.redirect('/admin')
   }
@@ -264,65 +277,7 @@ router.get('/sample',(req,res)=>{
 })
 
 //chart section start
-router.get("/dashboard",async(req, res) => {
-  let cod =await adminHelpers.codTotal()
-  let razorpay = await adminHelpers.razorTotal();
-  let paypal = await adminHelpers.paypalTotal();
-  let orders = await adminHelpers.getAllOrders();
-  let total = orders.length
-  let clients = await productHelpers.getAlluser();
-  let users = clients.length;
-  let weekly = 0;
-  let monthly = 0;
-  let yearly = 0;
-  productManagement.getGraphDetails().then(async(data) => {
-    let temp = data;
-    // console.log(temp);
-    await temp.map((det) => {
-     
-      if (det.status != "cancelled") {
-        weekly = weekly + det.totalAmount;
-      }
-    });
-
-    productManagement.getMonthDetails().then(async (msales) => {
-    let temp2 = msales
-      await temp2.map((det) => {
-       
-        if (det.status != "cancelled") {
-          monthly = monthly + det.totalAmount;
-        }
-      });
-      
-    })
-    productManagement.getYearDetails().then(async (ysales) => {
-      let temp3 = ysales;
-      await temp3.map((det) => {
-        console.log(det.totalAmount);
-        if (det.status != "cancelled") {
-          yearly = yearly + det.totalAmount;
-        }
-      });
-      
-    });
-
-    //first try
-    await adminHelpers.getLastweekOrders().then((response) => {
-      res.render("admin/dashboard", {
-        admin: true,
-        cod,
-        razorpay,
-        paypal,
-        total,
-        users,
-        weekly,
-        monthly,
-        yearly,
-      });
-    });
-  });
-
-}) 
+//initial
 //chart section end
 
 //coupon section

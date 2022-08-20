@@ -444,7 +444,11 @@
                             {{!-- <form action="" method="post" accept-charset="utf-8"> --}}
                                 
                                 <div>
+                                    {{#if userlog}}
                                     <button onclick="addToCart('{{productview.[0]._id}}')" class="btn btn-primary">Add to cart</button>
+                                    {{else}}
+                                    <a href="/login" class="btn btn-primary">Add to cart</a>
+                                    {{/if}}
                                 </div>
                             {{!-- </form> --}}
                         </div>

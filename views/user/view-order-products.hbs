@@ -81,19 +81,54 @@
                   </div>
                 </div>
                 <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
-                <div class="row d-flex align-items-center">
+                
+              </div>
+            </div>
+            {{/each}}
+
+            <div class="row d-flex align-items-center">
                   <div class="col-md-2">
                     <p class="text-muted mb-0 small">Track Order</p>
                   </div>
+                   
+                    {{#if_eq this.deliverystatus "Order Confirmed"}}
                   <div class="col-md-10">
                     <div class="progress" style="height: 6px; border-radius: 16px;">
                       <div class="progress-bar" role="progressbar"
-                        style="width: 35%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
+                        style="width: 20%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
                         aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
+                    {{/if_eq}}
+
+                     {{#if_eq this.deliverystatus "Shipped"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 40%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                    
+                     {{#if_eq this.deliverystatus "Out For Delivery"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 65%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                     {{#if_eq this.deliverystatus "Delivered"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 100%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
                     <div class="d-flex justify-content-around mb-1">
-                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Order placed</p>
-                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Product packed</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Order Confirmed</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for Delivery</p>
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
                     </div>
                     <div class="d-flex justify-content-end mb-1">
@@ -102,9 +137,6 @@
 
                   </div>
                 </div>
-              </div>
-            </div>
-            {{/each}}
           {{!-- {{#each orders}} --}}
             <div class="d-flex justify-content-between pt-2">
               <p class="fw-bold mb-0">Order Details</p>
@@ -113,7 +145,7 @@
 
             <div class="d-flex justify-content-between pt-2">
               <p class="text-muted mb-0">Invoice Number : {{orders._id}}</p>
-              <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span>₹{{orders.discountamount}}.00</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Discount Applied</span>₹{{orders.discountamount}}.00</p>
             </div>
 
             <div class="d-flex justify-content-between">

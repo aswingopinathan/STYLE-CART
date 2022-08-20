@@ -221,152 +221,10 @@ module.exports = {
                 resolve()
             })
         })
-    },//chart section
-    getGraphDetails: () => {
-        return new Promise(async (resolve, reject) => {
-            let week = await db
-                .get()
-                .collection(collection.ORDER_COLLECTION)
-                .find({
-                    timeStamp: {
-                        $gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
-                    },
-                })
-                .sort({ timeStamp: -1 })
-                .toArray();
-
-            resolve(week);
-        });
     },
-
-    getMonthDetails: () => {
-        return new Promise(async (resolve, reject) => {
-            let month = await db
-                .get()
-                .collection(collection.ORDER_COLLECTION)
-                .find({
-                    timeStamp: {
-                        $gte: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
-                    },
-                })
-                .sort({ timeStamp: -1 })
-                .toArray();
-
-            resolve(month);
-        });
-    },
-
-    getYearDetails: () => {
-        return new Promise(async (resolve, reject) => {
-            let month = await db
-                .get()
-                .collection(collection.ORDER_COLLECTION)
-                .find({
-                    timeStamp: {
-                        $gte: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
-                    },
-                })
-                .sort({ timeStamp: -1 })
-                .toArray();
-
-            resolve(month);
-        });
-    },
-    getLastweekOrders: (orderId, status) => {
-        return new Promise(async (resolve, reject) => {
-          await db
-            .get()
-            .collection(collections.ORDER_COLLECTION)
-            .find({
-              timeStamp: {
-                $gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000),
-              },
-            })
-            .toArray()
-            .then((data) => {
-              resolve(data);
-            });
-        });
-      },
-    
-      codTotal: () => {
-        return new Promise(async (resolve, reject) => {
-          var codTotal = await db
-            .get()
-            .collection(collections.ORDER_COLLECTION)
-            .aggregate([
-              {
-                $match: { paymentMethod: "COD" },
-              },
-              {
-                $unwind: "$products",
-              },
-              {
-                $group: {
-                  _id: null,
-                  total: {
-                    $sum: { $toInt: "$totalAmount" },
-                  },
-                },
-              },
-            ])
-            .toArray();
-          resolve(codTotal[0]);
-        });
-      },
-    
-      razorTotal: () => {
-        return new Promise(async (resolve, reject) => {
-          var codTotal = await db
-            .get()
-            .collection(collections.ORDER_COLLECTION)
-            .aggregate([
-              {
-                $match: { paymentMethod: "RazorPay" },
-              },
-              {
-                $unwind: "$products",
-              },
-              {
-                $group: {
-                  _id: null,
-                  total: {
-                    $sum: { $toInt: "$totalAmount" },
-                  },
-                },
-              },
-            ])
-            .toArray();
-          resolve(codTotal[0]);
-        });
-      },
-    
-      paypalTotal: () => {
-        return new Promise(async (resolve, reject) => {
-          var codTotal = await db
-            .get()
-            .collection(collections.ORDER_COLLECTION)
-            .aggregate([
-              {
-                $match: { paymentMethod: "PayPal"},
-              },
-              {
-                $unwind: "$products",
-              },
-              {
-                $group: {
-                  _id: null,
-                  total: {
-                    $sum: { $toInt: "$totalAmount" },
-                  },
-                },
-              },
-            ])
-            .toArray();
-          resolve(codTotal[0]);
-        });
-      },
-    //chart section end
+    //initail chart section start
+   
+    //initail chart section end
 
     //coupon section start
     addCoupon: (couponData) => {
@@ -432,6 +290,38 @@ module.exports = {
             })
             resolve()
         })
-      }
+      },
+      getPaymentMethodNums: (paymentMethod) => {
+        return new Promise(async (resolve, reject) => {
+            let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate(
+                [
+                    {
+                        $match: {
+                            paymentMethod: paymentMethod
+                        }
+                    },
+                    {
+                        $count: "count"
+                    }
+                ]
+            ).toArray();
+            resolve(response);
+
+        })
+    },
+
+    getRevenue: (unit,count) => {
+        return new Promise(async (resolve, reject) => {
+
+           let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            { $match: 
+                {$expr: {$gt: ["$date",{ $dateSubtract: 
+                    { startDate: "$$NOW", unit: unit, amount: count }}]}}},
+                    {$group:{_id:null,sum:{$sum:'$totalAmount'}}},
+                ]).toArray()
+            resolve(response);
+
+        })
+    },
       
 }

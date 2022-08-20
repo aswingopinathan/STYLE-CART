@@ -302,7 +302,8 @@ module.exports = {
                 products: products,
                 totalAmount: total,
                 status: status,
-                date: new Date().toDateString(),
+                date: new Date(),
+                date1: new Date().toDateString(),
                 cancel: false,
                 discountamount: discount
 
@@ -326,8 +327,8 @@ module.exports = {
                 {
                     $match: { userId: objectId(userId) }
                 }
-            ]).toArray()
 
+            ]).toArray()
             resolve(orders)
         })
     },
@@ -490,7 +491,7 @@ module.exports = {
                 .updateOne({ _id: objectId(orderId) },
                     {
                         $set: {
-                            status: 'placed'
+                            status: 'Order Confirmed'
                         }
                     }
                 ).then(() => {
@@ -643,7 +644,7 @@ module.exports = {
         let response = {}
         return new Promise(async (resolve, reject) => {
             let couponcode = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponname: body.coupon })
-            console.log(couponcode);
+            console.log("couponcode", couponcode);
             if (couponcode) {
                 let user = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponname: body.coupon, user: objectId(userId) })
                 if (user) {
@@ -655,16 +656,6 @@ module.exports = {
                     let endDate = new Date(couponcode.enddate)
                     console.log(endDate);
                     if (currentDate <= endDate) {
-                        // await db.get().collection(collection.COUPON_COLLECTION).updateOne(
-                        //     {
-                        //         couponname: body.coupon
-                        //     },
-                        //     {
-                        //         $push: {
-                        //             user: objectId(userId)
-
-                        //         }
-                        //     })
                         response.couponcode = couponcode
                         response.coupon = true
                         resolve(response)
@@ -672,7 +663,6 @@ module.exports = {
                         response.coupon = false
                         console.log('coupon expired');
                         resolve(response)
-                        
                     }
                 }
 
@@ -683,24 +673,8 @@ module.exports = {
         }
         )
     },
-    couponToCart:(userId,body)=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.CART_COLLECTION)
-            db.get().collection(collection.CART_COLLECTION).updateOne(
-                {
-                    user: objectId(userId)
-                },
-                {
-                    $push: {
-                        coupon: body.coupon
-
-                    }
-                })
-            resolve()
-        })
-    },
-    userAppliedCoupon:(userId,coupon)=>{
-        return new Promise((resolve,reject)=>{
+    userAppliedCoupon: (userId, coupon) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.COUPON_COLLECTION).updateOne(
                 {
                     couponname: coupon
@@ -711,8 +685,20 @@ module.exports = {
 
                     }
                 })
-                resolve()
+            resolve()
+        })
+    },
+    getCap: (body) => {
+        return new Promise(async (resolve, reject) => {
+            let coupondetails = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponname: body.coupon })
+            resolve(coupondetails)
+        })
+    },
+    getDeliveryStatus: (orderId) => {
+        return new Promise(async(resolve, reject) => {
+            let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
+            resolve(deliveryvalue.status)
         })
     }
-    
+
 }

@@ -45,7 +45,7 @@ router.get('/', async function (req, res, next) {
     }) 
   } 
  }catch(err){ 
-  console.log(err);
+  console.log(err); 
   res.send("Something went wrong")
  } 
 })
@@ -314,8 +314,10 @@ router.get('/view-order-products/:id',async(req,res)=>{
   console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
   let orders=await userHelpers.getCurrentOrder(req.params.id)
-  console.log(orders);
-  res.render('user/view-order-products',{userhead:true,userlog,products,orders})
+  let deliverystatus=await userHelpers.getDeliveryStatus(req.params.id)
+  console.log("hey",deliverystatus);
+  //console.log(orders);
+  res.render('user/view-order-products',{userhead:true,userlog,products,orders,deliverystatus})
 })
 
 //razor
@@ -402,7 +404,9 @@ router.post('/coupon',verifyLogin,async(req,res)=>{
   let amount ={};
   if (userlog) {
     let total = await userHelpers.getTotalAmount(userlog._id)
-    if( total >= 2000 && total <=4000 ){
+    let cap = await userHelpers.getCap(req.body)
+    console.log("value",cap.lowercap);
+    if( total >= cap.lowercap && total <=cap.uppercap ){
       userHelpers.couponCheck(userlog._id,req.body).then((response) => {
         if(response.coupon){
           coupon=response.couponcode
@@ -410,9 +414,9 @@ router.post('/coupon',verifyLogin,async(req,res)=>{
           amount.grandtotal=total-amount.discountamount
           req.session.amount = amount
           amount.status=true
-          userHelpers.couponToCart(userlog._id,req.body)
+          // userHelpers.couponToCart(userlog._id,req.body)
           res.json(amount)
-        }else{
+        }else{ 
           console.log('coupon already used/invalid');
           amount.status=false
           res.json(amount)
@@ -426,6 +430,11 @@ router.post('/coupon',verifyLogin,async(req,res)=>{
 
   } 
 }) 
+
+router.post('/ccoupon',async(req,res)=>{
+  let lowercap = await userHelpers.getLowerCap(req.body)
+  //console.log("lowercap",lowercap);
+})
 
 
 module.exports = router;
