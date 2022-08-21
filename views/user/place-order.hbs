@@ -442,6 +442,16 @@
                     document.getElementById('offer-price').innerHTML = amount.discountamount
                     document.getElementById('total-price').innerHTML = amount.grandtotal
                 })
+                }else if(amount.used){
+                    swal("Info!", "Coupon already used!", "warning").then(() => {
+                    document.getElementById('offer-price').innerHTML = 0 
+                    
+                })
+                }else if(amount.expired){
+                    swal("Info!", "Coupon Expired", "warning").then(() => {
+                    document.getElementById('offer-price').innerHTML = 0 
+                    
+                })
                 }else if(amount.small){
                     swal("Info!", "Total amount should be within 2000 and 4000 to apply coupon", "warning").then(() => {
                     document.getElementById('offer-price').innerHTML = 0 

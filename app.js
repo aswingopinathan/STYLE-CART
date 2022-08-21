@@ -17,8 +17,8 @@ var session=require('express-session')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
 app.engine('hbs', hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/'}) );
+
 var Hbs=hbs.create({});
 Hbs.handlebars.registerHelper('if_eq', function(a, b, opts) {
   if(a == b) // Or === depending on your needs
@@ -31,8 +31,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//
-
 //fileupload
 app.use(session({
   secret: "Key",

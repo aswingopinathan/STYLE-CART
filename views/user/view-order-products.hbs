@@ -1,47 +1,3 @@
-{{!-- <div class="container">
-    <div class="tab-content">
-        <!-- grid-view -->
-        <div id="grid-view" class="tab-pane active show" role="tabpanel">
-            <div class="row">
-                {{#each products}}
-                <!-- product-item start -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="product-item">
-                        <div class="product-img d-flex justify-content-center">
-
-                            <div>
-                                <img src="../product-images/{{this.Images.[0]}}"
-                                    style="width: 270px;height: 300px" alt="" />
-                            </div>
-
-                        </div>
-                        <div class="product-info">
-                            <h6 class="product-title">
-                                <a>{{this.Name}}</a>
-                            </h6>
-                            <h6 class="product-title">
-                                <a href="#">{{this.Brands}} </a>
-                            </h6>
-                           
-                            <h3 class="pro-price">${{this.Price}}</h3>
-                            <ul class="action-button">
-                                
-                                </li>
-                                 
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
-
-            </div>
-        </div>
-        <!-- list-view -->
-
-    </div>
-</div> --}}
-
-
 
 {{!-- working --}}
 <section class="h-100 gradient-custom">
@@ -125,12 +81,16 @@
                         aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     {{/if_eq}}
+                    {{#if orders.cancel}}
+                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Order Cancelled</p>
+                    {{else}}
                     <div class="d-flex justify-content-around mb-1">
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Order Confirmed</p>
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for Delivery</p>
                       <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
                     </div>
+                    {{/if}}
                     <div class="d-flex justify-content-end mb-1">
                       {{!-- <a href="/Return-Item/{{this._id}}">Return Item</a> --}}
                     </div>

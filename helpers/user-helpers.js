@@ -538,12 +538,15 @@ module.exports = {
             resolve(banner)
         })
     },
-    addNewAddress: (userData, userId) => {
+    addNewAddress: (body, userId) => {
         let addressObj = {
-            Address: userData.Address,
-            State: userData.State,
-            Pincode: userData.Pincode,
-            City: userData.City,
+            name: body.name,
+            mobile: body.mobile,
+            pincode: body.pincode,
+            country: body.country,
+            state: body.state,
+            city: body.city,
+            address: body.address
         };
         return new Promise((resolve, reject) => {
             db.get()
@@ -562,7 +565,7 @@ module.exports = {
     getAddress: (userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ _id: objectId(userId) }).then((response) => {
-                console.log("getaddress");
+                
                 resolve(response)
             })
         })
@@ -649,26 +652,70 @@ module.exports = {
                 let user = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponname: body.coupon, user: objectId(userId) })
                 if (user) {
                     response.coupon = false
+                    response.usedcoupon=true
                     console.log('coupon already used');
                     resolve(response)
                 } else {
                     let currentDate = new Date()
                     let endDate = new Date(couponcode.enddate)
-                    console.log(endDate);
                     if (currentDate <= endDate) {
-                        response.couponcode = couponcode
-                        response.coupon = true
-                        resolve(response)
+                        let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                            {
+                                $match: { user: objectId(userId) }
+                            },
+                            {
+                                $unwind: '$products'
+                            },
+                            {
+                                $project: {
+                                    item: '$products.item',
+                                    quantity: '$products.quantity'
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collection.PRODUCT_COLLECTION,
+                                    localField: 'item',
+                                    foreignField: '_id',
+                                    as: 'product'
+                                }
+                            },
+                            {
+                                $project: {
+                                    item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }
+                                }
+                            },
+                            {
+                                $group: {
+                                    _id: null,
+                                    total: { $sum: { $multiply: [{ $toInt: '$quantity' }, { $toInt: '$product.Price' }] } }
+                                }
+                            }
+                        ]).toArray()
+                        console.log("TOTAL AMOUNT",total);
+                        let total1=total[0].total
+                        console.log("TOTAL1 AMOUNT",total1);
+                        if( total1 >= couponcode.lowercap && total1 <=couponcode.uppercap ){
+                            response.discountamount= (couponcode.percentage*total1)/100
+                            response.grandtotal=total1-response.discountamount
+                            response.total1=total1
+                            response.coupon = true
+                            console.log("discount",response.discountamount);
+                            console.log("grandtotal",response.grandtotal);
+                            resolve(response)
+                        }else{
+                            response.small=true
+                            resolve(response)
+                        }
                     } else {
-                        response.coupon = false
+                        response.expired=true
                         console.log('coupon expired');
                         resolve(response)
                     }
-                }
-
+                  }
             } else {
-                resolve(response.coupon = false)
                 console.log('invalid coupon');
+                resolve(response)
             }
         }
         )

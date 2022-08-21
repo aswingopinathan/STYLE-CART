@@ -191,7 +191,7 @@ module.exports = {
                 .updateOne({ _id: objectId(orderId) },
                     {
                         $set: {
-                            status: 'cancelled',cancel: true
+                            status: 'Cancelled',cancel: true
                         }
                     }).then((response) => {
                         resolve(response)
@@ -323,5 +323,10 @@ module.exports = {
 
         })
     },
-      
+    getDeliveryStatusAdmin: (orderId) => {
+        return new Promise(async(resolve, reject) => {
+            let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
+            resolve(deliveryvalue.status)
+        })
+    }
 }

@@ -310,7 +310,7 @@ router.get('/orders',verifyLogin,async(req,res)=>{
     
 })
 
-router.get('/view-order-products/:id',async(req,res)=>{
+router.get('/view-order-products/:id',verifyLogin,async(req,res)=>{
   console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
   let orders=await userHelpers.getCurrentOrder(req.params.id)
@@ -371,7 +371,7 @@ router.post('/change-password',((req,res)=>{
  })
 }))
 
-router.get('/add-address',(req,res)=>{
+router.get('/add-address',verifyLogin,(req,res)=>{
   res.render('user/add-address',{userlog,userhead:true,cartCount})
 })
 
@@ -381,12 +381,13 @@ router.post('/add-address',(req,res)=>{
   })
 })
 
-router.get('/show-address',async(req,res)=>{
+router.get('/show-address',verifyLogin,async(req,res)=>{
   useradd=await userHelpers.getAddress(userlog._id)
+  console.log(useradd);
   res.render('user/show-address',{userlog,userhead:true,cartCount,useradd})
 })
 
-router.get('/edit-profile',(req,res)=>{
+router.get('/edit-profile',verifyLogin,(req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
     res.render('user/edit-profile',{userhead:true,cartCount,userlog,profiledata})
   })
@@ -399,42 +400,36 @@ router.post('/edit-profile/:id',(req,res)=>{
   })
 })
 //working on
-router.post('/coupon',verifyLogin,async(req,res)=>{
+router.post('/coupon',async(req,res)=>{
   req.session.coupondata=req.body.coupon
-  let amount ={};
-  if (userlog) {
-    let total = await userHelpers.getTotalAmount(userlog._id)
-    let cap = await userHelpers.getCap(req.body)
-    console.log("value",cap.lowercap);
-    if( total >= cap.lowercap && total <=cap.uppercap ){
-      userHelpers.couponCheck(userlog._id,req.body).then((response) => {
-        if(response.coupon){
-          coupon=response.couponcode
-          amount.discountamount= (coupon.percentage*total)/100
-          amount.grandtotal=total-amount.discountamount
-          req.session.amount = amount
-          amount.status=true
-          // userHelpers.couponToCart(userlog._id,req.body)
-          res.json(amount)
-        }else{ 
-          console.log('coupon already used/invalid');
-          amount.status=false
-          res.json(amount)
-        }
-      }) 
+  let amount ={} ;
+   userHelpers.couponCheck(userlog._id,req.body).then((response) => {
+    if(response.coupon){
+     amount=response
+      req.session.amount = amount
+      amount.status=true
+      res.json(amount)
+    }else if(response.usedcoupon){ 
+      console.log('coupon already used');
+      amount.used=true
+      res.json(amount)
+    }else if(response.small){
+      console.log('Not within Cap limits');
+      amount.small=true
+      res.json(amount)
+    }else if(response.expired){
+      console.log('Coupon expired');
+      amount.expired=true
+      res.json(amount)
     }else{
-          amount.small=true
-          res.json(amount)
+      console.log('coupon invalid');
+      amount.status=false
+      res.json(amount)
     }
-   
-
-  } 
+  }) 
 }) 
 
-router.post('/ccoupon',async(req,res)=>{
-  let lowercap = await userHelpers.getLowerCap(req.body)
-  //console.log("lowercap",lowercap);
-})
+
 
 
 module.exports = router;

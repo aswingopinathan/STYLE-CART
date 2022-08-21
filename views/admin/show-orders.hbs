@@ -47,6 +47,8 @@
                                             Update Status
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                             <button class="dropdown-item"
+                                                onclick="statusOrderConfirmed('{{this._id}}')">Order Confirmed</button>
                                             <button class="dropdown-item"
                                                 onclick="statusShipped('{{this._id}}')">Shipped</button>
                                             <button class="dropdown-item" onclick="statusOut('{{this._id}}')">Out For
@@ -86,6 +88,20 @@
 </div>
 <script>
     
+    function statusOrderConfirmed(orderId) {
+
+        $.ajax({
+            url: "/admin/change-status",
+            data: {
+                order: orderId,
+                status: "Order Confirmed"
+            },
+            method: "post",
+            success: (response) => {
+                location.reload();
+            },
+        });
+    }
 
     function statusShipped(orderId) {
 
@@ -146,8 +162,8 @@
                     $.ajax({
                         url: "/admin/admin-cancel-order",
                         data: {
-                            order: orderId,
-                            status: "Cancelled"
+                            order: orderId
+                           
                         },
                         method: "post",
                         success: (response) => {

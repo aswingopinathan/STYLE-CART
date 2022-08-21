@@ -224,8 +224,9 @@ router.get('/view-order-products/:id',async(req,res)=>{
   console.log(req.params.id);
   let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
   let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
-  console.log(products);
-  res.render('admin/view-order-products',{admin:true,products,orders})
+  let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
+  console.log(deliverystatusadmin);
+  res.render('admin/view-order-products',{admin:true,products,orders,deliverystatusadmin})
 })
 //orders section end
 
@@ -237,7 +238,7 @@ router.get('/logout', (req, res) => {
 })
 //workin
 router.post('/admin-cancel-order',((req,res)=>{
-  adminHelpers.adminCancelOrder(req.body.product).then((response)=>{
+  adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
     res.json(response)
   })
 }))
