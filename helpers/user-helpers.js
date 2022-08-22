@@ -141,11 +141,12 @@ module.exports = {
                             })
                 }
             } else {
+                //schema
                 let cartObj = {
                     user: objectId(userId),
                     products: [proObj]
                 }
-                db.get().collection(collection.CART_COLLECTION).insertOne(cartObj).then((response) => {
+                db.get().collection(collection.CART_COLLECTION).insertOne(cartObj).then(() => {
                     resolve()
                 })
             }
@@ -203,18 +204,38 @@ module.exports = {
             resolve(count)
         })
     },
-    //////////////
+    //////////////working on 22082022
     changeProductQuantity: (details) => {
-        // details.count = parseInt(details.count)
-        // details.quantity = parseInt(details.quantity)
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.CART_COLLECTION)
+        return new Promise(async(resolve, reject) => {
+            let product =await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(details.product)})
+            details.quantity=details.quantity+1
+            product.Stock=parseInt(product.Stock)
+            if(details.count == 1){
+                if(details.quantity > product.Stock){
+                    response.outofstock=true 
+                    resolve(response)
+                }else{
+                    db.get().collection(collection.CART_COLLECTION)
+                    .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
+                        {
+                            $inc: { 'products.$.quantity': details.count }
+                        }).then((response) => {
+                            response.outofstock=false
+                            response.normal=true
+                            resolve(response)
+                        })
+                }
+            }else{
+                db.get().collection(collection.CART_COLLECTION)
                 .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
                     {
                         $inc: { 'products.$.quantity': details.count }
                     }).then((response) => {
-                        resolve({ status: true })
+                        response.outofstock=false
+                        response.normal=true
+                        resolve(response)
                     })
+            }
         })
     },
     removeQuantity: (details) => {
@@ -624,6 +645,7 @@ module.exports = {
             });
         });
     },
+    /////refermore
     stockManagement: (productData) => {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < productData.length; i++) {

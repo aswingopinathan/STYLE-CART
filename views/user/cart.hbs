@@ -360,10 +360,7 @@
                                         swal("Product removed from cart").then(() => {
                                             location.reload()
                                         })
-
-                                    } else {
-
-                                    }
+                                    } 
 
                                 }
                             })
@@ -382,10 +379,16 @@
                     },
                     method: 'post',
                     success: (response) => {
-                        if (!response.removeProduct) {
+                        if (response.normal) {
                             document.getElementById(proId).innerHTML = quantity + count
                             document.getElementById('total').innerHTML = response.total
-                        } 
+                        } else if(response.outofstock){
+                            console.log("ajax outofstock")
+                            swal({text:"Product out of stock",icon:"warning"}).then(()=>{
+                           // document.getElementById(proId).innerHTML = quantity + count 
+                            //document.getElementById('total').innerHTML = response.total
+                            })
+                        }
 
                     }
                 })

@@ -250,28 +250,30 @@ module.exports = {
         })
     },
     //categoryoffer start
-    addOfferCategory: (couponData) => {
+    addOfferCategory: (body,catId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.COUPON_COLLECTION).insertOne(couponData).then((data) => {
-                resolve(data.insertedId)
+            db.get().collection(collection.CATEGORY_COLLECTION).updateOne({ _id: objectId(catId) },
+            {
+                $set: {
+                    percentage: body.percentage
+                }
             })
+            resolve()
         })
     },
     getAllCategoryOffer: () => {
         return new Promise(async (resolve, reject) => {
-            let coupon = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+            let coupon = await db.get().collection(collection.CATEGORY_OFFER_COLLECTION).find().toArray()
             resolve(coupon)
         })
     },
-    deleteOfferCategory: (couponId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.COUPON_COLLECTION).deleteOne({ _id: objectId(couponId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Category: objectId(couponId) }).then(() => {
-                    resolve()
-                })
-            })
-        })
-    },
+    // deleteOfferCategory: (offerId) => {
+    //     return new Promise((resolve, reject) => {
+    //         db.get().collection(collection.CATEGORY_OFFER_COLLECTION).deleteOne({ _id: objectId(offerId) }).then(() => {
+    //             resolve()
+    //         })
+    //     })
+    // },
     getCurrentOrderAdmin: (orderId)=>{
         return new Promise((resolve,reject)=>{
            let orders= db.get()
@@ -327,6 +329,18 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
             resolve(deliveryvalue.status)
+        })
+    },
+    changeOfferStatus: (catId,newoffer)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CATEGORY_COLLECTION).updateOne({ _id: objectId(catId) },
+            {
+                $set: {
+                    offer: newoffer
+                }
+            })
+            response.status=true
+            resolve(response)
         })
     }
 }

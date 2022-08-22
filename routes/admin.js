@@ -307,32 +307,41 @@ router.get('/delete-coupon/:id', (req, res) => {
 })
 
 //offercategory//working
-router.get('/show-offer-category', (req, res) => {
-  adminHelpers.getAllCategoryOffer().then((coupon) => {
-    res.render('admin/show-offer-category', { admin: true, coupon })
-  })
+router.get('/show-offer-category',async (req, res) => {
+ let category= await adminHelpers.getAllCategory()
+ let offerCategory= await adminHelpers.getAllCategoryOffer()
+ console.log("category",category);
+ res.render('admin/show-offer-category', { admin: true, offerCategory,category })
 })
 
-router.get('/add-offer-category', (req, res) => {
-  res.render('admin/add-offer-category', { admin: true })
+router.get('/add-offer-category/:id', (req, res) => {
+  req.session.catId=req.params.id
+  res.render('admin/add-offer-category', { admin: true }) 
 })
 
 router.post('/add-offer-category', (req, res) => {
-  adminHelpers.addOfferCategory(req.body).then(() => {
+  adminHelpers.addOfferCategory(req.body, req.session.catId).then(() => {
     res.redirect('/admin/show-offer-category')
   })
 })
 
-router.get('/delete-offer-category/:id', (req, res) => {
-  let couponId = req.params.id
-  console.log(couponId);
-  adminHelpers.deleteOfferCategory(couponId).then(() => {
-    res.redirect('/admin/show-offer-category')
-  })
-})
+// router.get('/delete-offer-category/:id', (req, res) => {
+//   let categoryofferId = req.params.id
+//   console.log(categoryofferId);
+//   adminHelpers.deleteOfferCategory(categoryofferId).then(() => {
+//     res.redirect('/admin/show-offer-category')
+//   })
+// })
 
 router.post('/change-status',(req,res)=>{
   adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
+    res.json(response)
+  }) 
+})
+
+router.post('/change-offer',(req,res)=>{
+  req.body.offer=Boolean(req.body.offer)
+  adminHelpers.changeOfferStatus(req.body.categoryId,req.body.offer).then((response)=>{
     res.json(response)
   })
 })

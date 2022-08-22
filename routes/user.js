@@ -157,7 +157,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/add-to-cart/:id', (req, res) => {
   console.log('api call');
-  userHelpers.addToCart(req.params.id, req.session.user._id).then(() => {
+  userHelpers.addToCart(req.params.id, userlog._id).then(() => {
     res.json({ status: true })
   })
 })
@@ -172,7 +172,7 @@ router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
     res.render('user/cart', { userhead: true, products, userlog, cartCount})
   }
 })
-//
+//working on 22082022
 router.post('/change-product-quantity', (req, res) => {
   let details = req.body
   details.count = parseInt(details.count)
@@ -184,6 +184,7 @@ router.post('/change-product-quantity', (req, res) => {
   }else{
     userHelpers.changeProductQuantity(details).then(async(response) => {
       response.total=await userHelpers.getTotalAmount(req.body.user)
+      console.log("response",response);
         res.json(response)
     })
   }
