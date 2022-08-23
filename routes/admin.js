@@ -97,13 +97,19 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
 
 //multer
 
-router.get('/edit-product/:id', async (req, res) => {
-  let editproduct = await productHelpers.getproductDetails(req.params.id)
-  let getcategory = await adminHelpers.getAllCategory()
-  let getsubcategory = await adminHelpers.getAllSubCategory()
-  let getbrands = await adminHelpers.getAllBrands()
-  res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
-})
+
+  router.get('/edit-product/:id', async (req, res) => {
+    try{
+    let editproduct = await productHelpers.getproductDetails(req.params.id)
+    let getcategory = await adminHelpers.getAllCategory()
+    let getsubcategory = await adminHelpers.getAllSubCategory()
+    let getbrands = await adminHelpers.getAllBrands()
+    res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
+  }catch{
+    res.render('/admin/page404')
+  }
+  })
+
 
 router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   console.log("pass");
@@ -113,8 +119,8 @@ router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   req.body.Images = filenames;
   productHelpers.updateProduct(req.params.id, req.body).then(() => {
     res.redirect('/admin/show-products')
-  })
-})
+  }) 
+}) 
 
 router.get('/delete-product/:id', (req, res) => {
   let proId = req.params.id
@@ -274,7 +280,7 @@ router.get('/delete-banner/:id', (req, res) => {
 
 //testing
 router.get('/sample',(req,res)=>{
-  res.render('admin/sample',{admin:true})
+  res.render('admin/page404')
 })
 
 //chart section start
@@ -309,9 +315,9 @@ router.get('/delete-coupon/:id', (req, res) => {
 //offercategory//working
 router.get('/show-offer-category',async (req, res) => {
  let category= await adminHelpers.getAllCategory()
- let offerCategory= await adminHelpers.getAllCategoryOffer()
+ //let offerCategory= await adminHelpers.getAllCategoryOffer()
  console.log("category",category);
- res.render('admin/show-offer-category', { admin: true, offerCategory,category })
+ res.render('admin/show-offer-category', { admin: true,category })
 })
 
 router.get('/add-offer-category/:id', (req, res) => {
@@ -325,23 +331,24 @@ router.post('/add-offer-category', (req, res) => {
   })
 })
 
-// router.get('/delete-offer-category/:id', (req, res) => {
-//   let categoryofferId = req.params.id
-//   console.log(categoryofferId);
-//   adminHelpers.deleteOfferCategory(categoryofferId).then(() => {
-//     res.redirect('/admin/show-offer-category')
-//   })
-// })
-
 router.post('/change-status',(req,res)=>{
   adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
     res.json(response)
   }) 
 })
 
-router.post('/change-offer',(req,res)=>{
-  req.body.offer=Boolean(req.body.offer)
-  adminHelpers.changeOfferStatus(req.body.categoryId,req.body.offer).then((response)=>{
+router.post('/offer-activate',(req,res)=>{
+  newoffer=req.body.offer
+  adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
+    adminHelpers.activateCategoryOffer(req.body.categoryId)
+    res.json(response)
+  })
+})
+
+router.post('/offer-deactivate',(req,res)=>{
+  newoffer=req.body.offer
+  adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
+    adminHelpers.deactivateCategoryOffer(req.body.categoryId)
     res.json(response)
   })
 })

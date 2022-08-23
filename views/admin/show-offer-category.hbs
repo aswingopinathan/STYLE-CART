@@ -11,9 +11,10 @@
                         <thead>
                             <tr>
                                 <th scope="col">Index</th>
-                                <th scope="col">Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Offer Name</th>
                                 <th scope="col">Offer Percentage</th>
-                                <th scope="col">Change Offer Percentage</th>
+                                <th scope="col">Change Offer </th>
                                 <th scope="col">Offer Status</th>
                             </tr>
                         </thead>
@@ -22,21 +23,20 @@
                             <tr>
                                 <td>{{inc @index}}</td>
                                 <td>{{this.Name}}</td>
+                                <td>{{this.offername}}</td>
                                 <td>{{this.percentage}}</td>
                                  <td>
                                     <div>
                                         {{!-- <button  class="btn btn-primary btn-sm"
                                             onclick="">set percentage</button> --}}
-                                            <a href="/admin/add-offer-category/{{this._id}}" class="btn btn-primary btn-sm">set percentage</a>
+                                            <a href="/admin/add-offer-category/{{this._id}}" class="btn btn-primary btn-sm">set offer</a>
                                     </div>
                                 <td>
                                     <div>
                                         {{#if this.offer}}
-                                        <button  class="btn btn-success btn-sm"
-                                            onclick="changeOffer1('{{this._id}}')">Active</button>
+                                <button  class="btn btn-success btn-sm" onclick="offerDeactivate('{{this._id}}')">Active</button>
                                             {{else}}
-                                            <button  class="btn btn-danger btn-sm" id="{{this._id}}"
-                                            onclick="changeOffer('{{this._id}}')">Inactive</button>
+                                <button  class="btn btn-danger btn-sm"  onclick="offerActivate('{{this._id}}')">Inactive</button>
                                             {{/if}}
                                     </div>
                                 </td>
@@ -53,12 +53,12 @@
 
 <script>
     
-function changeOffer(cartId) {
+function offerDeactivate(cartId) {
         $.ajax({
-            url: "/admin/change-offer",
+            url: "/admin/offer-deactivate",
             data: {
                 categoryId: cartId,
-                 offer: "true"
+                 offer: null
             },
             method: "post",
             success: (response) => {
@@ -69,12 +69,12 @@ function changeOffer(cartId) {
         });
     }
 
-    function changeOffer1(cartId) {
+    function offerActivate(cartId) {
         $.ajax({
-            url: "/admin/change-offer",
+            url: "/admin/offer-activate",
             data: {
                 categoryId: cartId,
-                offer: "false"
+                offer: true
             },
             method: "post",
             success: (response) => {

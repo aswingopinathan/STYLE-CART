@@ -768,6 +768,7 @@ module.exports = {
             let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
             resolve(deliveryvalue.status)
         })
-    }
+    },
+    
 
 }

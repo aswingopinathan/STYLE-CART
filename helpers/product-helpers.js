@@ -72,8 +72,12 @@ module.exports = {
                 SubCategory: objectId(SubCategory._id),
                 Stock: body.Stock,
                 Price: body.Price,
+                Cutprice: body.Cutprice,
                 Description: body.Description,
-                Images: body.Images
+                Images: body.Images,
+                discountpercentage:["5"],
+                offername:[""]
+
             }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(proObj).then(() => {
                 resolve()
@@ -158,6 +162,7 @@ module.exports = {
                 $set: {
                     Name: proDetails.Name,
                     Price: proDetails.Price,
+                    Cutprice:proDetails.Cutprice,
                     Description: proDetails.Description,
                     Images: proDetails.Images,
                     Category: objectId(Category._id),
@@ -192,9 +197,9 @@ module.exports = {
                 },
                 {
 
-                    $project: { Name: 1, Category: '$Category.Name', Brands: '$Brands.Name', Stock: 1, Price: 1, Images: 1 }
+                    $project: { Name: 1, Category: '$Category.Name', Brands: '$Brands.Name', Stock: 1,Cutprice:1, Price: 1, Images: 1,discountprice:1,discountpercentage:1 }
 
-                }
+                } 
             ]).toArray()
 
             resolve(productlist) 

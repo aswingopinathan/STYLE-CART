@@ -85,13 +85,13 @@
                                     <!-- product-item start -->
                                     {{#each productlist}}
                                     <div class="col-lg-3 col-md-4">
-                                        <div class="product-item">
+                                        <div class="product-item ">
                                             <div class="product-img">
                                                 <a href="/product-view/{{this._id}}">
                                                     <img src="/product-images/{{this.Images.[0]}}" alt="" style="width: 270px; height:300px" />
                                                 </a>
                                             </div>
-                                            <div class="product-info">
+                                            <div class="product-info ribbon-corner ribbon-fold">
                                                 <h6 class="product-title">
                                                     <a href="/product-view/{{this._id}}">{{this.Name}}</a>
                                                 </h6>
@@ -100,7 +100,10 @@
                                                             {{!-- <a href="#">{{this.Category}} </a> --}}
                                                         </h6>
                                                         <h6 class="product-title"><a>Stock  {{this.Stock}}</a></h6>
+                                                        {{!-- <h3 class="pro-price"><s>₹{{this.Cutprice}}</s></h3> --}}
+                                                        <div> <s class="pro-price">MRP: {{this.Cutprice}}.00</s> <span class="text-danger font-weight-bold"> {{this.discountpercentage.[0]}}% off</span></div>
                                                 <h3 class="pro-price">₹{{this.Price}}</h3>
+                                                
                                                 
                                                 <ul class="actioon-button">
                                                             {{!-- <li>

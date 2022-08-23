@@ -155,8 +155,14 @@ router.get('/logout', (req, res) => {
   res.redirect('/')
 })
 
-router.get('/add-to-cart/:id', (req, res) => {
+router.get('/add-to-cart/:id',async (req, res) => {
   console.log('api call');
+  console.log("req.params.id",req.params.id);
+  //let categorydetails=await userHelpers.getCategoryOffer(req.params.id)
+  //console.log("categorydetails",categorydetails);
+  
+  //req.session.offer=categorydetails.offer
+  //checking
   userHelpers.addToCart(req.params.id, userlog._id).then(() => {
     res.json({ status: true })
   })
