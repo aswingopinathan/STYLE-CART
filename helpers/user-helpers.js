@@ -50,7 +50,6 @@ module.exports = {
 
             // } 
             else {
-
                 userData.Password = await bcrypt.hash(userData.Password, 10)
                 client.verify
                     .services(process.env.SERVICE_SID)
@@ -206,35 +205,35 @@ module.exports = {
     },
     //////////////working on 22082022
     changeProductQuantity: (details) => {
-        return new Promise(async(resolve, reject) => {
-            let product =await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(details.product)})
-            details.quantity=details.quantity+1
-            product.Stock=parseInt(product.Stock)
-            if(details.count == 1){
-                if(details.quantity > product.Stock){
-                    response.outofstock=true 
+        return new Promise(async (resolve, reject) => {
+            let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(details.product) })
+            details.quantity = details.quantity + 1
+            product.Stock = parseInt(product.Stock)
+            if (details.count == 1) {
+                if (details.quantity > product.Stock) {
+                    response.outofstock = true
                     resolve(response)
-                }else{
+                } else {
                     db.get().collection(collection.CART_COLLECTION)
+                        .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
+                            {
+                                $inc: { 'products.$.quantity': details.count }
+                            }).then((response) => {
+                                response.outofstock = false
+                                response.normal = true
+                                resolve(response)
+                            })
+                }
+            } else {
+                db.get().collection(collection.CART_COLLECTION)
                     .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
                         {
                             $inc: { 'products.$.quantity': details.count }
                         }).then((response) => {
-                            response.outofstock=false
-                            response.normal=true
+                            response.outofstock = false
+                            response.normal = true
                             resolve(response)
                         })
-                }
-            }else{
-                db.get().collection(collection.CART_COLLECTION)
-                .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
-                    {
-                        $inc: { 'products.$.quantity': details.count }
-                    }).then((response) => {
-                        response.outofstock=false
-                        response.normal=true
-                        resolve(response)
-                    })
             }
         })
     },
@@ -313,9 +312,7 @@ module.exports = {
                     name: order.name,
                     mobile: order.mobile,
                     pincode: order.pincode,
-                    country: order.country,
                     state: order.state,
-                    city: order.city,
                     address: order.address
                 },
                 userId: objectId(order.userId),
@@ -564,10 +561,9 @@ module.exports = {
             name: body.name,
             mobile: body.mobile,
             pincode: body.pincode,
-            country: body.country,
             state: body.state,
-            city: body.city,
-            address: body.address
+            address: body.address,
+            locality: body.locality
         };
         return new Promise((resolve, reject) => {
             db.get()
@@ -579,14 +575,13 @@ module.exports = {
                     }
                 )
                 .then(() => {
-                    resolve();
+                    resolve(response);
                 });
         });
     },
     getAddress: (userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ _id: objectId(userId) }).then((response) => {
-                
                 resolve(response)
             })
         })
@@ -606,10 +601,11 @@ module.exports = {
             })
         })
     }, getProfile: (userId) => {
-        return new Promise(async (resolve, reject) => {
-            let profiledata = await db.get().collection(collection.USER_COLLECTION).find({ _id: objectId(userId) }).toArray()
-            console.log(profiledata);
-            resolve(profiledata)
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).findOne({ _id: objectId(userId) }).then((response) => {
+                resolve(response)
+                console.log("getProfile",response);
+            })
         })
     },
     deleteTheOrder: (orderId) => {
@@ -674,7 +670,7 @@ module.exports = {
                 let user = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponname: body.coupon, user: objectId(userId) })
                 if (user) {
                     response.coupon = false
-                    response.usedcoupon=true
+                    response.usedcoupon = true
                     console.log('coupon already used');
                     resolve(response)
                 } else {
@@ -714,27 +710,27 @@ module.exports = {
                                 }
                             }
                         ]).toArray()
-                        console.log("TOTAL AMOUNT",total);
-                        let total1=total[0].total
-                        console.log("TOTAL1 AMOUNT",total1);
-                        if( total1 >= couponcode.lowercap && total1 <=couponcode.uppercap ){
-                            response.discountamount= (couponcode.percentage*total1)/100
-                            response.grandtotal=total1-response.discountamount
-                            response.total1=total1
+                        console.log("TOTAL AMOUNT", total);
+                        let total1 = total[0].total
+                        console.log("TOTAL1 AMOUNT", total1);
+                        if (total1 >= couponcode.lowercap && total1 <= couponcode.uppercap) {
+                            response.discountamount = (couponcode.percentage * total1) / 100
+                            response.grandtotal = total1 - response.discountamount
+                            response.total1 = total1
                             response.coupon = true
-                            console.log("discount",response.discountamount);
-                            console.log("grandtotal",response.grandtotal);
+                            console.log("discount", response.discountamount);
+                            console.log("grandtotal", response.grandtotal);
                             resolve(response)
-                        }else{
-                            response.small=true
+                        } else {
+                            response.small = true
                             resolve(response)
                         }
                     } else {
-                        response.expired=true
+                        response.expired = true
                         console.log('coupon expired');
                         resolve(response)
                     }
-                  }
+                }
             } else {
                 console.log('invalid coupon');
                 resolve(response)
@@ -764,11 +760,28 @@ module.exports = {
         })
     },
     getDeliveryStatus: (orderId) => {
-        return new Promise(async(resolve, reject) => {
-            let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
+        return new Promise(async (resolve, reject) => {
+            let deliveryvalue = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
             resolve(deliveryvalue.status)
         })
     },
-    
+    referralUpdate: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            //referral advantage
+            let referralCheck = await db
+                .get()
+                .collection(collection.USER_COLLECTION)
+                .findOne({ yourReferralCode: userData.referralcode })
+            if (referralCheck) {
+                userId = referralCheck._id
+                await db
+                    .get()
+                    .collection(collection.USER_COLLECTION)
+                    .updateOne({ _id: objectId(userId) }, { $inc: { wallet: 100 } })
+            }
+            resolve()
+        })
+    }
+
 
 }

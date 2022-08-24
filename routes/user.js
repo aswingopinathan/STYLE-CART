@@ -107,6 +107,14 @@ let signupData;
 router.post('/signup', (req, res) => {
   //additional key status1 send to db
   req.body.status1 = true
+  //referral code
+  
+  req.body.wallet=parseInt(0)
+  let number = parseInt(req.body.Mobile) 
+  let newReferralCode = number.toString(16)
+  req.body.yourReferralCode=newReferralCode
+//passing referral code along body to session
+  req.session.referral=req.body
   userHelpers.doSignup(req.body).then((response) => {
     console.log(req.body)
     signupData = req.body 
@@ -127,6 +135,9 @@ router.get('/otp-page', (req, res) => {
 router.post('/otp-verify', (req, res, next) => {
   userHelpers.otpVerify(req.body.otp, signupData).then((response) => {
     if (response.status) {
+      //////////referral
+      console.log("req.session.referral",req.session.referral);
+      userHelpers.referralUpdate( req.session.referral)
       res.redirect('/login')
     } else {
       req.session.otpsignErr = "invalid otp"
@@ -158,11 +169,6 @@ router.get('/logout', (req, res) => {
 router.get('/add-to-cart/:id',async (req, res) => {
   console.log('api call');
   console.log("req.params.id",req.params.id);
-  //let categorydetails=await userHelpers.getCategoryOffer(req.params.id)
-  //console.log("categorydetails",categorydetails);
-  
-  //req.session.offer=categorydetails.offer
-  //checking
   userHelpers.addToCart(req.params.id, userlog._id).then(() => {
     res.json({ status: true })
   })
@@ -205,11 +211,12 @@ router.post('/delete-cartproduct', (req, res) => {
 router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
   if(cartCount!=0){
     let total=await userHelpers.getTotalAmount(req.session.user._id)
-  res.render('user/place-order',{userhead:true,cartCount,total,userlog})
+    let useradd=await userHelpers.getAddress(userlog._id)
+  res.render('user/place-order',{userhead:true,cartCount,total,userlog,useradd})
   }else{
     res.redirect('/cart')
   }
-})
+}) 
 
 router.post('/place-order',verifyLogin,async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
@@ -217,7 +224,7 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
   ////
   let totalPrice;
   let discount;
-  if(req.session.amount){
+  if(req.session.amount){ 
     totalPrice=req.session.amount.grandtotal
     discount=req.session.amount.discountamount
   }else{
@@ -354,8 +361,7 @@ router.post('/cancel-order',((req,res)=>{
 
 router.get('/profile',verifyLogin,((req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
-    console.log("checking");
-    console.log(profiledata);
+    console.log("checking",profiledata);
     res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
   })
 }))
@@ -389,8 +395,8 @@ router.post('/add-address',(req,res)=>{
 })
 
 router.get('/show-address',verifyLogin,async(req,res)=>{
-  useradd=await userHelpers.getAddress(userlog._id)
-  console.log(useradd);
+  let useradd=await userHelpers.getAddress(userlog._id)
+  console.log("useradd",useradd);
   res.render('user/show-address',{userlog,userhead:true,cartCount,useradd})
 })
 
@@ -435,6 +441,24 @@ router.post('/coupon',async(req,res)=>{
     }
   }) 
 }) 
+
+router.post('/save-address',(req,res)=>{
+  userHelpers.addNewAddress(req.body,userlog._id).then((response)=>{
+    res.json(response)
+  })
+})
+
+router.get('/edit-address',async(req,res)=>{
+  let useradd=await userHelpers.getAddress(userlog._id)
+  console.log("useradd",useradd);
+  res.render('user/edit-address',{userhead:true,cartCount,userlog,useradd})
+})
+
+router.post('/edit-address',(req,res)=>{
+ // userHelpers.editAddress(req.body,userlog._id)
+  res.redirect('/show-address')
+
+})
 
 
 

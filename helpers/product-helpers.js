@@ -64,7 +64,7 @@ module.exports = {
             let SubCategory = await db.get().collection(collection.SUB_CATEGORY_COLLECTION).findOne({ Name: body.SubCategory })
             console.log(SubCategory);
             let Brands = await db.get().collection(collection.BRAND_COLLECTION).findOne({ Name: body.Brands })
-            console.log(Brands);
+            console.log(Brands); 
             let proObj = {
                 Name: body.Name,
                 Category: objectId(Category._id),

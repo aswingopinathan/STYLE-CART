@@ -2,23 +2,23 @@
     <div class="col-md-6 m-auto">
         <div class="container mt-5 pl-5">
             <h2 class="text-center">Edit Profile</h2>
-            <form action="/edit-profile/{{profiledata.[0]._id}}" method="post">
+            <form action="/edit-profile/{{profiledata._id}}" method="post">
             <div class="form-group">
                 <label><strong>Username</strong></label>
-                <input type="text" class="form-control"  id="firstName" name="Username" value="{{profiledata.[0].Username}}" onkeyup="validateName()"
+                <input type="text" class="form-control"  id="firstName" name="Username" value="{{profiledata.Username}}" onkeyup="validateName()"
                     required>
             </div>
             <span id="firstName-error" class="text-danger my-auto"></span>
             <div class="form-group">
                 
                 <label><strong>Email</strong></label>
-                <input type="text" class="form-control"  id="email" name="Email" value="{{profiledata.[0].Email}}" onkeyup="validateEmail()"
+                <input type="text" class="form-control"  id="email" name="Email" value="{{profiledata.Email}}" onkeyup="validateEmail()"
                     id="contact-email" required>
             </div>
             <span id="email-error" class="text-danger my-auto"></span>
             <div class="form-group">
                 <label><strong>Mobilenumber</strong></label>
-                <input type="text" class="form-control" id="phoneNumber"  name="Mobile" value="{{profiledata.[0].Mobile}}" onkeyup="validatePhoneNumber()"
+                <input type="text" class="form-control" id="phoneNumber"  name="Mobile" value="{{profiledata.Mobile}}" onkeyup="validatePhoneNumber()"
                     placeholder="Enter mobile number" required>
             </div>
             <span id="phoneNumber-error" class="text-danger my-auto"></span>

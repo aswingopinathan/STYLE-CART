@@ -10,57 +10,41 @@
                 </div>
             </form>
         </div>
-        {{!-- <div class="col-md-6">
-            <div class="payment-details box-shadow p-30 mb-50">
-                <h6 class="widget-title border-left mb-20">payment details</h6>
-                <table>
-                    <tr>
-                        <td class="td-title-1">Cart Subtotal</td>
-                        <td class="td-title-2">{{total}}</td>
-                    </tr>
-
-                    <tr>
-                        <td class="td-title-1">Offer discount</td>
-                        <td class="td-title-2" id="offer-price">0</td>
-                    </tr>
-                    <tr>
-                        <td class="order-total">Grand Total</td>
-                        <td class="td-title-2" id="total-price">{{total}}</td>
-
-                    </tr>
-
-                </table>
-            </div>
-        </div> --}}
     </div>
 
+   <div class="row">
+     <div class="col-lg-6">
+        <form id="save-address">
+        
+        <div class="billing-details box-shadow p-30 pr-10">
+            <h6 class="widget-title border-left mb-20">Enter Delivery Details</h6>
+            <label>Name</label>
+            <input type="text" placeholder="Your Name Here..." name="name" value="">
+            <label>Mobile</label>
+            <input type="text" placeholder="10-digit mobile number" name="mobile" value="">
+            <label>Pincode</label>
+            <input type="text" placeholder="Pincode here..." name="pincode" value="">
+            {{!-- <input type="text" name="userId" value="{{userlog._id}}" hidden> --}}
+            <label>State</label>
+            <input type="text" placeholder="State here..." name="state" value="">
+            <label>Address</label>
+            {{!-- <textarea class="custom-textarea" placeholder="Your address here..." name="address"
+                value=""></textarea> --}}
+            <input type="text" placeholder="Your address here..." name="address" value="">
+             <button class="btn btn-primary mt-3 float-right" style="width: fit-content;"
+                                type="submit">Save Address</button>
+        </div>
+    
 
+    </form>
+    </div>
 
-    <form action="" id="checkout-form">
+    <div class="col-lg-6">
+        <form action="" id="checkout-form">
         <div class="row">
-            <div class="col-md-6">
-                <div class="billing-details pr-10">
-                    <h6 class="widget-title border-left mb-20">Enter Delivery Details</h6>
-                    <label>Name</label>
-                    <input type="text" placeholder="Your Name Here..." name="name" value="">
-                    <label>Mobile</label>
-                    <input type="text" placeholder="10-digit mobile number" name="mobile" value="" required>
-                    <label>Pincode</label>
-                    <input type="text" placeholder="Pincode here..." name="pincode" value="" required>
-                    <input type="text" name="userId" value="{{userlog._id}}" hidden>
-                    <label>Country</label>
-                    <input type="text" placeholder="Country here..." name="country" value="" required>
-                    <label>State</label>
-                    <input type="text" placeholder="State here..." name="state" value="" required>
-                    <label>City</label>
-                    <input type="text" placeholder="City here..." name="city" value="" required>
-                    <label>Address</label>
-                    <textarea class="custom-textarea" placeholder="Your address here..." name="address" value=""
-                        required></textarea>
-                </div>
-            </div>
+
             {{!-- --}}
-            <div class="col-md-6">
+            <div class="col-lg-12">
                 <div class="col-md-12">
                     <div class="payment-details box-shadow p-30 mb-50">
                         <h6 class="widget-title border-left mb-20">payment details</h6>
@@ -102,15 +86,29 @@
                             <h4 class="payment-title box-shadow">
                                 <input type="radio" name="payment-method" value="ONLINE-PAYPAL"> Paypal
                             </h4>
+                            <input type="text" name="userId" value="{{userlog._id}}" hidden>
                             <button class="btn btn-primary mt-3 float-right" style="width: fit-content;"
                                 type="submit">Checkout</button>
                         </div>
                     </div>
                 </div>
             </div>
+            {{!-- <h1>SAVED ADDRESSES</h1> --}}
+            <h6 class="widget-title border-left mb-20">SAVED ADDRESSES</h6>
+            <div class="panel col-md-12 mb-5">
+                {{#each useradd.address}}
+                <h4 class="payment-title box-shadow">
+                    <input type="radio" name="address"
+                        value="{{this.name}}, {{this.address}}, {{this.mobile}}, {{this.state}}, {{this.pincode}}"
+                        required> {{this.name}}, {{this.address}}, {{this.mobile}}, {{this.state}}, {{this.pincode}}
+                </h4><br>
+                {{/each}}
+            </div>
             {{!-- --}}
         </div>
     </form>
+    </div>
+   </div>
 
 
 
@@ -357,12 +355,12 @@
             success: (response) => {
                 // alert(response)
                 //swal("order created")
-                
+
                 if (response.codSuccess) {
-                    swal("Success!", "order created", "success").then(()=>{
+                    swal("Success!", "order created", "success").then(() => {
                         location.href = '/order-success'
                     })
-                    
+
                 } else if (response.razorSuccess) {
                     razorpayPayment(response)
                 } else if (response.paypalSuccess) {
@@ -417,17 +415,17 @@
             method: 'post',
             success: (response) => {
                 if (response.status) {
-                    swal("Success!", "order created", "success").then(()=>{
+                    swal("Success!", "order created", "success").then(() => {
                         location.href = '/order-success'
                     })
-                   // location.href = '/order-success'
+                    // location.href = '/order-success'
                 } else {
                     location.href = '/cancel'
                     // alert('Payment failed')
                 }
             }
-        }) 
-    } 
+        })
+    }
 
     $("#coupon-form").submit((e) => {
         e.preventDefault()
@@ -437,32 +435,49 @@
             data: $('#coupon-form').serialize(),
             success: (amount) => {
                 console.log(amount)
-                if(amount.status){
+                if (amount.status) {
                     swal("Success!", "Coupon Applied", "success").then(() => {
-                    document.getElementById('offer-price').innerHTML = amount.discountamount
-                    document.getElementById('total-price').innerHTML = amount.grandtotal
-                })
-                }else if(amount.used){
+                        document.getElementById('offer-price').innerHTML = amount.discountamount
+                        document.getElementById('total-price').innerHTML = amount.grandtotal
+                    })
+                } else if (amount.used) {
                     swal("Info!", "Coupon already used!", "warning").then(() => {
-                    document.getElementById('offer-price').innerHTML = 0 
-                    
-                })
-                }else if(amount.expired){
+                        document.getElementById('offer-price').innerHTML = 0
+
+                    })
+                } else if (amount.expired) {
                     swal("Info!", "Coupon Expired", "warning").then(() => {
-                    document.getElementById('offer-price').innerHTML = 0 
-                    
-                })
-                }else if(amount.small){
+                        document.getElementById('offer-price').innerHTML = 0
+
+                    })
+                } else if (amount.small) {
                     swal("Info!", "Total amount should be within 2000 and 4000 to apply coupon", "warning").then(() => {
-                    document.getElementById('offer-price').innerHTML = 0 
-                    
-                })
-                }else{
+                        document.getElementById('offer-price').innerHTML = 0
+
+                    })
+                } else {
                     swal("Oops!", "Coupon does not exist", "error").then(() => {
-                    document.getElementById('offer-price').innerHTML = 0 
-                    
-                }) 
+                        document.getElementById('offer-price').innerHTML = 0
+
+                    })
                 }
+            }
+        })
+    })
+
+    $("#save-address").submit((e) => {
+        e.preventDefault()
+
+        $.ajax({
+            url: '/save-address',
+            method: 'post',
+            data: $('#save-address').serialize(),
+            success: (response) => {
+                // alert(response)
+                swal("address saved").then(()=>{
+                    location.reload()
+                })
+                
             }
         })
     })
