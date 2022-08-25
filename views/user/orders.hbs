@@ -44,7 +44,7 @@
                                         
                                         {{else}}
                                         <button class="btn btn-warning btn-sm"
-                                            onclick="cancelProduct('{{this._id}}')">Cancel </button>
+                                            onclick="cancelProduct('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}')">Cancel </button>
                                         {{/if}}
                                     </td>
                                 </tr>
@@ -291,7 +291,7 @@
 <!-- END QUICKVIEW PRODUCT -->
 
 <script>
-    function cancelProduct(proId) {
+    function cancelProduct(orderId,total,paymentType) {
         console.log("cancel from orders");
         swal({
             title: "Are you sure?",
@@ -305,7 +305,10 @@
                     $.ajax({
                         url: "/cancel-order",
                         data: {
-                            product: proId
+                            orId: orderId,
+                            amount: total,
+                            payment:paymentType
+
                         },
                         method: "post",
                         success: (response) => {

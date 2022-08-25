@@ -503,7 +503,7 @@ module.exports = {
 
         })
     },
-    changePaymentStatus: (orderId, proId) => {
+    changePaymentStatus: (orderId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION)
                 .updateOne({ _id: objectId(orderId) },
@@ -563,7 +563,8 @@ module.exports = {
             pincode: body.pincode,
             state: body.state,
             address: body.address,
-            locality: body.locality
+            locality: body.locality,
+            uId:body.uId
         };
         return new Promise((resolve, reject) => {
             db.get()
@@ -781,6 +782,52 @@ module.exports = {
             }
             resolve()
         })
+    },
+    cancelAmountWallet: (userId,total)=>{
+        total=parseInt(total)
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION)
+            .updateOne({ _id: objectId(userId) }, { $inc: { wallet: total } })
+            resolve()
+        })
+    },
+    getWalletBalance: (userId)=>{
+        return new Promise((resolve,reject)=>{
+           db.get().collection(collection.USER_COLLECTION)
+            .findOne({_id:objectId(userId)}).then((response)=>{
+                response=response.wallet
+                resolve(response)
+            })
+            
+        })
+    },
+    updateWallet: (userId,walletMoney)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION)
+                .updateOne({ _id: objectId(userId) },
+                {
+                    $set: {
+                        wallet: walletMoney
+                    }
+                }
+            ).then(() => {
+                resolve()
+            })
+        })
+    },
+    increaseStock: (orderId) => {
+        return new Promise(async(resolve, reject) => {
+           let order =await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:objectId(orderId)})
+          let  productData=order.products
+            for (let i = 0; i < productData.length; i++) {
+                db.get()
+                    .collection(collection.PRODUCT_COLLECTION)
+                    .updateOne(
+                        { _id: objectId(productData[i].item) },
+                        { $inc: { Stock: productData[i].quantity } }
+                    );
+            } resolve()
+        });
     }
 
 

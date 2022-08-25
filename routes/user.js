@@ -212,16 +212,18 @@ router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
   if(cartCount!=0){
     let total=await userHelpers.getTotalAmount(req.session.user._id)
     let useradd=await userHelpers.getAddress(userlog._id)
-  res.render('user/place-order',{userhead:true,cartCount,total,userlog,useradd})
+    let walletBalance=await userHelpers.getWalletBalance(userlog._id)
+  res.render('user/place-order',{userhead:true,cartCount,total,userlog,useradd,walletBalance})
   }else{
     res.redirect('/cart')
   }
 }) 
+//wallet work
 
 router.post('/place-order',verifyLogin,async(req,res)=>{
   let products=await userHelpers.getCartProductList(req.body.userId)
-  
-  ////
+  ///
+  let walletBalance=await userHelpers.getWalletBalance(userlog._id)
   let totalPrice;
   let discount;
   if(req.session.amount){ 
@@ -233,6 +235,7 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
   ////
   req.session.cartProductDetails=products
   req.session.total=totalPrice
+  ////
   userHelpers.placeOrder(req.body,products,totalPrice,discount).then((orderId)=>{
     req.session.neworderId=orderId
     
@@ -256,11 +259,25 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
         })
       })
     }
+    else if(req.body['payment-method']==='WALLET'){
+     // totalPrice
+     if(walletBalance<totalPrice){
+      res.json({walletLow:true})
+     }else{
+      wallet=walletBalance-totalPrice
+      userHelpers.updateWallet(userlog._id,wallet)
+      userHelpers.stockManagement(products)
+      userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
+      userHelpers.cartClearing(userlog._id)
+      userHelpers.changePaymentStatus(orderId).then(()=>{
+        res.json({walletSuccess:true})
+      })
+     }
+    }
   })
-  req.session.amount=null
   
+  req.session.amount=null
   discount=null
-  console.log(req.body);
 })
  
 //paypal
@@ -352,16 +369,27 @@ userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
 })
 })
  
+///cancellled order amount moved to wallet
+router.post('/cancel-order',async(req,res)=>{
+  if(req.body.payment!= "COD"){
+    await userHelpers.cancelAmountWallet(userlog._id,req.body.amount)
+    ////
+    userHelpers.increaseStock(req.body.orId)
 
-router.post('/cancel-order',((req,res)=>{
-  userHelpers.cancelOrder(req.body.product).then((response)=>{
-    res.json(response)
-  })
-}))
+    await userHelpers.cancelOrder(req.body.orId).then((response)=>{
+      res.json(response)
+    })
+  }else{
+    await userHelpers.cancelOrder(req.body.orId).then((response)=>{
+      res.json(response)
+    })
+  }
+ /////
+})
 
 router.get('/profile',verifyLogin,((req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
-    console.log("checking",profiledata);
+    //console.log("checking",profiledata);
     res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
   })
 }))
@@ -389,6 +417,7 @@ router.get('/add-address',verifyLogin,(req,res)=>{
 })
 
 router.post('/add-address',(req,res)=>{
+  req.body.uId=Math.random()
   userHelpers.addNewAddress(req.body,userlog._id).then(()=>{
     res.redirect('/profile')
   })
@@ -448,8 +477,9 @@ router.post('/save-address',(req,res)=>{
   })
 })
 
-router.get('/edit-address',async(req,res)=>{
-  let useradd=await userHelpers.getAddress(userlog._id)
+router.get('/edit-address/:id',async(req,res)=>{
+  console.log("req.params.id",req.params.id);
+  let useradd=await userHelpers.getAddress(userlog._id,req.params.id)
   console.log("useradd",useradd);
   res.render('user/edit-address',{userhead:true,cartCount,userlog,useradd})
 })
@@ -457,11 +487,22 @@ router.get('/edit-address',async(req,res)=>{
 router.post('/edit-address',(req,res)=>{
  // userHelpers.editAddress(req.body,userlog._id)
   res.redirect('/show-address')
-
 })
 
+//working
+router.post('/balance-check',(req,res)=>{
+  if(req.body.balance>req.body.amount){
+    res.json({walletLow:true})
+   }else{
+    res.json({walletLow:false})
+   }
+})
+//development env
 
-
-
-module.exports = router;
+// router.get('/devel',verifyLogin,async(req,res)=>{
+//    let walletBalance=await userHelpers.getWalletBalance(userlog._id)
+//     console.log("walletBalance",walletBalance);
+//   res.send("ok")
+// })
+module.exports = router; 
  
