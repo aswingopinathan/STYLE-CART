@@ -1,191 +1,193 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-{{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script> --}}
-
-<body>
-
-    <!-- Sidebar -->
-    <div class="clearfix"></div>
-
-    </div>
-    <!-- Sidebar -left -->
-
-    </div>
-    <!-- Left Sidebar End -->
-
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="content-page">
-        <!-- Start content -->
-        <div class="content">
-            <div class="container-fluid">
-                <div class="page-title-box">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <h4 class="page-title">Dashboard</h4>
-                        </div>
-                        
-                    </div>
-                    <!-- end row -->
-                </div>
-                <!-- end page-title -->
-
-                <div class="row">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="card">
-                            <div class="card-heading p-4">
-                                <div class="mini-stat-icon float-right">
-                                    <i class="mdi mdi-cube-outline bg-primary  text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-16">Active Sessions</h5>
-                                </div>
-                                <h3 class="mt-4">43,225</h3>
-                                <div class="progress mt-4" style="height: 4px;">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"
-                                        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">75%</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="card">
-                            <div class="card-heading p-4">
-                                <div class="mini-stat-icon float-right">
-                                    <i class="mdi mdi-briefcase-check bg-success text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-16">Total Revenue</h5>
-                                </div>
-                                <h3 class="mt-4">$73,265</h3>
-                                <div class="progress mt-4" style="height: 4px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 88%"
-                                        aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">88%</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="card">
-                            <div class="card-heading p-4">
-                                <div class="mini-stat-icon float-right">
-                                    <i class="mdi mdi-tag-text-outline bg-warning text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-16">Average Price</h5>
-                                </div>
-                                <h3 class="mt-4">447</h3>
-                                <div class="progress mt-4" style="height: 4px;">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 68%"
-                                        aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">68%</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="card">
-                            <div class="card-heading p-4">
-                                <div class="mini-stat-icon float-right">
-                                    <i class="mdi mdi-buffer bg-danger text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-16">Add to Card</h5>
-                                </div>
-                                <h3 class="mt-4">86%</h3>
-                                <div class="progress mt-4" style="height: 4px;">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 82%"
-                                        aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">82%</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-               
-                <div class="d-flex">
-                    <div>
-                        <canvas id="mybarChart" style="height: 300px;"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="mypieChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-                
-
-                {{!-- script --}}
+{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
 
-                <script>
-                    //bar chart
-                    var xValues = ["week", "month", "threemonth", "sixmonth", "year"];
-                    var yValues = [{{ week.[0].sum }},
-                                   {{ month.[0].sum }},
-                                   {{threeMonth.[0].sum}},
-                                   {{sixMonth.[0].sum}},
-                                   {{ year.[0].sum }}];
-                    var barColors = [
-                        "#b91d47",
-                        "#00aba9",
-                        "#2b5797",
-                        "#e8c3b9",
-                        "#1e7145"
-                        ];
 
-                    new Chart("mybarChart", {
-                        type: "bar",//bar,hirozontalBar,pie,doughnut,radar,polarArea,line
-                        data: {
-                            labels: xValues,
-                            datasets: [{
-                                backgroundColor: barColors,
-                                data: yValues
-                            }]
-                        },
-                        options: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: "Sales Report"
-                                // fontSize:false
-                            }
-                        }
-                    });
-
-                    //pie chart
-                    var xValues = ["COD", "ONLINE-RAZOR", "ONLINE-PAYPAL"];
-                    var yValues = [{{cod.[0].count}}, {{razorpay.[0].count}}, {{paypal.[0].count}}];
-                    var pieColors = [
-                        "#b91d47",
-                        "#00aba9",
-                        "#2b5797"
-                    ];
-
-                    new Chart("mypieChart", {
-                        type: "doughnut",
-                        data: {
-                            labels: xValues,
-                            datasets: [{
-                                backgroundColor: pieColors,
-                                data: yValues
-                            }]
-                        },
-                        options: {
-                            title: {
-                                display: true,
-                                text: "Payment Report"
-                               
-                            }
-                        }
-                    });
-                </script>
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<!-- Start content -->
+<div class="container-fluid">
+    <div class="page-title-box">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <h4 class="page-title">Dashboard</h4>
             </div>
-           
+
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end page-title -->
+
+    {{!-- <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-heading p-4">
+                    <div class="mini-stat-icon float-right">
+                        <i class="mdi mdi-cube-outline bg-primary  text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-16">Active Sessions</h5>
+                    </div>
+                    <h3 class="mt-4">43,225</h3>
+                    <div class="progress mt-4" style="height: 4px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">75%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-heading p-4">
+                    <div class="mini-stat-icon float-right">
+                        <i class="mdi mdi-briefcase-check bg-success text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-16">Total Revenue</h5>
+                    </div>
+                    <h3 class="mt-4">$73,265</h3>
+                    <div class="progress mt-4" style="height: 4px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 88%" aria-valuenow="88"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">88%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-heading p-4">
+                    <div class="mini-stat-icon float-right">
+                        <i class="mdi mdi-tag-text-outline bg-warning text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-16">Average Price</h5>
+                    </div>
+                    <h3 class="mt-4">447</h3>
+                    <div class="progress mt-4" style="height: 4px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 68%" aria-valuenow="68"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">68%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-heading p-4">
+                    <div class="mini-stat-icon float-right">
+                        <i class="mdi mdi-buffer bg-danger text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-16">Add to Card</h5>
+                    </div>
+                    <h3 class="mt-4">86%</h3>
+                    <div class="progress mt-4" style="height: 4px;">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 82%" aria-valuenow="82"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">Previous period<span class="float-right">82%</span></p>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    {{!-- chart section --}}
+    <div class="d-flex">
+        <div class="col-md-6">
+            <canvas id="myLineChart" style="height: 300px;"></canvas>
+        </div>
+        <div class="col-md-6" >
+            <canvas id="myDoughnutChart" style="height: 300px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+        const ctx = document.getElementById('myLineChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',//doughnut
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Weekly Sales Report',
+                    data: [12, 19, 3, 5, 2, 3, 8],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        //2nd chart
+         const ctx1 = document.getElementById('myDoughnutChart').getContext('2d');
+        const myChart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ["ONLINE-RAZOR", "ONLINE-PAYPAL","COD"],
+                datasets: [{
+                    label: 'PAYMENT METHOD',
+                    data: [{{razorpay.[0].count}}, {{paypal.[0].count}}, {{cod.[0].count}}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+            }
+        });
+        </script>
+
 
 
 

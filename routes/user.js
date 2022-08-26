@@ -5,7 +5,7 @@ var router = express.Router();
 const productHelpers = require('../helpers/product-helpers');
 const userHelpers = require('../helpers/user-helpers')
 const paypal = require('paypal-rest-sdk');
-const CC = require("currency-converter-lt")
+//const CC = require("currency-converter-lt")
 
 
 const verifyLogin = (req, res, next) => {
@@ -82,7 +82,6 @@ router.post('/login', (req, res) => {
       res.redirect('/login')
     } else {
       if (response.status) {
-        console.log(response.status);
         req.session.user = response.user
         req.session.loggedIn = true;
         res.redirect('/login')
@@ -320,6 +319,7 @@ router.get('/success/:id', (req, res) => {
    
 }); 
 
+//paypal
 router.get('/cancel', (req, res) => {
   userHelpers.deleteTheOrder(req.session.neworderId).then(()=>{
     res.redirect('/orders')
@@ -373,9 +373,7 @@ userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
 router.post('/cancel-order',async(req,res)=>{
   if(req.body.payment!= "COD"){
     await userHelpers.cancelAmountWallet(userlog._id,req.body.amount)
-    ////
     userHelpers.increaseStock(req.body.orId)
-
     await userHelpers.cancelOrder(req.body.orId).then((response)=>{
       res.json(response)
     })
@@ -384,12 +382,10 @@ router.post('/cancel-order',async(req,res)=>{
       res.json(response)
     })
   }
- /////
 })
 
 router.get('/profile',verifyLogin,((req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
-    //console.log("checking",profiledata);
     res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
   })
 }))
@@ -428,6 +424,7 @@ router.get('/show-address',verifyLogin,async(req,res)=>{
   console.log("useradd",useradd);
   res.render('user/show-address',{userlog,userhead:true,cartCount,useradd})
 })
+
 
 router.get('/edit-profile',verifyLogin,(req,res)=>{
   userHelpers.getProfile(userlog._id).then((profiledata)=>{
@@ -489,7 +486,12 @@ router.post('/edit-address',(req,res)=>{
   res.redirect('/show-address')
 })
 
-//working
+router.post('/delete-address',(req,res)=>{
+  // userHelpers.deleteAddress(req.body,userlog._id)
+   res.redirect('/show-address')
+ })
+
+//wallet balance check ajax
 router.post('/balance-check',(req,res)=>{
   if(req.body.balance>req.body.amount){
     res.json({walletLow:true})

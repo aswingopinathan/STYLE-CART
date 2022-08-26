@@ -109,7 +109,6 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let orders = await db.get().collection(collection.ORDER_COLLECTION)
                 .find().toArray()
-            console.log(orders);
             resolve(orders)
         })
     }, getOrderProductsAdmin: (orderId) => {
@@ -440,6 +439,29 @@ module.exports = {
               } 
             );
         })
+            resolve()
+        })
+    },
+    adminIncreaseStock: (orderId) => {
+        return new Promise(async(resolve, reject) => {
+           let order =await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:objectId(orderId)})
+          let  productData=order.products
+            for (let i = 0; i < productData.length; i++) {
+                db.get()
+                    .collection(collection.PRODUCT_COLLECTION)
+                    .updateOne(
+                        { _id: objectId(productData[i].item) },
+                        { $inc: { Stock: productData[i].quantity } }
+                    );
+            } resolve()
+        });
+    },
+    //working on admin cancel fund to wallet no userid
+    AdminCancelAmountWallet: (userId,total)=>{
+        total=parseInt(total)
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION)
+            .updateOne({ _id: objectId(userId.valueOf()) }, { $inc: { wallet: total } })
             resolve()
         })
     }

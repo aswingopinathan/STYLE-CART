@@ -10,6 +10,14 @@ let Pin = "1234"
 
 /* GET users listing. */
 
+const verifyAdminLogin = (req, res, next) => {
+  if (req.session.isadmin) {
+    next()
+  } else {
+    res.redirect('/admin')
+  }
+}
+
 router.get('/', function (req, res, next) {
   if (req.session.isadmin) {
     res.redirect('/admin/adminindex')
@@ -18,9 +26,9 @@ router.get('/', function (req, res, next) {
   }
 });
 
-router.get('/adminindex',async function (req, res, next) {
-  if (req.session.isadmin) {
-    let cod = await adminHelpers.getPaymentMethodNums('COD')
+router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
+  // console.log("req.session.isadmin",req.session.isadmin);
+  let cod = await adminHelpers.getPaymentMethodNums('COD')
     let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
     let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
 
@@ -29,44 +37,41 @@ router.get('/adminindex',async function (req, res, next) {
     let threeMonth = await adminHelpers.getRevenue('month',3)
     let month = await adminHelpers.getRevenue('month',1);
     let week = await adminHelpers.getRevenue('day',7);
-    console.log(year);
-    console.log(sixMonth);
-    console.log(threeMonth);
-    console.log(week);
+
+    console.log("year",year);
+    console.log("sixMonth",sixMonth);
+    console.log("sixMonth",threeMonth);
+    console.log("week",week);
     res.render('admin/index', { admin: true,cod, razorpay, paypal, year, sixMonth, threeMonth, month,week });
-  } else {
-    res.redirect('/admin')
-  }
 });
 
 router.post('/adminindex', (req, res, next) => {
   const { Email, Password } = req.body;
   if (userName === Email && Pin === Password) {
     req.session.isadmin = userName
-    req.session.check = true
     req.session.err = null
     console.log("admin session created");
     res.redirect('/admin/adminindex')
   }
   else { 
-    req.session.err = "incorrect username or password"
+    req.session.err = "Invalid Credential"
     res.redirect('/admin')
   }
 })
 
-router.get('/show-user', (req, res, next) => {
+router.get('/show-user',verifyAdminLogin, (req, res, next) => {
   adminHelpers.getAllUsers().then((users) => {
     res.render('admin/show-user', { admin: true, users })
   })
 })
 
-router.get('/show-products', (req, res, next) => {
+router.get('/show-products',verifyAdminLogin, (req, res, next) => {
   productHelpers.getAllProducts().then((products) => {
     res.render('admin/show-products', { admin: true, products })
   })
 })
 
-router.get('/add-product', async function (req, res, next) {
+router.get('/add-product',verifyAdminLogin, async function (req, res, next) {
   let getcategory = await adminHelpers.getAllCategory()
   let getsubcategory = await adminHelpers.getAllSubCategory()
   let brands = await adminHelpers.getAllBrands()
@@ -98,7 +103,7 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
 //multer
 
 
-  router.get('/edit-product/:id', async (req, res) => {
+  router.get('/edit-product/:id',verifyAdminLogin, async (req, res) => {
     try{
     let editproduct = await productHelpers.getproductDetails(req.params.id)
     let getcategory = await adminHelpers.getAllCategory()
@@ -122,7 +127,7 @@ router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   }) 
 }) 
 
-router.get('/delete-product/:id', (req, res) => {
+router.get('/delete-product/:id',verifyAdminLogin, (req, res) => {
   let proId = req.params.id
   console.log(proId);
   productHelpers.deleteProduct(proId).then((response) => {
@@ -131,7 +136,7 @@ router.get('/delete-product/:id', (req, res) => {
 })
 
 //user blocking
-router.get('/block/:id', (req, res) => {
+router.get('/block/:id',verifyAdminLogin, (req, res) => {
   var userId = req.params.id;
   adminHelpers.blockUser(userId).then(() => {
     res.redirect('/admin/show-user')
@@ -139,20 +144,20 @@ router.get('/block/:id', (req, res) => {
 })
 
 //user unblocking
-router.get('/unblock/:id', (req, res) => {
+router.get('/unblock/:id',verifyAdminLogin, (req, res) => {
   var userId = req.params.id;
   adminHelpers.unblockUser(userId).then(() => {
     res.redirect('/admin/show-user')
   })
 })
 
-router.get('/show-category', (req, res) => {
+router.get('/show-category',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllCategory().then((category) => {
     res.render('admin/show-category', { admin: true, category })
   })
 })
 
-router.get('/add-category', (req, res) => {
+router.get('/add-category',verifyAdminLogin, (req, res) => {
   res.render('admin/add-category', { admin: true })
 })
 
@@ -162,20 +167,20 @@ router.post('/add-category', (req, res) => {
   })
 })
 
-router.get('/delete-category/:id', (req, res) => {
+router.get('/delete-category/:id',verifyAdminLogin, (req, res) => {
   let catId = req.params.id
   adminHelpers.deleteCategory(catId).then(() => {
     res.redirect('/admin/show-category')
   })
 })
 
-router.get('/show-sub-category', (req, res) => {
+router.get('/show-sub-category',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllSubCategory().then((subcategory) => {
     res.render('admin/show-sub-category', { admin: true, subcategory })
   })
 })
 
-router.get('/add-sub-category', (req, res) => {
+router.get('/add-sub-category',verifyAdminLogin, (req, res) => {
   res.render('admin/add-sub-category', { admin: true })
 })
 
@@ -185,7 +190,7 @@ router.post('/add-sub-category', (req, res) => {
   })
 })
 
-router.get('/delete-sub-category/:id', (req, res) => {
+router.get('/delete-sub-category/:id',verifyAdminLogin, (req, res) => {
   let subId = req.params.id
   adminHelpers.deleteSubCategory(subId).then(() => {
     res.redirect('/admin/show-sub-category')
@@ -193,13 +198,13 @@ router.get('/delete-sub-category/:id', (req, res) => {
 })
 
 //brands section start
-router.get('/show-brands', (req, res) => {
+router.get('/show-brands',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllBrands().then((brands) => {
     res.render('admin/show-brands', { admin: true, brands })
   })
 })
 
-router.get('/add-brands', (req, res) => {
+router.get('/add-brands',verifyAdminLogin, (req, res) => {
   res.render('admin/add-brands', { admin: true })
 })
 
@@ -209,7 +214,7 @@ router.post('/add-brands', (req, res) => {
   })
 })
 
-router.get('/delete-brands/:id', (req, res) => {
+router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
   let brandId = req.params.id
   console.log(brandId);
   adminHelpers.deleteBrands(brandId).then(() => {
@@ -220,13 +225,15 @@ router.get('/delete-brands/:id', (req, res) => {
 
 //orders section start
 //working
-router.get('/show-orders', (req, res) => {
+router.get('/show-orders',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllOrders().then((orders) => {
+    let aswin=orders[0].userId
+    console.log("aswin",aswin);
     res.render('admin/show-orders', { admin: true,order:orders })
   })
-})
+}) 
 
-router.get('/view-order-products/:id',async(req,res)=>{
+router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{
   console.log(req.params.id);
   let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
   let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
@@ -239,25 +246,38 @@ router.get('/view-order-products/:id',async(req,res)=>{
 router.get('/logout', (req, res) => {
   req.session.isadmin = null
   console.log("admin session destroyed");
-  req.session.check = null
   res.redirect('/admin')
 })
-//workin
-router.post('/admin-cancel-order',((req,res)=>{
-  adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
-    res.json(response)
-  })
-}))
+//admin cancel fund to wallet no userid
+// router.post('/admin-cancel-order',(req,res)=>{
+//   adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
+//     res.json(response)
+//   })
+// })
+router.post('/admin-cancel-order',async(req,res)=>{
+  if(req.body.payment!= "COD"){
+    await adminHelpers.AdminCancelAmountWallet(req.body.user,req.body.amount)
+    await adminHelpers.adminIncreaseStock(req.body.order)
+    await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
+      res.json(response)
+    })
+  }else{
+    await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
+      res.json(response)
+    })
+  }
+})
+///admin cancel fund to wallet
 
-router.get('/show-banner',((req,res)=>{
+router.get('/show-banner',verifyAdminLogin,(req,res)=>{
   adminHelpers.getAllBanner().then((banner)=>{
     res.render('admin/show-banner',{admin:true,banner})
   })
-}))
+})
 
-router.get('/add-banner',((req,res)=>{
+router.get('/add-banner',verifyAdminLogin,(req,res)=>{
 res.render('admin/add-banner',{admin:true}) 
-}))
+})
 
 router.post('/add-banner', upload.array('Images'), (req, res) => {
   var filenames = req.files.map(function (file) {
@@ -265,14 +285,12 @@ router.post('/add-banner', upload.array('Images'), (req, res) => {
   });
   req.body.Images = filenames;
   adminHelpers.addBanner(req.body).then(()=> {
-    console.log(req.body);
     res.redirect('/admin/show-banner')
   })
 })
 
-router.get('/delete-banner/:id', (req, res) => {
+router.get('/delete-banner/:id',verifyAdminLogin, (req, res) => {
   let banner = req.params.id
-  console.log("deleted banner"+banner);
   adminHelpers.deleteBanner(banner).then(() => {
     res.redirect('/admin/show-banner')
   })
@@ -283,18 +301,15 @@ router.get('/sample',(req,res)=>{
   res.render('admin/page404')
 })
 
-//chart section start
-//initial
-//chart section end
 
 //coupon section
-router.get('/show-coupon', (req, res) => {
+router.get('/show-coupon',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllCoupon().then((coupon) => {
     res.render('admin/show-coupon', { admin: true, coupon })
   })
 })
 
-router.get('/add-coupon', (req, res) => {
+router.get('/add-coupon',verifyAdminLogin, (req, res) => {
   res.render('admin/add-coupon', { admin: true })
 })
 
@@ -304,23 +319,20 @@ router.post('/add-coupon', (req, res) => {
   })
 })
 
-router.get('/delete-coupon/:id', (req, res) => {
+router.get('/delete-coupon/:id',verifyAdminLogin, (req, res) => {
   let couponId = req.params.id
-  console.log(couponId);
   adminHelpers.deleteCoupon(couponId).then(() => {
     res.redirect('/admin/show-coupon')
   })
 })
 
 //offercategory//working
-router.get('/show-offer-category',async (req, res) => {
+router.get('/show-offer-category',verifyAdminLogin,async (req, res) => {
  let category= await adminHelpers.getAllCategory()
- //let offerCategory= await adminHelpers.getAllCategoryOffer()
- console.log("category",category);
  res.render('admin/show-offer-category', { admin: true,category })
 })
 
-router.get('/add-offer-category/:id', (req, res) => {
+router.get('/add-offer-category/:id',verifyAdminLogin, (req, res) => {
   req.session.catId=req.params.id
   res.render('admin/add-offer-category', { admin: true }) 
 })

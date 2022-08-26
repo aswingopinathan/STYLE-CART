@@ -1,109 +1,117 @@
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- Top Bar Start -->
+    <div class="topbar">
+        <!-- LOGO -->
+        <div class="topbar-left">
+            <a href="/admin/adminindex" class="logo">
+                <span class="logo-light">
+                    STYLE CART
+                </span>
+                <span class="logo-sm">
+                    <i class="mdi mdi-camera-control"></i>
+                </span>
+            </a>
+        </div>
 
-    <body>
-        <!-- Begin page -->
-        <div id="wrapper">
-            <!-- Top Bar Start -->
-            <div class="topbar">
-                <!-- LOGO -->
-                <div class="topbar-left">
-                    <a href="/admin/adminindex" class="logo">
-                        <span class="logo-light">
-                            STYLE CART
-                        </span>
-                        <span class="logo-sm">
-                            <i class="mdi mdi-camera-control"></i>
-                        </span>
-                    </a>
-                </div>
-                
-                <nav class="navbar-custom">
-                    <ul class="navbar-right list-inline float-right mb-0">
-                        <!-- language-->
-                        <li >
-                            <div class="d-flex">
-                              <a href="/admin/logout" class="btn btn-primary mt-3 " style="width: fit-content;">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <!-- Top Bar End -->
-
-            <!-- ========== Left Sidebar Start ========== -->
-            <div class="left side-menu">
-                <div  id="remove-scroll">
-                    {{!--above div class="slimscroll-menu" --}}
-                    <!--- Sidemenu -->
-                    <div id="sidebar-menu">
-                        <!-- Left Menu Start -->
-                        <ul class="metismenu" id="side-menu">
-                            <li class="menu-title">Menu</li>
-                            <li>
-                                <a href="/admin/adminindex" class="waves-effect">
-                                    <i class="icon-accelerator"></i><span class="badge badge-success badge-pill float-right"></span> <span> Dashboard </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Users <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="submenu">
-                                    <li><a href="/admin/show-user">show user</a></li>
-                                </ul>
-                            </li>
-                             <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Products <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="submenu">
-                                    <li><a href="/admin/show-products">Show Products</a></li>
-                                    <li><a href="/admin/add-product">Add Products</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Category <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="submenu">
-                                    <li><a href="/admin/show-category">Show category</a></li>
-                                    <li><a href="/admin/show-sub-category">Show sub-category</a></li>
-                                    <li><a href="/admin/show-offer-category">Show Category Offer</a></li>
-                                    <li><a href="/admin/show-brands">Show brands</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Orders <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                 <ul class="submenu">
-                                    <li><a href="/admin/show-orders">Show Orders</a></li>
-                                    
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Banners <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                 <ul class="submenu">
-                                    <li><a href="/admin/show-banner">Show Banner</a></li> 
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Coupons <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                 <ul class="submenu">
-                                    <li><a href="/admin/show-coupon">Show Coupon</a></li> 
-                                </ul>
-                            </li>
-                             
-                        </ul>
+        <nav class="navbar-custom">
+            <ul class="navbar-right list-inline float-right mb-0">
+                <!-- language-->
+                <li>
+                    <div class="d-flex">
+                        <a href="/admin/logout" class="btn btn-primary mt-3 " style="width: fit-content;">Logout</a>
                     </div>
-                    <!-- Sidebar -->
-                    <div class="clearfix"></div>
-                </div>
-                <!-- Sidebar -left -->
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Top Bar End -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="left side-menu">
+        <div id="remove-scroll">
+            {{!--above div class="slimscroll-menu" --}}
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu" id="side-menu">
+                    <li class="menu-title">Menu</li>
+                    <li>
+                        <a href="/admin/adminindex" class="waves-effect">
+                            <i class="icon-accelerator"></i><span
+                                class="badge badge-success badge-pill float-right"></span> <span> Dashboard </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Users <span
+                                    class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-user">show user</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Products
+                                <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-products">Show Products</a></li>
+                            <li><a href="/admin/add-product">Add Products</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Category
+                                <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-category">Show category</a></li>
+                            <li><a href="/admin/show-sub-category">Show sub-category</a></li>
+                            <li><a href="/admin/show-offer-category">Show Category Offer</a></li>
+                            <li><a href="/admin/show-brands">Show brands</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Orders
+                                <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-orders">Show Orders</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Banners
+                                <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-banner">Show Banner</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="waves-effect"><i class="icon-spread"></i><span> Coupons
+                                <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                            </span></a>
+                        <ul class="submenu">
+                            <li><a href="/admin/show-coupon">Show Coupon</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
             </div>
-            <!-- Left Sidebar End -->
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-                    <div class="container-fluid">
-                        <!-- end page-title -->
+            <!-- Sidebar -->
+            {{!-- <div class="clearfix"></div> --}}
+        </div>
+        <!-- Sidebar -left -->
+    </div>
+    <!-- Left Sidebar End -->
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container-fluid">
+                <!-- end page-title -->
             </div>
         </div>
-        <!-- END wrapper -->
-    </body>
-
-</html>
+        

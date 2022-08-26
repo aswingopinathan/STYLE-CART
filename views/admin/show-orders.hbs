@@ -11,8 +11,6 @@
                                 <th scope="col">Index</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Address</th>
-                                <th scope="col">Pincode</th>
-                                <th scope="col">Mobile</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Payment</th>
                                 <th scope="col">Status</th>
@@ -26,8 +24,6 @@
                                 <td>{{inc @index}}</td>
                                 <td>{{this.date1}}</td>
                                 <td>{{this.deliveryDetails.address}}</td>
-                                <td>{{this.deliveryDetails.pincode}}</td>
-                                <td>{{this.deliveryDetails.mobile}}</td>
                                 <td>{{this.totalAmount}}</td>
                                 <td>{{this.paymentMethod}}</td>
                                 <td>{{this.status}}</td>
@@ -56,7 +52,7 @@
                                             <button class="dropdown-item"
                                                 onclick="statusDelivered('{{this._id}}')">Delivered</button>
                                             <button class="dropdown-item"
-                                                onclick="statusCancelled('{{this._id}}')">Cancel</button>
+                                                onclick="statusCancelled('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.[0].userId}}')">Cancel</button>
                                             {{/if}}
                                         </div>
                                     </div>
@@ -148,8 +144,8 @@
         });
     }
 
-    function statusCancelled(orderId) {
-
+    function statusCancelled(orderId,total,paymentType,usrId) {
+        console.log("usrId",usrId)
         swal({
             title: "Are you sure?",
             text: "Product will be cancelled from orders",
@@ -162,7 +158,10 @@
                     $.ajax({
                         url: "/admin/admin-cancel-order",
                         data: {
-                            order: orderId
+                            order: orderId,
+                            amount: total,
+                            payment:paymentType,
+                            userId: usrId
                            
                         },
                         method: "post",
