@@ -413,9 +413,9 @@ router.get('/add-address',verifyLogin,(req,res)=>{
 })
 
 router.post('/add-address',(req,res)=>{
-  req.body.uId=Math.random()
+  // req.body.uId=Math.random()
   userHelpers.addNewAddress(req.body,userlog._id).then(()=>{
-    res.redirect('/profile')
+    res.redirect('/show-address')
   })
 })
 
@@ -476,18 +476,18 @@ router.post('/save-address',(req,res)=>{
 
 router.get('/edit-address/:id',async(req,res)=>{
   console.log("req.params.id",req.params.id);
-  let useradd=await userHelpers.getAddress(userlog._id,req.params.id)
+  let useradd=await userHelpers.getSpecificAddress(req.params.id)
   console.log("useradd",useradd);
   res.render('user/edit-address',{userhead:true,cartCount,userlog,useradd})
 })
 
-router.post('/edit-address',(req,res)=>{
- // userHelpers.editAddress(req.body,userlog._id)
+router.post('/edit-address/:id',(req,res)=>{
+  userHelpers.editAddress(req.body,req.params.id)
   res.redirect('/show-address')
 })
 
-router.post('/delete-address',(req,res)=>{
-  // userHelpers.deleteAddress(req.body,userlog._id)
+router.get('/delete-address/:id',(req,res)=>{
+  userHelpers.deleteAddress(req.params.id)
    res.redirect('/show-address')
  })
 

@@ -5,7 +5,7 @@
                 <h4 class="mt-0 header-title mb-4 text-center">All Orders</h4>
 
                 <div class="table-responsive">
-                    <table class="table table-hover" id="productsTable">
+                    <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th scope="col">Index</th>
@@ -52,7 +52,7 @@
                                             <button class="dropdown-item"
                                                 onclick="statusDelivered('{{this._id}}')">Delivered</button>
                                             <button class="dropdown-item"
-                                                onclick="statusCancelled('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.[0].userId}}')">Cancel</button>
+                                                onclick="statusCancelled('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.userId}}')">Cancel</button>
                                             {{/if}}
                                         </div>
                                     </div>
@@ -146,6 +146,7 @@
 
     function statusCancelled(orderId,total,paymentType,usrId) {
         console.log("usrId",usrId)
+        console.log("paymentType",paymentType)
         swal({
             title: "Are you sure?",
             text: "Product will be cancelled from orders",

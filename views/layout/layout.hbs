@@ -27,20 +27,32 @@
     <!-- Style customizer (Remove these two lines please) -->
     <link rel="stylesheet" href="/stylesheets/user/css/style-customizer.css">
     <link href="#" data-style="styles" rel="stylesheet">
+
+    {{!-- external datatable --}}
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
     {{/if}}
 
     {{#if admin}}
     <!-- Bootstrap rating css -->
-    {{!-- <link href="../plugins/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css"> --}}
+    <link href="/stylesheets/admin/plugins/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/admin/css/metismenu.min.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/admin/css/icons.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/admin/css/style.css" rel="stylesheet" type="text/css">
+
+    {{!-- datatables --}}
+    <!-- DataTables -->
+        <link href="/stylesheets/admin/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+        <link href="/stylesheets/admin/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Responsive datatable examples -->
+        <link href="/stylesheets/admin/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     {{/if}}
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     
     {{#if productScript}}
     {{!-- nproduct-view css start--}}
@@ -84,10 +96,19 @@
     <script src="/stylesheets/user/js/plugins.js"></script>
     <!-- Main js file that contents all jQuery plugins activation. -->
     <script src="/stylesheets/user/js/main.js"></script>
+
+    {{!-- external datatable script --}}
+     <script>
+    $(document).ready( function () {
+    $('#productsTable').DataTable();
+    } );
+    </script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
     {{/if}}
 
     {{#if admin}}
-
     {{!-- swal cdn --}}
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -99,19 +120,34 @@
     <script src="/stylesheets/admin/js/waves.min.js"></script>
 
     <!-- Bootstrap rating js -->
-    {{!-- <script src="../plugins/bootstrap-rating/bootstrap-rating.min.js"></script> --}}
+    <script src="/stylesheets/admin/plugins/bootstrap-rating/bootstrap-rating.min.js"></script>
     <script src="/stylesheets/admin/pages/rating-init.js"></script>
 
     <!-- App js -->
     <script src="/stylesheets/admin/js/app.js"></script>
+
+    {{!-- datatables --}}
+     <!-- Required datatable js -->
+        <script src="/stylesheets/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Buttons examples -->
+        <script src="/stylesheets/admin/plugins/datatables/dataTables.buttons.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/buttons.bootstrap4.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/jszip.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/pdfmake.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/vfs_fonts.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/buttons.html5.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/buttons.print.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/buttons.colVis.min.js"></script>
+        <!-- Responsive examples -->
+        <script src="/stylesheets/admin/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="/stylesheets/admin/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+        <!-- Datatable init js -->
+        <script src="/stylesheets/admin/pages/datatables.init.js"></script>
     {{/if}}
 
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-    <script>
-    $(document).ready( function () {
-    $('#productsTable').DataTable();
-    } );
-    </script>
+   
     
     {{#if productScript}}
     {{!-- nproduct-view --}}

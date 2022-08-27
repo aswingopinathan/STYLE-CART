@@ -1,3 +1,58 @@
+<style>
+.box {
+  width: 200px; height: 300px;
+  position: relative;
+  border: 1px solid #BBB;
+  background: #EEE;
+}
+.ribbon {
+  position: absolute;
+  right: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px; height: 75px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  width: 100px;
+  display: block;
+  background: #f60a0a;
+  background: linear-gradient(#f60a0a 0%, #f60a0a 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px; right: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+
+
+</style>
+
+
 <!-- Body main wrapper start -->
 <div class="wrapper">
     <!-- START SLIDER AREA -->
@@ -85,7 +140,10 @@
                                     <!-- product-item start -->
                                     {{#each productlist}}
                                     <div class="col-lg-3 col-md-4">
-                                        <div class="product-item ">
+                                        <div class="product-item banner-item ">
+                                <div class="ribbon">
+                                    <span> {{this.discountpercentage}}% Off</span>
+                                </div>
                                             <div class="product-img">
                                                 <a href="/product-view/{{this._id}}">
                                                     <img src="/product-images/{{this.Images.[0]}}" alt="" style="width: 270px; height:300px" />
@@ -101,7 +159,7 @@
                                                         </h6>
                                                         <h6 class="product-title"><a>Stock  {{this.Stock}}</a></h6>
                                                         {{!-- <h3 class="pro-price"><s>₹{{this.Cutprice}}</s></h3> --}}
-                                                        <div> <s class="pro-price">MRP: {{this.Cutprice}}.00</s> <span class="text-danger font-weight-bold"> {{this.discountpercentage.[0]}}% off</span></div>
+                                                        <div> <s class="pro-price">MRP: {{this.Cutprice}}.00</s> </div>
                                                 <h3 class="pro-price">₹{{this.Price}}</h3>
                                                 
                                                 

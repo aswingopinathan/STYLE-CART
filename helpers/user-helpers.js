@@ -558,33 +558,31 @@ module.exports = {
     },
     addNewAddress: (body, userId) => {
         let addressObj = {
+            userId: objectId(userId),
             name: body.name,
             mobile: body.mobile,
             pincode: body.pincode,
             state: body.state,
             address: body.address,
             locality: body.locality,
-            uId:body.uId
         };
         return new Promise((resolve, reject) => {
             db.get()
-                .collection(collection.USER_COLLECTION)
-                .updateOne(
-                    { _id: objectId(userId) },
-                    {
-                        $push: { address: addressObj },
-                    }
-                )
+                .collection(collection.ADDRESS_COLLECTION)
+                .insertOne(addressObj)
                 .then(() => {
                     resolve(response);
                 });
         });
     },
-    getAddress: (userId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.USER_COLLECTION).findOne({ _id: objectId(userId) }).then((response) => {
-                resolve(response)
-            })
+    getAddress: (usrId) => {
+        return new Promise(async(resolve, reject) => {
+          let userAddress =  await db.get().collection(collection.ADDRESS_COLLECTION).aggregate([
+            {
+                $match:{userId:objectId(usrId)}
+            }
+           ]).toArray()
+           resolve(userAddress)
         })
     }, editProfile: (body, userId) => {
         console.log(body);
@@ -828,7 +826,33 @@ module.exports = {
                     );
             } resolve()
         });
+    },
+    getSpecificAddress: (addressId) => {
+        return new Promise(async(resolve, reject) => {
+          let userAddress =  await db.get().collection(collection.ADDRESS_COLLECTION).findOne({_id:objectId(addressId)})
+           resolve(userAddress)
+        })
+    },
+    editAddress : (body,addressId) => {
+        return new Promise((resolve,reject)=>{
+            db.get()
+            .collection(collection.ADDRESS_COLLECTION)
+            .updateOne({_id:objectId(addressId)},{$set:{
+                name:body.name,
+                mobile:body.mobile,
+                pincode:body.pincode,
+                state:body.state,
+                address:body.address,
+                locality:body.locality
+            }})
+            resolve()
+        })
+    },
+    deleteAddress: (addressId) => {
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ADDRESS_COLLECTION).deleteOne({_id:objectId(addressId)})
+            resolve()
+        })
     }
-
 
 }

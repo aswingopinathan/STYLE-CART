@@ -3,7 +3,7 @@
   <a href="/add-address" class="btn btn-primary">Add address</a><br><br>
 
   <div class="container-fluid d-flex ">
-    {{#each useradd.address}}
+    {{#each useradd}}
     <div class="card m-5" style="width: 18rem;">
       <div class="card-body ">
         <h5 class="card-title text-center">Address</h5>
@@ -14,8 +14,8 @@
         <p class="card-text">{{this.mobile}} </p>
         <p class="card-text">{{this.state}} </p>
         <p class="card-text">{{this.uId}} </p>
-        <a href="/edit-address/{{this.uId}}" class="card-link btn btn-primary ">Edit</a>
-        <a href="#" class="card-link btn btn-danger">Delete</a>
+        <a href="/edit-address/{{this._id}}" class="card-link btn btn-primary ">Edit</a>
+        <a href="/delete-address/{{this._id}}" class="card-link btn btn-danger">Delete</a>
       </div>
     </div>
     {{/each}}

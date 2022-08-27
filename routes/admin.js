@@ -31,18 +31,12 @@ router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
   let cod = await adminHelpers.getPaymentMethodNums('COD')
     let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
     let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
+    let wallet = await adminHelpers.getPaymentMethodNums('WALLET')
 
-    let year = await adminHelpers.getRevenue('year',1);
-    let sixMonth =await adminHelpers.getRevenue('month',6)
-    let threeMonth = await adminHelpers.getRevenue('month',3)
-    let month = await adminHelpers.getRevenue('month',1);
-    let week = await adminHelpers.getRevenue('day',7);
+    let data1= await adminHelpers.getChartData()
+    console.log("data1",data1)
 
-    console.log("year",year);
-    console.log("sixMonth",sixMonth);
-    console.log("sixMonth",threeMonth);
-    console.log("week",week);
-    res.render('admin/index', { admin: true,cod, razorpay, paypal, year, sixMonth, threeMonth, month,week });
+    res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,data1 });
 });
 
 router.post('/adminindex', (req, res, next) => {
@@ -227,8 +221,8 @@ router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
 //working
 router.get('/show-orders',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllOrders().then((orders) => {
-    let aswin=orders[0].userId
-    console.log("aswin",aswin);
+    // let aswin=orders[0].userId
+    // console.log("aswin",aswin);
     res.render('admin/show-orders', { admin: true,order:orders })
   })
 }) 
@@ -238,7 +232,7 @@ router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{
   let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
   let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
   let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
-  console.log(deliverystatusadmin);
+  console.log("products",products);
   res.render('admin/view-order-products',{admin:true,products,orders,deliverystatusadmin})
 })
 //orders section end
@@ -249,14 +243,10 @@ router.get('/logout', (req, res) => {
   res.redirect('/admin')
 })
 //admin cancel fund to wallet no userid
-// router.post('/admin-cancel-order',(req,res)=>{
-//   adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
-//     res.json(response)
-//   })
-// })
+
 router.post('/admin-cancel-order',async(req,res)=>{
   if(req.body.payment!= "COD"){
-    await adminHelpers.AdminCancelAmountWallet(req.body.user,req.body.amount)
+    await adminHelpers.AdminCancelAmountWallet(req.body.userId,req.body.amount)
     await adminHelpers.adminIncreaseStock(req.body.order)
     await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
       res.json(response)
@@ -267,7 +257,7 @@ router.post('/admin-cancel-order',async(req,res)=>{
     })
   }
 })
-///admin cancel fund to wallet
+///admin cancel fund return to wallet
 
 router.get('/show-banner',verifyAdminLogin,(req,res)=>{
   adminHelpers.getAllBanner().then((banner)=>{
@@ -363,6 +353,11 @@ router.post('/offer-deactivate',(req,res)=>{
     adminHelpers.deactivateCategoryOffer(req.body.categoryId)
     res.json(response)
   })
+})
+
+router.get('/sample1',(req,res)=>{
+  adminHelpers.getChartData()
+  res.send("ok")
 })
  
 

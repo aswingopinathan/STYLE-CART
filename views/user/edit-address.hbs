@@ -2,36 +2,36 @@
     <div class="col-md-6 m-auto">
         <div class="container mt-5 pl-5">
             <h2 class="text-center">Edit Address</h2>
-            <form action="/edit-address" method="post">
+            <form action="/edit-address/{{useradd._id}}" method="post">
             <div class="form-group">
                 <label><strong>Name</strong></label>
-                <input type="text" class="form-control"  id="" name="name" value="{{useradd.address.[0].name}}"
+                <input type="text" class="form-control"  id="" name="name" value="{{useradd.name}}"
                     required>
             </div>
             <div class="form-group">
                 <label><strong>Mobile</strong></label>
-                <input type="text" class="form-control"  id="" name="mobile" value="{{useradd.address.[0].mobile}}"
+                <input type="text" class="form-control"  id="" name="mobile" value="{{useradd.mobile}}"
                     id="" required>
             </div>
             <div class="form-group">
                 <label><strong>Pincode</strong></label>
                 <input type="text" class="form-control" id=""  name="pincode" 
-                    value="{{useradd.address.[0].pincode}}" required>
+                    value="{{useradd.pincode}}" required>
             </div>
             <div class="form-group">
                 <label><strong>Locality</strong></label>
                 <input type="text" class="form-control" id=""  name="locality" 
-                    value="{{useradd.address.[0].locality}}" required>
+                    value="{{useradd.locality}}" required>
             </div>
             <div class="form-group">
                 <label><strong>Address</strong></label>
                 <input type="text" class="form-control" id=""  name="address" 
-                    value="{{useradd.address.[0].address}}" required>
+                    value="{{useradd.address}}" required>
             </div>
             <div class="form-group">
                 <label><strong>State</strong></label>
                 <input type="text" class="form-control" id=""  name="state" 
-                    value="{{useradd.address.[0].state}}" required>
+                    value="{{useradd.state}}" required>
             </div>
            
             <div class="mt-3" style=" width: fit-content;">

@@ -458,12 +458,87 @@ module.exports = {
     },
     //working on admin cancel fund to wallet no userid
     AdminCancelAmountWallet: (userId,total)=>{
+        console.log("userId",userId);
         total=parseInt(total)
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.USER_COLLECTION)
-            .updateOne({ _id: objectId(userId.valueOf()) }, { $inc: { wallet: total } })
+            .updateOne({ _id:objectId(userId) }, { $inc: { wallet: total } })
             resolve()
         })
+    },
+    getChartData: async () => {
+        let data = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match: {
+                    cancel: false
+                }
+            }, {
+
+                $group: {
+                    _id: {
+                        truncatedOrderDate: {
+                            $dateTrunc: {
+                                date: "$date",
+                                unit: "month",
+                                binSize: 1
+                            }
+                        }
+                    },
+                    sumQuantity: {
+                        $sum: "$totalAmount"
+                    }
+                }
+            },
+             {
+                $project: {
+                    month: {
+                        $month: "$_id.truncatedOrderDate"
+                    },
+                    year:{$year:"$_id.truncatedOrderDate"},
+                    sumQuantity: 1
+                }
+            },
+            {
+                $match:{
+                    year:2022
+                }
+            }, {
+                $sort: {
+                    month: 1
+                } 
+            }
+        ]).toArray()
+
+        console.log(data, '++++++++++++test data ', data.length, data[0].year)
+        if (data.length < 12) {
+
+            for (let i = 1; i <= 12; i++) {
+                let datain = true;
+                for (let j = 0; j < data.length; j++) {
+                    if (data[j].month === i) {
+                        datain = null;
+                    }
+
+                }
+
+                if (datain) {
+                    data.push({sumQuantity: 0, month: i})
+                }
+
+            }
+        }
+        await data.sort(function (a, b) {
+            return a.month - b.month
+         });
+         console.log("data",data);
+         let linChartData=[];
+         data.map((element)=>{
+            let a=element.sumQuantity
+            linChartData.push(a)
+
+         })
+         console.log("linechartdata",linChartData);
+         return linChartData
     }
     
 }

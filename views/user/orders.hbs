@@ -293,6 +293,7 @@
 <script>
     function cancelProduct(orderId,total,paymentType) {
         console.log("cancel from orders");
+        console.log("paymentType",paymentType);
         swal({
             title: "Are you sure?",
             text: "Product will be cancelled from orders",

@@ -9,5 +9,4 @@ module.exports = {
     BANNER_COLLECTION: 'banner',
     ADDRESS_COLLECTION: 'address',
     COUPON_COLLECTION: 'coupon',
-    CATEGORY_OFFER_COLLECTION: 'offercategory'
 }
