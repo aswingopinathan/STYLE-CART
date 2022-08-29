@@ -44,74 +44,104 @@ router.get('/', async function (req, res, next) {
       })
     }) 
   } 
- }catch(err){ 
-  console.log(err); 
+ }catch(error){ 
+  console.log(error); 
   res.send("Something went wrong")
  } 
 })
 
 let categoryHelper;
 router.get('/allproducts', verifyCartCount, function (req, res, next) {
-  productHelpers.getProductList().then((productlist) => {
-    userHelpers.getAllCategory().then((mycategory)=>{
-      categoryHelper=mycategory
-      if(req.session.loggedIn){
-        res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount,mycategory:categoryHelper })
-      }else{
-        res.render('user/category-wise', { userhead: true, userlog, productlist,mycategory:categoryHelper })
-      }
+  try{
+    productHelpers.getProductList().then((productlist) => {
+      userHelpers.getAllCategory().then((mycategory)=>{
+        categoryHelper=mycategory
+        if(req.session.loggedIn){
+          res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount,mycategory:categoryHelper })
+        }else{
+          res.render('user/category-wise', { userhead: true, userlog, productlist,mycategory:categoryHelper })
+        }
+        
+      })
       
     })
-    
-  })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
+
+
 router.get('/login', (req, res, next) => {
-  if (req.session.loggedIn) {
-    res.redirect('/')
-  } else {
-    res.render('user/login', { loginerr: req.session.loginErr })
-    req.session.loginErr = false
+  try{
+    if (req.session.loggedIn) {
+      res.redirect('/')
+    } else {
+      res.render('user/login', { loginerr: req.session.loginErr })
+      req.session.loginErr = false
+    }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
   }
+  
 })
 
 router.post('/login', (req, res) => {
-  userHelpers.doLogin(req.body).then((response) => {
-    if (response.userblock) {
-      req.session.loginErr = "user blocked"
-      res.redirect('/login')
-    } else {
-      if (response.status) {
-        req.session.user = response.user
-        req.session.loggedIn = true;
+  try{
+    userHelpers.doLogin(req.body).then((response) => {
+      if (response.userblock) {
+        req.session.loginErr = "user blocked"
         res.redirect('/login')
       } else {
-        req.session.loginErr = "Invalid Email or Password"
-        res.redirect('/login')
+        if (response.status) {
+          req.session.user = response.user
+          req.session.loggedIn = true;
+          res.redirect('/login')
+        } else {
+          req.session.loginErr = "Invalid Email or Password"
+          res.redirect('/login')
+        }
       }
-    }
-  })
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/signup', function (req, res) {
-  if (req.session.loggedIn) {
-    res.redirect('/')
-  } else {
-    res.render('user/signup', { signerr: req.session.signErr })
-    req.session.signErr = false
+  try{
+    if (req.session.loggedIn) {
+      res.redirect('/')
+    } else {
+      res.render('user/signup', { signerr: req.session.signErr })
+      req.session.signErr = false
+    }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
   }
+  
 })
 
 let signupData;
 router.post('/signup', (req, res) => {
-  //additional key status1 send to db
+  try{
+    //additional key status1 send to db
   req.body.status1 = true
   //referral code
-  
   req.body.wallet=parseInt(0)
   let number = parseInt(req.body.Mobile) 
   let newReferralCode = number.toString(16)
-  req.body.yourReferralCode=newReferralCode
+  req.body.yourReferralCode=newReferralCode 
 //passing referral code along body to session
   req.session.referral=req.body
   userHelpers.doSignup(req.body).then((response) => {
@@ -125,56 +155,105 @@ router.post('/signup', (req, res) => {
       res.redirect('/otp-page')
     }
   })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/otp-page', (req, res) => {
-  res.render('user/otp-page', { otpsignErr: req.session.otpsignErr, Mobile: signupData.Mobile })
+  try{
+    res.render('user/otp-page', { otpsignErr: req.session.otpsignErr, Mobile: signupData.Mobile })
+
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/otp-verify', (req, res, next) => {
-  userHelpers.otpVerify(req.body.otp, signupData).then((response) => {
-    if (response.status) {
-      //////////referral
-      console.log("req.session.referral",req.session.referral);
-      userHelpers.referralUpdate( req.session.referral)
-      res.redirect('/login')
-    } else {
-      req.session.otpsignErr = "invalid otp"
-      res.redirect('/otp-page')
-    }
-  })  
+  try{
+    userHelpers.otpVerify(req.body.otp, signupData).then((response) => {
+      if (response.status) {
+        //////////referral
+        console.log("req.session.referral",req.session.referral);
+        userHelpers.referralUpdate( req.session.referral)
+        res.redirect('/login')
+      } else {
+        req.session.otpsignErr = "invalid otp"
+        res.redirect('/otp-page')
+      }
+    }) 
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+   
 })
 
 router.get('/category-wise/:id', verifyCartCount, (req, res) => {
-  productHelpers.getSpecificCategory(req.params.id).then((productlist) => {
-    res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog ,mycategory:categoryHelper})
-  })
+  try{
+    productHelpers.getSpecificCategory(req.params.id).then((productlist) => {
+      res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog ,mycategory:categoryHelper})
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+ 
 })  
  
 //working
 router.get('/product-view/:id', verifyCartCount, (req, res) => {
-  productHelpers.productview(req.params.id).then((productview) => {
-    console.log(productview);
-    res.render('user/product-view', { userhead: true, productview, userlog, cartCount,productScript:true })
-  })
+  try{
+    productHelpers.productview(req.params.id).then((productview) => {
+      console.log(productview);
+      res.render('user/product-view', { userhead: true, productview, userlog, cartCount,productScript:true })
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/logout', (req, res) => {
-  req.session.user = null
+  try{
+    req.session.user = null
   req.session.loggedIn = null
   res.redirect('/')
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/add-to-cart/:id',async (req, res) => {
-  console.log('api call');
+  try{
+    console.log('api call');
   console.log("req.params.id",req.params.id);
   userHelpers.addToCart(req.params.id, userlog._id).then(() => {
     res.json({ status: true })
   })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
-  let products = await userHelpers.getCartProducts(req.session.user._id)
+  try{
+    let products = await userHelpers.getCartProducts(req.session.user._id)
   if(cartCount!=0){
     let cartTable = true
     let totalValue = await userHelpers.getTotalAmount(req.session.user._id)
@@ -182,10 +261,17 @@ router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
   }else{
     res.render('user/cart', { userhead: true, products, userlog, cartCount})
   }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 //working on 22082022
 router.post('/change-product-quantity', (req, res) => {
-  let details = req.body
+  try{
+    let details = req.body
   details.count = parseInt(details.count)
   details.quantity = parseInt(details.quantity)
   if(details.count == -1 && details.quantity == 1){
@@ -199,28 +285,49 @@ router.post('/change-product-quantity', (req, res) => {
         res.json(response)
     })
   }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 //
 router.post('/delete-cartproduct', (req, res) => {
-  userHelpers.deleteCartProduct(req.body.cart, req.body.product).then((response) => {
-    res.json(response)
-  })
+  try{
+    userHelpers.deleteCartProduct(req.body.cart, req.body.product).then((response) => {
+      res.json(response)
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
-  if(cartCount!=0){
-    let total=await userHelpers.getTotalAmount(req.session.user._id)
-    let useradd=await userHelpers.getAddress(userlog._id)
-    let walletBalance=await userHelpers.getWalletBalance(userlog._id)
-  res.render('user/place-order',{userhead:true,cartCount,total,userlog,useradd,walletBalance})
-  }else{
-    res.redirect('/cart')
+  try{
+    if(cartCount!=0){
+      let total=await userHelpers.getTotalAmount(req.session.user._id)
+      let useradd=await userHelpers.getAddress(userlog._id)
+      let walletBalance=await userHelpers.getWalletBalance(userlog._id)
+    res.render('user/place-order',{userhead:true,cartCount,total,userlog,useradd,walletBalance})
+    }else{
+      res.redirect('/cart')
+    }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
   }
+  
 }) 
 //wallet work
 
 router.post('/place-order',verifyLogin,async(req,res)=>{
-  let products=await userHelpers.getCartProductList(req.body.userId)
+  try{
+    let products=await userHelpers.getCartProductList(req.body.userId)
   ///
   let walletBalance=await userHelpers.getWalletBalance(userlog._id)
   let totalPrice;
@@ -277,83 +384,125 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
   
   req.session.amount=null
   discount=null
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
  
 //paypal
 let amount;
 router.get('/success/:id', (req, res) => {
-  userHelpers.converter(req.session.total).then((price)=>{
-    let convertedamount = parseInt(price)
-    amount = convertedamount
-    console.log(req.params.id);
-    const payerId = req.query.PayerID;
-    const paymentId = req.query.paymentId;
-  
-    const execute_payment_json = {
-      "payer_id": payerId,
-      "transactions": [{
-          "amount": {
-              "currency": "USD",
-              "total": amount
-          }
-      }]
-    }; 
-  
-    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-      if (error) {
-          console.log(error.response);
-          throw error;
-      } else {
-          //console.log(JSON.stringify(payment));
-          console.log("paypal payment succes");
-          userHelpers.stockManagement(req.session.cartProductDetails)
-          userHelpers.changePaymentStatus(req.params.id).then(()=>{
-            userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
-            userHelpers.cartClearing(userlog._id).then(()=>{
-              res.redirect('/order-success');
+  try{
+    userHelpers.converter(req.session.total).then((price)=>{
+      let convertedamount = parseInt(price)
+      amount = convertedamount
+      console.log(req.params.id);
+      const payerId = req.query.PayerID;
+      const paymentId = req.query.paymentId;
+    
+      const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "USD",
+                "total": amount
+            }
+        }]
+      }; 
+    
+      paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            console.log(error.response);
+            throw error;
+        } else {
+            //console.log(JSON.stringify(payment));
+            console.log("paypal payment succes");
+            userHelpers.stockManagement(req.session.cartProductDetails)
+            userHelpers.changePaymentStatus(req.params.id).then(()=>{
+              userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
+              userHelpers.cartClearing(userlog._id).then(()=>{
+                res.redirect('/order-success');
+              })
             })
-          })
-      }
-  });
-  })
+        }
+    });
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
    
 }); 
 
 //paypal
 router.get('/cancel', (req, res) => {
-  userHelpers.deleteTheOrder(req.session.neworderId).then(()=>{
-    res.redirect('/orders')
-  })
+  try{
+    userHelpers.deleteTheOrder(req.session.neworderId).then(()=>{
+      res.redirect('/orders')
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
   
 });
 //stockmanagement
 router.get('/order-success',verifyCartCount,(req,res)=>{
-  req.session.coupondata=null
+  try{
+    req.session.coupondata=null
   res.render('user/order-success',{userhead:true,userlog,cartCount})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 }) 
 
 router.get('/orders',verifyLogin,async(req,res)=>{ 
+  try{
     userHelpers.deletePending().then(async()=>{
       let orders=await userHelpers.getUserOrders(userlog._id)
       console.log(orders);
     res.render('user/orders',{userhead:true,userlog,orders,cartCount})
     })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+    
     
 })
-
+///working on 29monday
 router.get('/view-order-products/:id',verifyLogin,async(req,res)=>{
-  console.log(req.params.id);
+  try{
+    console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
   let orders=await userHelpers.getCurrentOrder(req.params.id)
   let deliverystatus=await userHelpers.getDeliveryStatus(req.params.id)
   console.log("hey",deliverystatus);
   //console.log(orders);
   res.render('user/view-order-products',{userhead:true,userlog,products,orders,deliverystatus})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 //razor
 router.post('/verify-payment',(req,res)=>{ 
-console.log(req.body);
+  try{
+    console.log(req.body);
 userHelpers.verifyPayment(req.body).then(()=>{
 userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   console.log("Payment Success");
@@ -367,137 +516,241 @@ userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   console.log(err);
   res.json({status:false,errMsg:''})
 })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+
 })
  
 ///cancellled order amount moved to wallet
 router.post('/cancel-order',async(req,res)=>{
-  if(req.body.payment!= "COD"){
-    await userHelpers.cancelAmountWallet(userlog._id,req.body.amount)
-    userHelpers.increaseStock(req.body.orId)
-    await userHelpers.cancelOrder(req.body.orId).then((response)=>{
-      res.json(response)
-    })
-  }else{
-    await userHelpers.cancelOrder(req.body.orId).then((response)=>{
-      res.json(response)
-    })
+  try{
+    if(req.body.payment!= "COD"){
+      await userHelpers.cancelAmountWallet(userlog._id,req.body.amount)
+      userHelpers.increaseStock(req.body.orId)
+      await userHelpers.cancelOrder(req.body.orId).then((response)=>{
+        res.json(response)
+      })
+    }else{
+      await userHelpers.cancelOrder(req.body.orId).then((response)=>{
+        res.json(response)
+      })
+    }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
   }
+  
 })
 
 router.get('/profile',verifyLogin,((req,res)=>{
-  userHelpers.getProfile(userlog._id).then((profiledata)=>{
-    res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
-  })
+  try{
+    userHelpers.getProfile(userlog._id).then((profiledata)=>{
+      res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 }))
 
 router.get('/change-password',verifyLogin,((req,res)=>{
   try{
     res.render('user/change-password',{userhead:true,cartCount,userlog})
-  }catch(err)
+  }catch(error)
   {
-    console.log(err)
+    console.log(error)
     res.send('404')
   }
   
 }))
 
 router.post('/change-password',((req,res)=>{
- userHelpers.changePassword(req.body,userlog._id).then(()=>{
-  console.log("password updated");
-  res.redirect('/')
- })
+  try{
+    userHelpers.changePassword(req.body,userlog._id).then(()=>{
+      console.log("password updated");
+      res.redirect('/')
+     })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+ 
 }))
 
 router.get('/add-address',verifyLogin,(req,res)=>{
-  res.render('user/add-address',{userlog,userhead:true,cartCount})
+  try{
+    res.render('user/add-address',{userlog,userhead:true,cartCount})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.post('/add-address',(req,res)=>{
-  // req.body.uId=Math.random()
+  try{
+    // req.body.uId=Math.random()
   userHelpers.addNewAddress(req.body,userlog._id).then(()=>{
     res.redirect('/show-address')
   })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/show-address',verifyLogin,async(req,res)=>{
-  let useradd=await userHelpers.getAddress(userlog._id)
+  try{
+    let useradd=await userHelpers.getAddress(userlog._id)
   console.log("useradd",useradd);
   res.render('user/show-address',{userlog,userhead:true,cartCount,useradd})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 
 router.get('/edit-profile',verifyLogin,(req,res)=>{
-  userHelpers.getProfile(userlog._id).then((profiledata)=>{
-    res.render('user/edit-profile',{userhead:true,cartCount,userlog,profiledata})
-  })
+  try{
+    userHelpers.getProfile(userlog._id).then((profiledata)=>{
+      res.render('user/edit-profile',{userhead:true,cartCount,userlog,profiledata})
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 
 router.post('/edit-profile/:id',(req,res)=>{
-  userHelpers.editProfile(req.body,req.params.id).then(()=>{
-    res.redirect('/profile')
-  })
+  try{
+    userHelpers.editProfile(req.body,req.params.id).then(()=>{
+      res.redirect('/profile')
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+ 
 })
 //working on
 router.post('/coupon',async(req,res)=>{
-  req.session.coupondata=req.body.coupon
-  let amount ={} ;
-   userHelpers.couponCheck(userlog._id,req.body).then((response) => {
-    if(response.coupon){
-     amount=response
-      req.session.amount = amount
-      amount.status=true
-      res.json(amount)
-    }else if(response.usedcoupon){ 
-      console.log('coupon already used');
-      amount.used=true
-      res.json(amount)
-    }else if(response.small){
-      console.log('Not within Cap limits');
-      amount.small=true
-      res.json(amount)
-    }else if(response.expired){
-      console.log('Coupon expired');
-      amount.expired=true
-      res.json(amount)
-    }else{
-      console.log('coupon invalid');
-      amount.status=false
-      res.json(amount)
-    }
-  }) 
+  try{
+    req.session.coupondata=req.body.coupon
+    let amount ={} ;
+     userHelpers.couponCheck(userlog._id,req.body).then((response) => {
+      if(response.coupon){
+       amount=response
+        req.session.amount = amount
+        amount.status=true
+        res.json(amount)
+      }else if(response.usedcoupon){ 
+        console.log('coupon already used');
+        amount.used=true
+        res.json(amount)
+      }else if(response.small){
+        console.log('Not within Cap limits');
+        amount.small=true
+        res.json(amount)
+      }else if(response.expired){
+        console.log('Coupon expired');
+        amount.expired=true
+        res.json(amount)
+      }else{
+        console.log('coupon invalid');
+        amount.status=false
+        res.json(amount)
+      }
+    }) 
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+ 
 }) 
 
 router.post('/save-address',(req,res)=>{
-  userHelpers.addNewAddress(req.body,userlog._id).then((response)=>{
-    res.json(response)
-  })
+  try{
+    userHelpers.addNewAddress(req.body,userlog._id).then((response)=>{
+      res.json(response)
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/edit-address/:id',async(req,res)=>{
-  console.log("req.params.id",req.params.id);
+  try{
+    console.log("req.params.id",req.params.id);
   let useradd=await userHelpers.getSpecificAddress(req.params.id)
   console.log("useradd",useradd);
   res.render('user/edit-address',{userhead:true,cartCount,userlog,useradd})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.post('/edit-address/:id',(req,res)=>{
-  userHelpers.editAddress(req.body,req.params.id)
+  try{
+    userHelpers.editAddress(req.body,req.params.id)
   res.redirect('/show-address')
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 
 router.get('/delete-address/:id',(req,res)=>{
-  userHelpers.deleteAddress(req.params.id)
+  try{
+    userHelpers.deleteAddress(req.params.id)
    res.redirect('/show-address')
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
  })
 
 //wallet balance check ajax
 router.post('/balance-check',(req,res)=>{
-  if(req.body.balance>req.body.amount){
-    res.json({walletLow:true})
-   }else{
-    res.json({walletLow:false})
-   }
+  try{
+    if(req.body.balance>req.body.amount){
+      res.json({walletLow:true})
+     }else{
+      res.json({walletLow:false})
+     }
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
 //development env
 

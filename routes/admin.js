@@ -19,6 +19,12 @@ const verifyAdminLogin = (req, res, next) => {
 }
 
 router.get('/', function (req, res, next) {
+  try{
+
+  }catch(error)
+  {
+  
+  }
   if (req.session.isadmin) {
     res.redirect('/admin/adminindex')
   } else {
@@ -26,19 +32,34 @@ router.get('/', function (req, res, next) {
   }
 });
 
+let yearValue=2022;
 router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
-  // console.log("req.session.isadmin",req.session.isadmin);
-  let cod = await adminHelpers.getPaymentMethodNums('COD')
+  // console.log("yearValuechange2",yearValue);
+
+
+    let cod = await adminHelpers.getPaymentMethodNums('COD')
     let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
     let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
     let wallet = await adminHelpers.getPaymentMethodNums('WALLET')
 
-    let data1= await adminHelpers.getChartData()
-    console.log("data1",data1)
+    let chartData= await adminHelpers.getChartData(yearValue)
 
-    res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,data1 });
+    let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue)
+
+    let listedYears= await adminHelpers.getYear()
+
+    let userCount=   await adminHelpers.getUserCount()
+
+    // console.log("yearlySalesReport",yearlySalesReport); 
+    res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,chartData,monthlySalesReport,yearValue,listedYears,userCount});
 });
 
+router.get('/sales-monthly',async(req,res)=>{
+  let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue)
+
+  res.render('admin/sales-monthly',{admin: true,monthlySalesReport})
+})
+ 
 router.post('/adminindex', (req, res, next) => {
   const { Email, Password } = req.body;
   if (userName === Email && Pin === Password) {
@@ -221,8 +242,6 @@ router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
 //working
 router.get('/show-orders',verifyAdminLogin, (req, res) => {
   adminHelpers.getAllOrders().then((orders) => {
-    // let aswin=orders[0].userId
-    // console.log("aswin",aswin);
     res.render('admin/show-orders', { admin: true,order:orders })
   })
 }) 
@@ -355,8 +374,18 @@ router.post('/offer-deactivate',(req,res)=>{
   })
 })
 
-router.get('/sample1',(req,res)=>{
-  adminHelpers.getChartData()
+router.post('/change-year',(req,res)=>{
+  yearValue=req.body.year
+  console.log("yearValuechange",yearValue);
+  res.json(response)
+})
+
+router.get('/sample1',async(req,res)=>{
+  // let salesReport= await adminHelpers.getReportData()
+  // console.log("salesReport",salesReport); 
+  // await adminHelpers.getYear()
+  // await adminHelpers.getUserCount()
+
   res.send("ok")
 })
  

@@ -62,6 +62,15 @@ module.exports = {
                 console.log('no same email');
                 resolve(response)
             }
+            // else{
+            //     userData.Password = await bcrypt.hash(userData.Password, 10)
+            //     db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((data) => {
+            //         resolve(data.insertedId)
+            //     })
+            //     response.status = true
+            //     resolve(response)
+            // }
+
         })
     },
     otpVerify: (otp, signupData) => {
@@ -853,6 +862,7 @@ module.exports = {
             db.get().collection(collection.ADDRESS_COLLECTION).deleteOne({_id:objectId(addressId)})
             resolve()
         })
-    }
+    },
+    
 
 }

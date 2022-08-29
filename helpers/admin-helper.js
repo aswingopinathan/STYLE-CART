@@ -142,7 +142,7 @@ module.exports = {
                         Brands: '$product.Brands',
                         Price: '$product.Price',
                         Images: '$product.Images',
-                        quantity:1
+                        quantity: 1
 
                     }
                 },
@@ -189,7 +189,7 @@ module.exports = {
                 .updateOne({ _id: objectId(orderId) },
                     {
                         $set: {
-                            status: 'Cancelled',cancel: true
+                            status: 'Cancelled', cancel: true
                         }
                     }).then((response) => {
                         resolve(response)
@@ -242,38 +242,38 @@ module.exports = {
             })
         })
     },
-    addOfferCategory: (body,catId) => {
+    addOfferCategory: (body, catId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.CATEGORY_COLLECTION).updateOne({ _id: objectId(catId) },
-            {
-                $set: {
-                    percentage: body.percentage,
-                    offername: body.offername
-                }
-            })
+                {
+                    $set: {
+                        percentage: body.percentage,
+                        offername: body.offername
+                    }
+                })
             resolve()
         })
     },
-    getCurrentOrderAdmin: (orderId)=>{
-        return new Promise((resolve,reject)=>{
-           let orders= db.get()
-            .collection(collection.ORDER_COLLECTION)
-            .findOne({_id:objectId(orderId)})
+    getCurrentOrderAdmin: (orderId) => {
+        return new Promise((resolve, reject) => {
+            let orders = db.get()
+                .collection(collection.ORDER_COLLECTION)
+                .findOne({ _id: objectId(orderId) })
             resolve(orders)
         })
-      },
-      changeDeliveryStatus: (orderId,status)=>{
-        return new Promise((resolve,reject)=>{
+    },
+    changeDeliveryStatus: (orderId, status) => {
+        return new Promise((resolve, reject) => {
             db.get()
-            .collection(collection.ORDER_COLLECTION)
-            .updateOne({_id:objectId(orderId)},
-            {
-                $set:{status: status}
-            })
+                .collection(collection.ORDER_COLLECTION)
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: { status: status }
+                    })
             resolve()
         })
-      },
-      getPaymentMethodNums: (paymentMethod) => {
+    },
+    getPaymentMethodNums: (paymentMethod) => {
         return new Promise(async (resolve, reject) => {
             let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate(
                 [
@@ -290,162 +290,171 @@ module.exports = {
             resolve(response);
         })
     },
-    getRevenue: (unit,count) => {
+    //not used
+    getRevenue: (unit, count) => {
         return new Promise(async (resolve, reject) => {
-           let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-            { $match: 
-                {$expr: {$gt: ["$date",{ $dateSubtract: 
-                    { startDate: "$$NOW", unit: unit, amount: count }}]}}},
-                    {$group:{_id:null,sum:{$sum:'$totalAmount'}}},
-                ]).toArray()
+            let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:
+                    {
+                        $expr: {
+                            $gt: ["$date", {
+                                $dateSubtract:
+                                    { startDate: "$$NOW", unit: unit, amount: count }
+                            }]
+                        }
+                    }
+                },
+                { $group: { _id: null, sum: { $sum: '$totalAmount' } } },
+            ]).toArray()
             resolve(response);
         })
     },
     getDeliveryStatusAdmin: (orderId) => {
-        return new Promise(async(resolve, reject) => {
-            let deliveryvalue =await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
+        return new Promise(async (resolve, reject) => {
+            let deliveryvalue = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
             resolve(deliveryvalue.status)
         })
     },
-    changeOfferStatus: (catId,newoffer)=>{
-        return new Promise((resolve,reject)=>{
+    changeOfferStatus: (catId, newoffer) => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.CATEGORY_COLLECTION).updateOne({ _id: objectId(catId) },
-            {
-                $set: {
-                    offer: newoffer
-                }
-            })
-            response.status=true
+                {
+                    $set: {
+                        offer: newoffer
+                    }
+                })
+            response.status = true
             resolve(response)
         })
     },
-    activateCategoryOffer: (catId)=>{
-        return new Promise(async(resolve,reject)=>{
-          let products=await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
-            {
-                $match:{Category:objectId(catId)}
-            },
-            {
-                $project:{
-                    Name:1,
-                    Category:1,
-                    Stock:1,
-                    Price:1,
-                    Cutprice:1
+    activateCategoryOffer: (catId) => {
+        return new Promise(async (resolve, reject) => {
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                {
+                    $match: { Category: objectId(catId) }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Category: 1,
+                        Stock: 1,
+                        Price: 1,
+                        Cutprice: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.CATEGORY_COLLECTION,
+                        localField: 'Category',
+                        foreignField: '_id',
+                        as: 'Category'
+                    }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Categoryoffername: '$Category.offername',
+                        Categorypercentage: '$Category.percentage',
+                        Stock: 1,
+                        Price: 1,
+                        Cutprice: 1
+                    }
                 }
-            },
-            {
-                $lookup:{
-                    from:collection.CATEGORY_COLLECTION,
-                    localField:'Category',
-                    foreignField:'_id',
-                    as: 'Category'
-                }
-            },
-            {
-                $project:{
-                    Name:1,
-                    Categoryoffername:'$Category.offername',
-                    Categorypercentage:'$Category.percentage',
-                    Stock:1,
-                    Price:1,
-                    Cutprice:1
-                }
-            }
-          ]).toArray()
+            ]).toArray()
 
             //mapping
-            products.map(async(prod)=>{
-                let Price=parseInt(prod.Cutprice)
+            products.map(async (prod) => {
+                let Price = parseInt(prod.Cutprice)
                 let discount = (Price * prod.Categorypercentage) / 100;
                 Price = parseInt(Price - parseInt(discount));
-                 console.log("Price",Price);
-               
-            await db 
-            .get()
-            .collection(collection.PRODUCT_COLLECTION)
-            .updateMany(
-              { _id: objectId(prod._id) },
-              {
-                $set: {
-                  Price: Price,
-                  offername: prod.Categoryoffername,
-                   discountprice: discount,
-                   discountpercentage: prod.Categorypercentage,
-               
-                }
-              }
-            );
-        })
+                console.log("Price", Price);
+
+                await db
+                    .get()
+                    .collection(collection.PRODUCT_COLLECTION)
+                    .updateMany(
+                        { _id: objectId(prod._id) },
+                        {
+                            $set: {
+                                Price: Price,
+                                offername: prod.Categoryoffername,
+                                discountprice: discount,
+                                discountpercentage: prod.Categorypercentage,
+
+                            }
+                        }
+                    );
+            })
             resolve()
         })
     },
-    deactivateCategoryOffer: (catId)=>{
-        return new Promise(async(resolve,reject)=>{
-          let products=await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
-            {
-                $match:{Category:objectId(catId)}
-            },
-            {
-                $project:{
-                    Name:1,
-                    Category:1,
-                    Stock:1,
-                    Price:1,
-                    Cutprice:1
+    deactivateCategoryOffer: (catId) => {
+        return new Promise(async (resolve, reject) => {
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                {
+                    $match: { Category: objectId(catId) }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Category: 1,
+                        Stock: 1,
+                        Price: 1,
+                        Cutprice: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.CATEGORY_COLLECTION,
+                        localField: 'Category',
+                        foreignField: '_id',
+                        as: 'Category'
+                    }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Categoryoffername: '$Category.offername',
+                        Categorypercentage: '$Category.percentage',
+                        Stock: 1,
+                        Price: 1,
+                        Cutprice: 1
+                    }
                 }
-            },
-            {
-                $lookup:{
-                    from:collection.CATEGORY_COLLECTION,
-                    localField:'Category',
-                    foreignField:'_id',
-                    as: 'Category'
-                }
-            },
-            {
-                $project:{
-                    Name:1,
-                    Categoryoffername:'$Category.offername',
-                    Categorypercentage:'$Category.percentage',
-                    Stock:1,
-                    Price:1,
-                    Cutprice:1
-                }
-            }
-          ]).toArray()
+            ]).toArray()
 
             //mapping
-            products.map(async(prod)=>{
-                let Price=parseInt(prod.Price)
+            products.map(async (prod) => {
+                let Price = parseInt(prod.Price)
                 let discount = (prod.Cutprice * prod.Categorypercentage) / 100;
                 Price = parseInt(Price + parseInt(discount));
-                let  discount1=(Price*5)/100
-                let Price1=Price-discount1
-                let defaultpercentage="5"
-               
-            await db 
-            .get()
-            .collection(collection.PRODUCT_COLLECTION)
-            .updateMany(
-              { _id: objectId(prod._id) },
-              {
-                $set: {
-                  Price: Price1,
-                  offername: prod.Categoryoffername,
-                   discountprice: discount1,
-                   discountpercentage: [defaultpercentage],
-                }
-              } 
-            );
-        })
+                let discount1 = (Price * 5) / 100
+                let Price1 = Price - discount1
+                let defaultpercentage = "5"
+
+                await db
+                    .get()
+                    .collection(collection.PRODUCT_COLLECTION)
+                    .updateMany(
+                        { _id: objectId(prod._id) },
+                        {
+                            $set: {
+                                Price: Price1,
+                                offername: prod.Categoryoffername,
+                                discountprice: discount1,
+                                discountpercentage: [defaultpercentage],
+                            }
+                        }
+                    );
+            })
             resolve()
         })
     },
     adminIncreaseStock: (orderId) => {
-        return new Promise(async(resolve, reject) => {
-           let order =await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:objectId(orderId)})
-          let  productData=order.products
+        return new Promise(async (resolve, reject) => {
+            let order = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: objectId(orderId) })
+            let productData = order.products
             for (let i = 0; i < productData.length; i++) {
                 db.get()
                     .collection(collection.PRODUCT_COLLECTION)
@@ -457,16 +466,18 @@ module.exports = {
         });
     },
     //working on admin cancel fund to wallet no userid
-    AdminCancelAmountWallet: (userId,total)=>{
-        console.log("userId",userId);
-        total=parseInt(total)
-        return new Promise((resolve,reject)=>{
+    AdminCancelAmountWallet: (userId, total) => {
+        console.log("userId", userId);
+        total = parseInt(total)
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION)
-            .updateOne({ _id:objectId(userId) }, { $inc: { wallet: total } })
+                .updateOne({ _id: objectId(userId) }, { $inc: { wallet: total } })
             resolve()
         })
     },
-    getChartData: async () => {
+    getChartData: async (yearValue) => {
+        yearValue=parseInt(yearValue)
+
         let data = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
             {
                 $match: {
@@ -489,27 +500,27 @@ module.exports = {
                     }
                 }
             },
-             {
+            {
                 $project: {
                     month: {
                         $month: "$_id.truncatedOrderDate"
                     },
-                    year:{$year:"$_id.truncatedOrderDate"},
+                    year: { $year: "$_id.truncatedOrderDate" },
                     sumQuantity: 1
                 }
             },
             {
-                $match:{
-                    year:2022
+                $match: {
+                    year: yearValue
                 }
             }, {
                 $sort: {
                     month: 1
-                } 
+                }
             }
         ]).toArray()
 
-        console.log(data, '++++++++++++test data ', data.length, data[0].year)
+        // console.log(data, '++++++++++++test data ', data.length, data[0].year)
         if (data.length < 12) {
 
             for (let i = 1; i <= 12; i++) {
@@ -522,23 +533,117 @@ module.exports = {
                 }
 
                 if (datain) {
-                    data.push({sumQuantity: 0, month: i})
+                    data.push({ sumQuantity: 0, month: i })
                 }
 
             }
         }
         await data.sort(function (a, b) {
             return a.month - b.month
-         });
-         console.log("data",data);
-         let linChartData=[];
-         data.map((element)=>{
-            let a=element.sumQuantity
+        });
+        console.log("data", data);
+        let linChartData = [];
+        data.map((element) => {
+            let a = element.sumQuantity
             linChartData.push(a)
 
-         })
-         console.log("linechartdata",linChartData);
-         return linChartData
+        })
+        // console.log("linechartdata", linChartData);
+        return linChartData
+    },
+   
+    getMonthlySalesReport: async (yearValue) => {
+        // console.log("yearValuechange3",yearValue);
+        yearValue=parseInt(yearValue)
+
+        let report = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match: {
+                    cancel: false
+                }
+            }, {
+
+                $group: {
+                    _id: {
+                        truncatedOrderDate: {
+                            $dateTrunc: {
+                                date: "$date",
+                                unit: "month",
+                                binSize: 1
+                            }
+                        }
+                    },
+                    grandTotal: {
+                        $sum: "$totalAmount"
+                    }
+                }
+            },
+            {
+                $project: {
+                    month: {
+                        $month: "$_id.truncatedOrderDate"
+                    },
+                    year: { $year: "$_id.truncatedOrderDate" },
+                    grandTotal: 1
+                }
+            },
+            {
+                $match: {
+                    year: yearValue
+                }
+            },
+             {
+                $sort: {
+                    month: 1
+                }
+            }
+        ]).toArray()
+        console.log("report11111",report);
+        if (report.length < 12) {
+
+            for (let i = 1; i <= 12; i++) {
+                let datain = true;
+                for (let j = 0; j < report.length; j++) {
+                    if (report[j].month === i) {
+                        datain = null;
+                    }
+
+                }
+
+                if (datain) {
+                    report.push({ grandTotal: 0, month: i })
+                }
+
+            }
+        }
+        await report.sort(function (a, b) {
+            return a.month - b.month
+        });
+        return (report)
+    },
+    getYear:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let listedYears= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $group:{_id:{year:{$year:"$date"}}}
+                },
+                {
+                    $project:{year:"$_id.year",_id:0}
+                },
+                {
+                    $sort:{year:-1}
+                }
+            ]).toArray()
+            console.log("listedYears",listedYears);
+            resolve(listedYears)
+        })
+    },
+    getUserCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+          let userCount= await db.get().collection(collection.USER_COLLECTION).count()
+            console.log("userCount",userCount);
+            resolve(userCount)
+        })
     }
-    
+   
 }

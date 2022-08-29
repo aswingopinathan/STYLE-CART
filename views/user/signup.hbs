@@ -57,7 +57,7 @@
                 <a href="/login" class="sign sign-info mt-5 " style="width: fit-content; text-decoration: none;">Already
                     have account ?</a>
                 <div class="mx-auto mt-3" style=" width: fit-content;">
-                    <button type="submit" onclick="return myfun()" value="Submit"
+                    <button type="submit" onclick="return validateForm()" value="Submit"
                         class="btn btn-primary">Signup</button>
                 </div>
             </form>
@@ -151,6 +151,14 @@
       }
       confirmPasswordError.innerHTML = ''
       return true
+    }
+     function validateForm() {
+
+
+      if (!validateFirstName() || !validateLastName() || !validateEmail() || !validatePhoneNumber() || !validatePassword() || !validateConfirmPassword()) {
+        submitError.innerHTML = 'Please fill the form properly';
+        return false;
+      }
     }
 
 

@@ -40,12 +40,18 @@
                                         <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View ...
                                             
                                         </a><br><br>
+
                                         {{#if cancel}}
+                                       
+                                        {{else}}
+                                        {{#if_eq this.status "Delivered"}}
                                         
                                         {{else}}
                                         <button class="btn btn-warning btn-sm"
                                             onclick="cancelProduct('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}')">Cancel </button>
+                                        {{/if_eq}}
                                         {{/if}}
+
                                     </td>
                                 </tr>
                                 {{/each}}
