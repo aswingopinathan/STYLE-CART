@@ -1,4 +1,5 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> --}}
+<script src="https://unpkg.com/nice-invoice@1.1.4/dist/index.js"></script>
 
 
 {{!-- working --}}
@@ -12,7 +13,9 @@
           </div>
           <div class="d-flex justify-content-end">
              <div>
-                <a  class="btn btn-primary" id="download">download invoice</a>
+                {{!-- <a  class="btn btn-primary" id="download">download invoice</a> --}}
+                 <a  class="btn btn-primary" onclick="invoice()">download invoice</a>
+
             </div>
           </div>
            
@@ -379,7 +382,7 @@
 <!-- END QUICKVIEW PRODUCT -->
 
 
-<script>
+{{!-- <script>
     window.onload = function () {
     document.getElementById("download")
         .addEventListener("click", () => {
@@ -396,6 +399,26 @@
             html2pdf().from(invoice).set(opt).save();
         })
 }
+</script> --}}
+
+<script>
+    function invoice(){
+       // console.log("id",orderid)
+        console.log("Hello world")
+         $.ajax({
+            url: '/invoice',
+            method: 'post',
+            success: (response) => {
+                if (response.status) {
+                    swal("Success!", "invoice created", "success").then(() => {
+                       // location.href = '/order-success'
+                    })
+                } else {
+                   // location.href = '/cancel'
+                }
+            }
+        })    
+    }
 </script>
    
 

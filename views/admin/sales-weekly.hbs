@@ -1,5 +1,4 @@
- <h4 class="page-title text-center">Monthly Sales Report-{{yearValue}}</h4>
- <div class="row">
+<h4 class="page-title text-center">Weekly Sales Report-{{yearValue}}</h4>
     <div class="col-md-2">
             <select id="inputYear" class="form-control" onchange="changeYear()">
                 <option selected>Choose year...</option>
@@ -8,8 +7,6 @@
                 {{/each}}
             </select>
     </div>
-</div>
-{{!-- <a href="/admin/sales-monthly" class="btn btn-primary" style="color: white;">sales</a> --}}
 <div class="row">
     <div class="col-12">
         <div class="card m-b-30">
@@ -18,26 +15,18 @@
                     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th>Months</th>
-                            <th>Jan</th>
-                            <th>Feb</th>
-                            <th>Mar</th>
-                            <th>Apr</th>
-                            <th>May</th>
-                            <th>Jun</th>
-                            <th>Jul</th>
-                            <th>Aug</th>
-                            <th>Sept</th>
-                            <th>Oct</th>
-                            <th>Nov</th>
-                            <th>Dec</th>
+                            <th>Weeks in {{weeklySalesReport.[0].year}}</th>
+                            {{#each weeklySalesReport}}
+                            <th>week {{this.week}}</th>
+                            {{/each}}
+                           
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td>Revenue ({{yearValue}})</td>
-                            {{#each monthlySalesReport}}
+                            <td>Revenue</td>
+                            {{#each weeklySalesReport}}
                             <td>{{this.grandTotal}}</td>
                             {{/each}}
                         </tr>
@@ -49,8 +38,7 @@
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
- </div>
- <script>
+<script>
      function changeYear() {
             let year= document.getElementById('inputYear').value
                         console.log("changeYear",year)

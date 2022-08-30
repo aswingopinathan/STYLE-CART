@@ -6,12 +6,15 @@ function addToCart(proId) {
         method: 'get',
         success: (response) => {
            // alert("Item added to cart")
-           swal("Success!", "Item added to cart", "success")
+           swal("Success!", "Item added to cart", "success").then(()=>{
             if (response.status) {
                 let count = $('#cart-count').html()
                 count = parseInt(count) + 1
                 $('#cart-count').html(count)
             }
+            location.href = '/cart'
+           })
+           
         }
     })
 }

@@ -598,7 +598,7 @@ module.exports = {
                 }
             }
         ]).toArray()
-        console.log("report11111",report);
+        // console.log("report11111",report);
         if (report.length < 12) {
 
             for (let i = 1; i <= 12; i++) {
@@ -644,6 +644,95 @@ module.exports = {
             console.log("userCount",userCount);
             resolve(userCount)
         })
+    },
+    getYearlySalesReport: async () => {
+        let report = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match: {
+                    cancel: false
+                }
+            }, 
+            {
+                $group: {
+                    _id: {
+                        truncatedOrderDate: {
+                            $dateTrunc: {
+                                date: "$date",
+                                unit: "year",
+                                binSize: 1
+                            }
+                        }
+                    },
+                    grandTotal: {
+                        $sum: "$totalAmount"
+                    }
+                }
+            },
+            {
+                $project: {
+                    year: {
+                        $year: "$_id.truncatedOrderDate"
+                    },
+                    grandTotal:1
+                }
+            },
+            {
+                $sort: {
+                    year: -1 
+                }
+            }
+        ]).toArray()
+        // console.log("report1",report);
+        return report;
+    },
+    getWeeklySalesReport: async (yearValue) => {
+        yearValue=parseInt(yearValue)
+        let report = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match: {
+                    cancel: false
+                }
+            }, 
+            {
+                $group: {
+                    _id: {
+                        truncatedOrderDate: {
+                            $dateTrunc: {
+                                date: "$date",
+                                unit: "week",
+                                binSize: 1
+                            }
+                        }
+                    },
+                    grandTotal: {
+                        $sum: "$totalAmount"
+                    }
+                }
+            },
+            {
+                $project: {
+                    year: {
+                        $year: "$_id.truncatedOrderDate"
+                    },
+                    week: {
+                        $week: "$_id.truncatedOrderDate"
+                    },
+                    grandTotal:1
+                }
+            },
+            {
+                $match:{
+                    year:yearValue
+                }
+            },
+            {
+                $sort: {
+                    week: 1 
+                }
+            }
+        ]).toArray()
+        console.log("report1",report);
+        return report;
     }
    
 }

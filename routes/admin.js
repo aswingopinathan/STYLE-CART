@@ -54,11 +54,6 @@ router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
     res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,chartData,monthlySalesReport,yearValue,listedYears,userCount});
 });
 
-router.get('/sales-monthly',async(req,res)=>{
-  let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue)
-
-  res.render('admin/sales-monthly',{admin: true,monthlySalesReport})
-})
  
 router.post('/adminindex', (req, res, next) => {
   const { Email, Password } = req.body;
@@ -380,14 +375,36 @@ router.post('/change-year',(req,res)=>{
   res.json(response)
 })
 
-router.get('/sample1',async(req,res)=>{
-  // let salesReport= await adminHelpers.getReportData()
-  // console.log("salesReport",salesReport); 
+router.get('/sales-yearly',async(req,res)=>{
+  let yearlySalesReport= await adminHelpers.getYearlySalesReport()
+  // console.log("report2",yearlySalesReport);
+  res.render('admin/sales-yearly',{admin: true,yearlySalesReport,yearValue})
+})
+
+router.get('/sales-weekly',async(req,res)=>{
+  let weeklySalesReport= await adminHelpers.getWeeklySalesReport(yearValue )
+  let listedYears= await adminHelpers.getYear()
+
+  // console.log("report2",weeklySalesReport);
+  res.render('admin/sales-weekly',{admin: true,weeklySalesReport,listedYears,yearValue})
+})
+
+router.get('/sales-monthly',async(req,res)=>{
+  let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue )
+  let listedYears= await adminHelpers.getYear()
+
+  console.log("report2",monthlySalesReport);
+  res.render('admin/sales-monthly',{admin: true,monthlySalesReport,listedYears,yearValue})
+})
+
+// router.get('/sample1',async(req,res)=>{
+  // let paymentDetails= await adminHelpers.getYearlyPayment()
+  // console.log("paymentDetails",paymentDetails); 
   // await adminHelpers.getYear()
   // await adminHelpers.getUserCount()
 
-  res.send("ok")
-})
+  // res.send("ok")
+// })
  
 
 module.exports = router;

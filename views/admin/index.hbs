@@ -27,7 +27,7 @@
                         <i class="mdi mdi-cube-outline bg-primary  text-white"></i>
                     </div>
                     <div>
-                        <h5 class="font-16">Active Users</h5>
+                        <h5 class="font-16">Users</h5>
                     </div>
                     <h3 class="mt-4">{{userCount}}</h3>
                     <div class="progress mt-4" style="height: 4px;">
@@ -107,7 +107,7 @@
         </div>
     </div><br>
 
-    <h4 class="page-title text-center">Monthly Sales Report-{{yearValue}}</h4>
+    {{!-- <h4 class="page-title text-center">Monthly Sales Report-{{yearValue}}</h4> --}}
     <div class="col-md-2">
             <select id="inputYear" class="form-control" onchange="changeYear()">
                 <option selected>Choose year...</option>
@@ -117,8 +117,8 @@
             </select>
     </div>
 </div>
-<a href="/admin/sales-monthly" class="btn btn-primary" style="color: white;">sales</a>
-<div class="row">
+{{!-- <a href="/admin/sales-monthly" class="btn btn-primary" style="color: white;">sales</a> --}}
+{{!-- <div class="row">
     <div class="col-12">
         <div class="card m-b-30">
             <div class="card-body">
@@ -156,7 +156,7 @@
             </div>
         </div>
     </div> <!-- end col -->
-</div> <!-- end row -->
+</div> <!-- end row --> --}}
 
 
      
@@ -258,22 +258,7 @@
         });
     }
 
-    $("#save-address").submit((e) => {
-        e.preventDefault()
-
-        $.ajax({
-            url: '/save-address',
-            method: 'post',
-            data: $('#save-address').serialize(),
-            success: (response) => {
-                // alert(response)
-                swal("address saved").then(() => {
-                    location.reload()
-                })
-
-            }
-        })
-    })
+   
         //
         </script>
 

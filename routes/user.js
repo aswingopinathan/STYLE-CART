@@ -751,13 +751,23 @@ router.post('/balance-check',(req,res)=>{
   res.send("Something went wrong")
   }
   
-})
-//development env
+}) 
 
-// router.get('/devel',verifyLogin,async(req,res)=>{
-//    let walletBalance=await userHelpers.getWalletBalance(userlog._id)
-//     console.log("walletBalance",walletBalance);
-//   res.send("ok")
-// })
+///working on 30
+router.post('/invoice',async(req,res)=>{
+  console.log("req.body.id",req.body.id)
+  let products=await userHelpers.getOrderProducts(req.body.id)
+  let orders=await userHelpers.getCurrentOrder(req.body.id)
+  let deliverystatus=await userHelpers.getDeliveryStatus(req.body.id)
+  await userHelpers.createInvoice(products,orders,deliverystatus,userlog)
+  response.status=true
+    res.json(response)
+})
+
+//development env
+router.get('/devel',verifyLogin,async(req,res)=>{
+  res.render('user/invoice')
+  // res.send("ok")
+})
 module.exports = router; 
  
