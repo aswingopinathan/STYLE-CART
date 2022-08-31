@@ -15,7 +15,7 @@
                                 <th scope="col">Payment</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Delivery Status</th>
-                                {{!-- <th scope="col">Details</th> --}}
+                                <th scope="col">Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,7 +23,7 @@
                             <tr>
                                 <td>{{inc @index}}</td>
                                 <td>{{this.date1}}</td>
-                                <td>{{this.deliveryDetails.address}}</td>
+                                <td>{{this.deliveryDetails.address}},{{this.deliveryDetails.name}}</td>
                                 <td>{{this.totalAmount}}</td>
                                 <td>{{this.paymentMethod}}</td>
                                 <td>{{this.status}}</td>
@@ -58,14 +58,14 @@
                                     </div>
 
                                 </td>
-                                {{!-- <td>
+                                <td>
                                     <div>
                                         <a href="/admin/view-order-products/{{this._id}}"
                                             class="btn btn-primary btn-sm"> View Order
                                         </a>
                                     </div><br>
                                    
-                                </td> --}}
+                                </td>
                             </tr>
                             {{/each}}
                         </tbody>

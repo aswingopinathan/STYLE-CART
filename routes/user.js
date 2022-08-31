@@ -463,7 +463,6 @@ router.get('/order-success',verifyCartCount,(req,res)=>{
     console.log(error); 
   res.send("Something went wrong")
   }
-  
 }) 
 
 router.get('/orders',verifyLogin,async(req,res)=>{ 
@@ -752,7 +751,6 @@ router.post('/balance-check',(req,res)=>{
     console.log(error); 
   res.send("Something went wrong")
   }
-  
 }) 
 
 ///working on 30 
@@ -774,5 +772,7 @@ router.get('/devel',verifyLogin,async(req,res)=>{
   res.render('user/invoice')
   // res.send("ok")   
 })
+
+
 module.exports = router; 
  

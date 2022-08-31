@@ -1,169 +1,130 @@
-  <!-- Start content -->
-  <div class="content">
-    <div class="container-fluid">
-      <div class="page-title-box">
-        <div class="row align-items-center">
-          <div class="col-sm-6">
-            <h4 class="page-title">Invoice</h4>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-right">
-              {{!-- <li class="breadcrumb-item"><a href="javascript:void(0);">Stexo</a></li>
-              <li class="breadcrumb-item"><a href="javascript:void(0);">Pages</a></li>
-              <li class="breadcrumb-item active">Invoice</li> --}}
-            </ol>
-          </div>
-        </div> <!-- end row -->
-      </div>
-      <!-- end page-title -->
 
-      <div class="row">
-        <div class="col-12">
-          <div class="card m-b-30">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12">
-                  <div class="invoice-title">
-                    <h4 class="float-right font-16"><strong>Order #{{products.[0]._id}}</strong></h4>
-                    <h3 class="m-t-0">
-                      {{!-- <img src="/stylesheets/admin/assets/images/logo-dark.png" alt="logo" height="24" /> --}}
-                      STYLE CART
-                    </h3>
+{{!-- working --}}
+<section class="h-100 gradient-custom">
+  <div class="container-fluid h-100 ">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-12 col-xl-8">
+        <div class="card" style="border-radius: 10px;">
+         
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #30419b;">Product Details</p>
+              {{!-- <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p> --}}
+            </div>
+            {{#each products}}
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-2">
+                    <img src="/product-images/{{this.Images.[0]}}" class="img-fluid" alt="Product img">
                   </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-6">
-                      <address>
-                        <strong>Billed To:</strong><br>
-                        Ricky Clemons<br>
-                        1234 Main<br>
-                        Apt. 4B<br>
-                        Springfield, ST 54321
-                      </address>
-                    </div>
-                    <div class="col-6 text-right">
-                      <address>
-                        <strong>Shipped To:</strong><br>
-                        Kenny Rigdon<br>
-                        1234 Main<br>
-                        Apt. 4B<br>
-                        Springfield, ST 54321
-                      </address>
-                    </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0">Name : {{this.Name}}</p>
                   </div>
-                  <div class="row">
-                    <div class="col-6 m-t-30">
-                      <address>
-                        <strong>Payment Method:</strong><br>
-                        Visa ending **** 4242<br>
-                        RClemons@email.com
-                      </address>
-                    </div>
-                    <div class="col-6 m-t-30 text-right">
-                      <address>
-                        <strong>Order Date:</strong><br>
-                        October 7, 2016<br><br>
-                      </address>
-                    </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Category : {{this.Category}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Brand : {{this.Brands}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Qty : {{this.quantity}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Price : {{this.Price}}</p>
                   </div>
                 </div>
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                
               </div>
-
-              <div class="row">
-                <div class="col-12">
-                  <div class="panel panel-default">
-                    <div class="p-2">
-                      <h3 class="panel-title font-20"><strong>Order summary</strong></h3>
-                    </div>
-                    <div class="">
-                      <div class="table-responsive">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <td><strong>Item</strong></td>
-                              <td class="text-center"><strong>Price</strong></td>
-                              <td class="text-center"><strong>Quantity</strong>
-                              </td>
-                              <td class="text-right"><strong>Totals</strong></td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <!-- foreach ($order->lineItems as $line) or some such thing here -->
-                            <tr>
-                              <td>BS-200</td>
-                              <td class="text-center">$10.99</td>
-                              <td class="text-center">1</td>
-                              <td class="text-right">$10.99</td>
-                            </tr>
-                            <tr>
-                              <td>BS-400</td>
-                              <td class="text-center">$20.00</td>
-                              <td class="text-center">3</td>
-                              <td class="text-right">$60.00</td>
-                            </tr>
-                            <tr>
-                              <td>BS-1000</td>
-                              <td class="text-center">$600.00</td>
-                              <td class="text-center">1</td>
-                              <td class="text-right">$600.00</td>
-                            </tr>
-                            <tr>
-                              <td class="thick-line"></td>
-                              <td class="thick-line"></td>
-                              <td class="thick-line text-center">
-                                <strong>Subtotal</strong>
-                              </td>
-                              <td class="thick-line text-right">$670.99</td>
-                            </tr>
-                            <tr>
-                              <td class="no-line"></td>
-                              <td class="no-line"></td>
-                              <td class="no-line text-center">
-                                <strong>Shipping</strong>
-                              </td>
-                              <td class="no-line text-right">$15</td>
-                            </tr>
-                            <tr>
-                              <td class="no-line"></td>
-                              <td class="no-line"></td>
-                              <td class="no-line text-center">
-                                <strong>Total</strong>
-                              </td>
-                              <td class="no-line text-right">
-                                <h4 class="m-0">$685.99</h4>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-
-                      <div class="d-print-none mo-mt-2">
-                        <div class="float-right">
-                          <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i
-                              class="fa fa-print"></i></a>
-                          <a href="#" class="btn btn-primary waves-effect waves-light">Send</a>
-                        </div>
-                      </div>
-                    </div>
+            </div>
+            {{/each}}
+              <div class="row d-flex align-items-center">
+                  <div class="col-md-2">
+                    <p class="text-muted mb-0 small">Track Order</p>
                   </div>
+                   {{#if_eq this.deliverystatusadmin "Order Confirmed"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 20%; border-radius: 16px; background-color: #30419b;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                    {{#if_eq this.deliverystatusadmin "Shipped"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 40%; border-radius: 16px; background-color: #30419b;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                    {{#if_eq this.deliverystatusadmin "Out For Delivery"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 65%; border-radius: 16px; background-color: #30419b;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                    {{#if_eq this.deliverystatusadmin "Delivered"}}
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 100%; border-radius: 16px; background-color: #30419b;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {{/if_eq}}
+                    {{#if orders.cancel}}
+                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Order Cancelled</p>
+                    {{else}}
+                    <div class="d-flex justify-content-around mb-1">
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Order Confirmed</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Out For Delivery</p>
+                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                    </div>
+                    {{/if}}
+                    <div class="d-flex justify-content-end mb-1">
+                      {{!-- <a href="/Return-Item/{{this._id}}">Return Item</a> --}}
+                    </div>
 
+                  </div>
                 </div>
-              </div> <!-- end row -->
+            <div class="d-flex justify-content-between pt-2">
+              <p class="fw-bold mb-0">Order Details</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>₹{{orders.totalAmount}}.00</p>
+            </div>
 
+            <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">Invoice Number : {{orders._id}}</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span>₹{{orders.discountamount}}.00</p>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <p class="text-muted mb-0">Invoice Date : {{orders.date}}</p>
+              {{!-- <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p> --}}
+            </div>
+
+            <div class="d-flex justify-content-between mb-5">
+              <p class="text-muted mb-0">Recepits Voucher : </p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
             </div>
           </div>
-        </div> <!-- end col -->
-      </div> <!-- end row -->
-
-
+          <div class="card-footer border-0 px-4 py-5"
+            style="background-color: #30419b; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
+              : <span class="h2 mb-0 ms-2">₹{{orders.totalAmount}}.00</span></h5>
+          </div>
+          
+        </div>
+      </div>
     </div>
-    <!-- container-fluid -->
-
   </div>
-  <!-- content -->
+</section>
 
-  <footer class="footer">
-     2019 - 2022 Style Cart <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i>
-      </span>.
-  </footer>
 
+
+
+
+   

@@ -77,9 +77,10 @@ module.exports = {
     deleteSubCategory: (subId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.SUB_CATEGORY_COLLECTION).deleteOne({ _id: objectId(subId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ SubCategory: objectId(subId) }).then(() => {
-                    resolve()
-                })
+                resolve()
+                // db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ SubCategory: objectId(subId) }).then(() => {
+                //     resolve()
+                // })
             })
         })
     },
@@ -108,7 +109,7 @@ module.exports = {
     getAllOrders: () => {
         return new Promise(async (resolve, reject) => {
             let orders = await db.get().collection(collection.ORDER_COLLECTION)
-                .find().toArray()
+                .find().sort({date:-1}).toArray()
             resolve(orders)
         })
     }, getOrderProductsAdmin: (orderId) => {
@@ -200,6 +201,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let proObj = {
                 Name: body.Name,
+                Description: body.Description,
                 Images: body.Images
             }
             db.get().collection(collection.BANNER_COLLECTION).insertOne(proObj).then(() => {
@@ -213,9 +215,9 @@ module.exports = {
             resolve(banner)
         })
     },
-    deleteBanner: (bannerData) => {
+    deleteBanner: (bannerId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.BANNER_COLLECTION).deleteOne({ _id: objectId(bannerData) }).then(() => {
+            db.get().collection(collection.BANNER_COLLECTION).deleteOne({ _id: objectId(bannerId) }).then(() => {
                 resolve()
             })
         })
@@ -769,6 +771,12 @@ module.exports = {
         ]).toArray()
         console.log("report1",report);
         return report;
-    }
+    },
+    getBannerDetails:(bannerId)=>{
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.BANNER_COLLECTION).findOne({_id:objectId(bannerId)})
+            resolve()
+        })
+      }
    
 }

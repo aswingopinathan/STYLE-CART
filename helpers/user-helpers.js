@@ -315,29 +315,30 @@ module.exports = {
     },
     //working
     placeOrder: (order, products, total, discount) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
             console.log(order, products, total);
             let status = order['payment-method'] === 'COD' ? 'Order Confirmed' : 'pending'
+            let addressFinder= await db.get().collection(collection.ADDRESS_COLLECTION).findOne({_id:objectId(order.address)})
             let orderObj = {
                 deliveryDetails: {
-                    name: order.name,
-                    mobile: order.mobile,
-                    pincode: order.pincode,
-                    state: order.state,
-                    address: order.address
+                    name: addressFinder.name,
+                    mobile: addressFinder.mobile,
+                    pincode: addressFinder.pincode,
+                    state: addressFinder.state,
+                    address: addressFinder.address
                 },
                 userId: objectId(order.userId),
                 paymentMethod: order['payment-method'],
                 products: products,
                 totalAmount: total,
-                status: status,
+                status: status,  
                 date: new Date(),
                 date1: new Date().toDateString(),
                 cancel: false,
                 discountamount: discount
 
             }
-            db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
+            await db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
                 console.log('order id:' + response.insertedId);
                 resolve(response.insertedId)
             })
@@ -915,5 +916,14 @@ module.exports = {
           resolve()
         });
       },
+      //not used
+      getUniqueAddress:(addId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let address=await db.get().collection(collection.ADDRESS_COLLECTION).findOne({_id:objectId(addId)})
+            // console.log("address2",address)
+            resolve(address)
+        })
+      },
+     
 
 }
