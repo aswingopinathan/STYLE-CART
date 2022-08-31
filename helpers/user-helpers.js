@@ -355,6 +355,11 @@ module.exports = {
             let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
                     $match: { userId: objectId(userId) }
+                },
+                {
+                    $sort:{
+                        date1:-1
+                    }
                 }
 
             ]).toArray()
@@ -865,60 +870,50 @@ module.exports = {
             resolve()
         })
     },
-    createInvoice: (product,order,delivery,userlog)=>{
-        return new Promise((resolve,reject)=>{
-            const invoiceDetail = {
-                shipping: {
-                  name: userlog.name,
-                  address: "1234 Main Street",
-                  city: "Dubai",
-                  state: "Dubai",
-                  country: "UAE",
-                  postal_code: 94111
-                },
-                items: [
-                  {
-                    item: "Chair",
-                    description: "Wooden chair",
-                    quantity: 1,
-                    price: 50.00, 
-                    tax: "10%"
-                  },
-                  {
-                    item: "Watch",
-                    description: "Wall watch for office",
-                    quantity: 2,
-                    price: 30.00,
-                    tax: "10%"
-                  },
-                  {
-                    item: "Water Glass Set",
-                    description: "Water glass set for office",
-                    quantity: 1,
-                    price: 35.00,
-                    tax: ""
-                  }
-                ],
-                subtotal: 156,
-                total: 156,
-                order_number: 1234222,
-                header:{
-                    company_name: "Nice Invoice",
-                    company_logo: "logo.png",
-                    company_address: "Nice Invoice. 123 William Street 1th Floor New York, NY 123456"
-                },
-                footer:{
-                  text: "This is footer - you can add any text here"
-                },
-                currency_symbol:"$", 
-                date: {
-                  billing_date: "08 August 2020",
-                  due_date: "10 September 2020",
-                }
-            };
-            niceInvoice(invoiceDetail, 'your-invoice-name.pdf');
-            resolve()
-        })
-    }
+   
+    downloadInvoice: (products, orders, user) => {
+        let data = [];
+        products.map(async (pro) => {
+          data = {
+            item: pro.Name[0],
+            description: pro.Category[0],
+            quantity: pro.quantity,
+            price: pro.Price[0],
+            tax: '0%',
+          };
+        });
+        return new Promise((resolve, reject) => {
+          const invoiceDetail = {
+            shipping: {
+              name: orders.deliveryDetails.name,
+              address: orders.deliveryDetails.address,
+              city: orders.deliveryDetails.city,
+              state: orders.deliveryDetails.state,
+              country: 'India',
+              postal_code: orders.deliveryDetails.pincode,
+            },
+            items: [data],
+            subtotal: orders.totalAmount,
+            total: orders.totalAmount,
+            order_number: orders._id,
+            header: {
+              company_name: 'Style cart',
+              company_logo: 'logo.png',
+              company_address: 'Room No:16 Unknown Building Cochin',
+            },
+            footer: {
+              text: 'Thank you for purchasing from style cart',
+            },
+            currency_symbol: '₹',
+            date: {
+              billing_date: orders.date1,
+              due_date: orders.date1,
+            },
+          }; 
+    
+          niceInvoice(invoiceDetail, user.Username + orders._id + '.pdf');
+          resolve()
+        });
+      },
 
 }

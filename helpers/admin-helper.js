@@ -236,9 +236,7 @@ module.exports = {
     deleteCoupon: (couponId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.COUPON_COLLECTION).deleteOne({ _id: objectId(couponId) }).then(() => {
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ Category: objectId(couponId) }).then(() => {
-                    resolve()
-                })
+                resolve()
             })
         })
     },
@@ -641,8 +639,46 @@ module.exports = {
     getUserCount:()=>{
         return new Promise(async(resolve,reject)=>{
           let userCount= await db.get().collection(collection.USER_COLLECTION).count()
-            console.log("userCount",userCount);
+            // console.log("userCount",userCount);
             resolve(userCount)
+        })
+    },
+    getProductCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+          let productCount= await db.get().collection(collection.PRODUCT_COLLECTION).count()
+            resolve(productCount)
+        })
+    },
+    getOrdersCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+          let ordersCount= await db.get().collection(collection.ORDER_COLLECTION).count()
+            resolve(ordersCount)
+        })
+    },
+    getTotalRevenue:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let totalRevenue=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        cancel:false
+                    }
+                },
+                {
+                    $group:{
+                        _id:null,
+                        grandTotal:{
+                            $sum:"$totalAmount"
+                        }
+                    }
+                },
+                {
+                    $project:{
+                        grandTotal:1
+                    }
+                }
+            ]).toArray()
+            console.log("totalRevenue",totalRevenue);
+            resolve(totalRevenue)
         })
     },
     getYearlySalesReport: async () => {

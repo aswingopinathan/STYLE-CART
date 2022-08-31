@@ -20,43 +20,51 @@ const verifyAdminLogin = (req, res, next) => {
 
 router.get('/', function (req, res, next) {
   try{
-
+    if (req.session.isadmin) {
+      res.redirect('/admin/adminindex')
+    } else {
+      res.render('admin/admin-login', { errout: req.session.err });
+    }
   }catch(error)
   {
-  
-  }
-  if (req.session.isadmin) {
-    res.redirect('/admin/adminindex')
-  } else {
-    res.render('admin/admin-login', { errout: req.session.err });
+    console.log(error); 
+  res.send("Something went wrong")
   }
 });
 
 let yearValue=2022;
 router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
-  // console.log("yearValuechange2",yearValue);
+try{
+  let cod = await adminHelpers.getPaymentMethodNums('COD')
+  let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
+  let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
+  let wallet = await adminHelpers.getPaymentMethodNums('WALLET')
 
+  let chartData= await adminHelpers.getChartData(yearValue)
 
-    let cod = await adminHelpers.getPaymentMethodNums('COD')
-    let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
-    let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
-    let wallet = await adminHelpers.getPaymentMethodNums('WALLET')
+  let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue)
 
-    let chartData= await adminHelpers.getChartData(yearValue)
+  let listedYears= await adminHelpers.getYear()
 
-    let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue)
+  let userCount=   await adminHelpers.getUserCount()
 
-    let listedYears= await adminHelpers.getYear()
+  let productCount=   await adminHelpers.getProductCount()
 
-    let userCount=   await adminHelpers.getUserCount()
+  let ordersCount=   await adminHelpers.getOrdersCount()
 
-    // console.log("yearlySalesReport",yearlySalesReport); 
-    res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,chartData,monthlySalesReport,yearValue,listedYears,userCount});
+  let totalRevenue= await adminHelpers.getTotalRevenue()
+
+  res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,chartData,monthlySalesReport,yearValue,listedYears,userCount,productCount,ordersCount,totalRevenue});
+}catch(error){
+  console.log(error); 
+  res.send("Something went wrong")
+}
 });
 
  
 router.post('/adminindex', (req, res, next) => {
-  const { Email, Password } = req.body;
+  try{
+    const { Email, Password } = req.body;
   if (userName === Email && Pin === Password) {
     req.session.isadmin = userName
     req.session.err = null
@@ -67,25 +75,44 @@ router.post('/adminindex', (req, res, next) => {
     req.session.err = "Invalid Credential"
     res.redirect('/admin')
   }
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/show-user',verifyAdminLogin, (req, res, next) => {
-  adminHelpers.getAllUsers().then((users) => {
-    res.render('admin/show-user', { admin: true, users })
-  })
+  try{
+    adminHelpers.getAllUsers().then((users) => {
+      res.render('admin/show-user', { admin: true, users })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/show-products',verifyAdminLogin, (req, res, next) => {
-  productHelpers.getAllProducts().then((products) => {
-    res.render('admin/show-products', { admin: true, products })
-  })
+  try{
+    productHelpers.getAllProducts().then((products) => {
+      res.render('admin/show-products', { admin: true, products })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-product',verifyAdminLogin, async function (req, res, next) {
-  let getcategory = await adminHelpers.getAllCategory()
+  try{
+    let getcategory = await adminHelpers.getAllCategory()
   let getsubcategory = await adminHelpers.getAllSubCategory()
   let brands = await adminHelpers.getAllBrands()
   res.render('admin/add-product', { admin: true, getcategory, getsubcategory, brands });
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 });
 
 //multer
@@ -100,18 +127,21 @@ const filestorageEngine = multer.diskStorage({
 
 const upload = multer({ storage: filestorageEngine })
 router.post('/add-product', upload.array('Images'), (req, res) => {
-  var filenames = req.files.map(function (file) {
-    return file.filename;
-  });
-  req.body.Images = filenames;
-  productHelpers.addproduct(req.body).then(()=> {
-    console.log(req.body);
-    res.redirect('/admin/show-products')
-  })
+  try{
+    var filenames = req.files.map(function (file) {
+      return file.filename;
+    });
+    req.body.Images = filenames;
+    productHelpers.addproduct(req.body).then(()=> {
+      console.log(req.body);
+      res.redirect('/admin/show-products')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
-
-//multer
-
 
   router.get('/edit-product/:id',verifyAdminLogin, async (req, res) => {
     try{
@@ -121,13 +151,14 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
     let getbrands = await adminHelpers.getAllBrands()
     res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
   }catch{
-    res.render('/admin/page404')
+    console.log(error); 
+  res.send("Something went wrong")
   }
   })
 
-
 router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
-  console.log("pass");
+  try{
+    console.log("pass");
   var filenames = req.files.map(function (file) {
     return file.filename;
   });
@@ -135,169 +166,282 @@ router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   productHelpers.updateProduct(req.params.id, req.body).then(() => {
     res.redirect('/admin/show-products')
   }) 
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 }) 
 
 router.get('/delete-product/:id',verifyAdminLogin, (req, res) => {
-  let proId = req.params.id
+  try{
+    let proId = req.params.id
   console.log(proId);
   productHelpers.deleteProduct(proId).then((response) => {
     res.redirect('/admin/show-products')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 //user blocking
 router.get('/block/:id',verifyAdminLogin, (req, res) => {
-  var userId = req.params.id;
+  try{
+    var userId = req.params.id;
   adminHelpers.blockUser(userId).then(() => {
     res.redirect('/admin/show-user')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 //user unblocking
 router.get('/unblock/:id',verifyAdminLogin, (req, res) => {
-  var userId = req.params.id;
+  try{
+    var userId = req.params.id;
   adminHelpers.unblockUser(userId).then(() => {
     res.redirect('/admin/show-user')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/show-category',verifyAdminLogin, (req, res) => {
-  adminHelpers.getAllCategory().then((category) => {
-    res.render('admin/show-category', { admin: true, category })
-  })
+  try{
+    adminHelpers.getAllCategory().then((category) => {
+      res.render('admin/show-category', { admin: true, category })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-category',verifyAdminLogin, (req, res) => {
-  res.render('admin/add-category', { admin: true })
+  try{
+    res.render('admin/add-category', { admin: true })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-category', (req, res) => {
-  adminHelpers.addCategory(req.body).then(() => {
-    res.redirect('/admin/show-category')
-  })
+  try{
+    adminHelpers.addCategory(req.body).then(() => {
+      res.redirect('/admin/show-category')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/delete-category/:id',verifyAdminLogin, (req, res) => {
-  let catId = req.params.id
+  try{
+    let catId = req.params.id
   adminHelpers.deleteCategory(catId).then(() => {
     res.redirect('/admin/show-category')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/show-sub-category',verifyAdminLogin, (req, res) => {
-  adminHelpers.getAllSubCategory().then((subcategory) => {
-    res.render('admin/show-sub-category', { admin: true, subcategory })
-  })
+  try{
+    adminHelpers.getAllSubCategory().then((subcategory) => {
+      res.render('admin/show-sub-category', { admin: true, subcategory })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-sub-category',verifyAdminLogin, (req, res) => {
-  res.render('admin/add-sub-category', { admin: true })
+  try{
+    res.render('admin/add-sub-category', { admin: true })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-sub-category', (req, res) => {
-  adminHelpers.addSubCategory(req.body).then(() => {
-    res.redirect('/admin/show-sub-category')
-  })
+  try{
+    adminHelpers.addSubCategory(req.body).then(() => {
+      res.redirect('/admin/show-sub-category')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/delete-sub-category/:id',verifyAdminLogin, (req, res) => {
-  let subId = req.params.id
-  adminHelpers.deleteSubCategory(subId).then(() => {
-    res.redirect('/admin/show-sub-category')
-  })
+  try{
+    let subId = req.params.id
+    adminHelpers.deleteSubCategory(subId).then(() => {
+      res.redirect('/admin/show-sub-category')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 //brands section start
 router.get('/show-brands',verifyAdminLogin, (req, res) => {
-  adminHelpers.getAllBrands().then((brands) => {
-    res.render('admin/show-brands', { admin: true, brands })
-  })
+  try{
+    adminHelpers.getAllBrands().then((brands) => {
+      res.render('admin/show-brands', { admin: true, brands })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-brands',verifyAdminLogin, (req, res) => {
-  res.render('admin/add-brands', { admin: true })
+  try{
+    res.render('admin/add-brands', { admin: true })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-brands', (req, res) => {
-  adminHelpers.addBrands(req.body).then(() => {
-    res.redirect('/admin/show-brands')
-  })
+  try{
+    adminHelpers.addBrands(req.body).then(() => {
+      res.redirect('/admin/show-brands')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
-  let brandId = req.params.id
+  try{
+    let brandId = req.params.id
   console.log(brandId);
   adminHelpers.deleteBrands(brandId).then(() => {
     res.redirect('/admin/show-brands')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
-//brands section end
 
-//orders section start
-//working
 router.get('/show-orders',verifyAdminLogin, (req, res) => {
-  adminHelpers.getAllOrders().then((orders) => {
-    res.render('admin/show-orders', { admin: true,order:orders })
-  })
+  try{
+    adminHelpers.getAllOrders().then((orders) => {
+      res.render('admin/show-orders', { admin: true,order:orders })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 }) 
 
 router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{
-  console.log(req.params.id);
-  let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
+  try{
+    let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
   let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
   let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
   console.log("products",products);
   res.render('admin/view-order-products',{admin:true,products,orders,deliverystatusadmin})
-})
-//orders section end
-
-router.get('/logout', (req, res) => {
-  req.session.isadmin = null
-  console.log("admin session destroyed");
-  res.redirect('/admin')
-})
-//admin cancel fund to wallet no userid
-
-router.post('/admin-cancel-order',async(req,res)=>{
-  if(req.body.payment!= "COD"){
-    await adminHelpers.AdminCancelAmountWallet(req.body.userId,req.body.amount)
-    await adminHelpers.adminIncreaseStock(req.body.order)
-    await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
-      res.json(response)
-    })
-  }else{
-    await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
-      res.json(response)
-    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
   }
 })
-///admin cancel fund return to wallet
+
+router.get('/logout', (req, res) => {
+  try{
+    req.session.isadmin = null
+    console.log("admin session destroyed");
+    res.redirect('/admin')
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+ 
+})
+
+router.post('/admin-cancel-order',async(req,res)=>{
+  try{
+    if(req.body.payment!= "COD"){
+      await adminHelpers.AdminCancelAmountWallet(req.body.userId,req.body.amount)
+      await adminHelpers.adminIncreaseStock(req.body.order)
+      await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
+        res.json(response)
+      })
+    }else{
+      await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
+        res.json(response)
+      })
+    }
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+})
 
 router.get('/show-banner',verifyAdminLogin,(req,res)=>{
-  adminHelpers.getAllBanner().then((banner)=>{
-    res.render('admin/show-banner',{admin:true,banner})
-  })
+  try{
+    adminHelpers.getAllBanner().then((banner)=>{
+      res.render('admin/show-banner',{admin:true,banner})
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-banner',verifyAdminLogin,(req,res)=>{
-res.render('admin/add-banner',{admin:true}) 
+  try{
+    res.render('admin/add-banner',{admin:true})
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-banner', upload.array('Images'), (req, res) => {
-  var filenames = req.files.map(function (file) {
-    return file.filename;
-  });
-  req.body.Images = filenames;
-  adminHelpers.addBanner(req.body).then(()=> {
-    res.redirect('/admin/show-banner')
-  })
+  try{
+    var filenames = req.files.map(function (file) {
+      return file.filename;
+    });
+    req.body.Images = filenames;
+    adminHelpers.addBanner(req.body).then(()=> {
+      res.redirect('/admin/show-banner')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/delete-banner/:id',verifyAdminLogin, (req, res) => {
-  let banner = req.params.id
+  try{
+    let banner = req.params.id
   adminHelpers.deleteBanner(banner).then(() => {
     res.redirect('/admin/show-banner')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 //testing
@@ -305,106 +449,159 @@ router.get('/sample',(req,res)=>{
   res.render('admin/page404')
 })
 
-
-//coupon section
 router.get('/show-coupon',verifyAdminLogin, (req, res) => {
-  adminHelpers.getAllCoupon().then((coupon) => {
-    res.render('admin/show-coupon', { admin: true, coupon })
-  })
+  try{
+    adminHelpers.getAllCoupon().then((coupon) => {
+      res.render('admin/show-coupon', { admin: true, coupon })
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-coupon',verifyAdminLogin, (req, res) => {
-  res.render('admin/add-coupon', { admin: true })
+  try{
+    res.render('admin/add-coupon', { admin: true })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-coupon', (req, res) => {
-  adminHelpers.addCoupon(req.body).then(() => {
-    res.redirect('/admin/show-coupon')
-  })
+  try{
+    adminHelpers.addCoupon(req.body).then(() => {
+      res.redirect('/admin/show-coupon')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/delete-coupon/:id',verifyAdminLogin, (req, res) => {
-  let couponId = req.params.id
+  try{
+    let couponId = req.params.id
   adminHelpers.deleteCoupon(couponId).then(() => {
     res.redirect('/admin/show-coupon')
   })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
-//offercategory//working
 router.get('/show-offer-category',verifyAdminLogin,async (req, res) => {
- let category= await adminHelpers.getAllCategory()
+  try{
+    let category= await adminHelpers.getAllCategory()
  res.render('admin/show-offer-category', { admin: true,category })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/add-offer-category/:id',verifyAdminLogin, (req, res) => {
-  req.session.catId=req.params.id
+  try{
+    req.session.catId=req.params.id
   res.render('admin/add-offer-category', { admin: true }) 
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/add-offer-category', (req, res) => {
-  adminHelpers.addOfferCategory(req.body, req.session.catId).then(() => {
-    res.redirect('/admin/show-offer-category')
-  })
+  try{
+    adminHelpers.addOfferCategory(req.body, req.session.catId).then(() => {
+      res.redirect('/admin/show-offer-category')
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/change-status',(req,res)=>{
-  adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
-    res.json(response)
-  }) 
+  try{
+    adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
+      res.json(response)
+    }) 
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/offer-activate',(req,res)=>{
-  newoffer=req.body.offer
-  adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
-    adminHelpers.activateCategoryOffer(req.body.categoryId)
-    res.json(response)
-  })
+  try{
+    newoffer=req.body.offer
+    adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
+      adminHelpers.activateCategoryOffer(req.body.categoryId)
+      res.json(response)
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/offer-deactivate',(req,res)=>{
-  newoffer=req.body.offer
-  adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
-    adminHelpers.deactivateCategoryOffer(req.body.categoryId)
-    res.json(response)
-  })
+  try{
+    newoffer=req.body.offer
+    adminHelpers.changeOfferStatus(req.body.categoryId,newoffer).then((response)=>{
+      adminHelpers.deactivateCategoryOffer(req.body.categoryId)
+      res.json(response)
+    })
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.post('/change-year',(req,res)=>{
-  yearValue=req.body.year
+  try{
+    yearValue=req.body.year
   console.log("yearValuechange",yearValue);
   res.json(response)
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/sales-yearly',async(req,res)=>{
-  let yearlySalesReport= await adminHelpers.getYearlySalesReport()
-  // console.log("report2",yearlySalesReport);
+  try{
+    let yearlySalesReport= await adminHelpers.getYearlySalesReport()
   res.render('admin/sales-yearly',{admin: true,yearlySalesReport,yearValue})
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/sales-weekly',async(req,res)=>{
-  let weeklySalesReport= await adminHelpers.getWeeklySalesReport(yearValue )
+  try{
+    let weeklySalesReport= await adminHelpers.getWeeklySalesReport(yearValue )
   let listedYears= await adminHelpers.getYear()
-
-  // console.log("report2",weeklySalesReport);
   res.render('admin/sales-weekly',{admin: true,weeklySalesReport,listedYears,yearValue})
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
 })
 
 router.get('/sales-monthly',async(req,res)=>{
-  let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue )
+  try{
+    let monthlySalesReport= await adminHelpers.getMonthlySalesReport(yearValue )
   let listedYears= await adminHelpers.getYear()
-
-  console.log("report2",monthlySalesReport);
   res.render('admin/sales-monthly',{admin: true,monthlySalesReport,listedYears,yearValue})
+  }catch(error){
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+  
 })
-
-// router.get('/sample1',async(req,res)=>{
-  // let paymentDetails= await adminHelpers.getYearlyPayment()
-  // console.log("paymentDetails",paymentDetails); 
-  // await adminHelpers.getYear()
-  // await adminHelpers.getUserCount()
-
-  // res.send("ok")
-// })
- 
 
 module.exports = router;

@@ -482,7 +482,9 @@ router.get('/orders',verifyLogin,async(req,res)=>{
     
 })
 ///working on 29monday
+let viewOrder;
 router.get('/view-order-products/:id',verifyLogin,async(req,res)=>{
+  viewOrder=req.params.id
   try{
     console.log(req.params.id);
   let products=await userHelpers.getOrderProducts(req.params.id)
@@ -753,21 +755,24 @@ router.post('/balance-check',(req,res)=>{
   
 }) 
 
-///working on 30
+///working on 30 
 router.post('/invoice',async(req,res)=>{
-  console.log("req.body.id",req.body.id)
-  let products=await userHelpers.getOrderProducts(req.body.id)
-  let orders=await userHelpers.getCurrentOrder(req.body.id)
-  let deliverystatus=await userHelpers.getDeliveryStatus(req.body.id)
-  await userHelpers.createInvoice(products,orders,deliverystatus,userlog)
+  // console.log("req.body.id",req.body.id)
+  let products=await userHelpers.getOrderProducts(viewOrder)
+  let orders=await userHelpers.getCurrentOrder(viewOrder)
+
+  console.log("products",products);
+  console.log("orders",orders); 
+  console.log("orders._id",orders._id);
+  await userHelpers.downloadInvoice(products,orders,userlog)
   response.status=true
-    res.json(response)
-})
+    res.json(response) 
+}) 
 
 //development env
 router.get('/devel',verifyLogin,async(req,res)=>{
   res.render('user/invoice')
-  // res.send("ok")
+  // res.send("ok")   
 })
 module.exports = router; 
  
