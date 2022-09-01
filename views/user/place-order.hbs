@@ -19,17 +19,17 @@
                 <div class="billing-details box-shadow p-30 pr-10">
                     <h6 class="widget-title border-left mb-20">Enter Delivery Details</h6> 
                     <label>Name</label>
-                    <input type="text" placeholder="Your Name Here..." id="name1" name="name" value="">
+                    <input type="text" placeholder="Your Name Here..."  name="name" value="">
                     <label>Mobile</label>
-                    <input type="text" placeholder="10-digit mobile number" id="mobile1" name="mobile" value="">
+                    <input type="text" placeholder="10-digit mobile number"  name="mobile" value="">
                     <label>Pincode</label>
-                    <input type="text" placeholder="Pincode here..." id="pincode1" name="pincode" value="">
+                    <input type="text" placeholder="Pincode here..."  name="pincode" value="">
                     {{!-- <input type="text" name="userId" value="{{userlog._id}}" hidden> --}}
+                    <label>Locality</label>
+                    <input type="text" placeholder="Locality here..."  name="locality" value="">
                     <label>State</label>
-                    <input type="text" placeholder="State here..." id="state1" name="state" value="">
+                    <input type="text" placeholder="State here..."  name="state" value="">
                     <label>Address</label>
-                    {{!-- <textarea class="custom-textarea" placeholder="Your address here..." name="address"
-                        value=""></textarea> --}}
                     <input type="text" placeholder="Your address here..." id="address1" name="address" value="">
                     <button class="btn btn-primary mt-3 float-right" style="width: fit-content;" type="submit">Save
                         Address</button>
@@ -486,10 +486,9 @@
             data: $('#save-address').serialize(),
             success: (response) => {
                 // alert(response)
-                swal("address saved").then(() => {
-                    location.reload()
-                })
-
+                swal("Success", "Address saved", "success").then(()=>{
+                        location.reload();
+                     })
             }
         })
     })

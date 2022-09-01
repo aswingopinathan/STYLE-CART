@@ -342,19 +342,21 @@ router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
   }
 })
 
-router.get('/show-orders',verifyAdminLogin, (req, res) => {
+router.get('/show-orders',verifyAdminLogin,async (req, res) => {
   try{
-    adminHelpers.getAllOrders().then((orders) => {
-      res.render('admin/show-orders', { admin: true,order:orders })
-    })
+    let orders = await adminHelpers.getAllOrders()
+    // let adminDeliveryStatus =await adminHelpers.getDeliveryStatusAdmin(adminViewOrderId)
+    res.render('admin/show-orders', { admin: true,order:orders })
   }catch(error){
     console.log(error); 
   res.render('admin/page404')
   }
 }) 
 
+// let adminViewOrderId;
 router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{
   try{
+    // adminViewOrderId=req.params.id
     let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
   let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
   let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
@@ -414,7 +416,7 @@ router.get('/add-banner',verifyAdminLogin,(req,res)=>{
   }catch(error){
     console.log(error); 
   res.render('admin/page404')
-  }
+  }   
 })
 
 router.post('/add-banner', upload.array('Images'), (req, res) => {
@@ -435,7 +437,18 @@ router.post('/add-banner', upload.array('Images'), (req, res) => {
 ///working on 31wednesday
 router.get('/edit-banner/:id',async(req,res)=>{
   let bannerDetails=await adminHelpers.getBannerDetails(req.params.id)
+  console.log("bannerDetails",bannerDetails);
   res.render('admin/edit-banner',{admin:true,bannerDetails})
+})
+
+router.post('/edit-banner/:id',upload.array('Images', 4),async(req,res)=>{
+  var filenames = req.files.map(function (file) {
+    return file.filename;
+  });
+  req.body.Images = filenames;
+  adminHelpers.updateBanner(req.params.id, req.body).then(() => {
+    res.redirect('/admin/show-banner')
+  }) 
 })
 
 router.post('/delete-banner',verifyAdminLogin, (req, res) => {
@@ -444,7 +457,7 @@ router.post('/delete-banner',verifyAdminLogin, (req, res) => {
   adminHelpers.deleteBanner(req.body.id).then(() => {
     res.redirect('/admin/show-banner')
   })
-  }catch(error){
+  }catch(error){   
     console.log(error); 
   res.render('admin/page404')
   }

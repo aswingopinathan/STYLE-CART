@@ -51,6 +51,7 @@ module.exports = {
             //     resolve(response)
 
             // } 
+
             else {
                 userData.Password = await bcrypt.hash(userData.Password, 10)
                 client.verify
@@ -64,12 +65,18 @@ module.exports = {
                 console.log('no same email');
                 resolve(response)
             }
+
             // else{
+                
             //     userData.Password = await bcrypt.hash(userData.Password, 10)
             //     db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((data) => {
+            //         let wallObj={
+            //             userId:objectId(data.insertedId),
+            //             wallet:parseInt(0)
+            //         }
+            //         db.get().collection(collection.WALLET_COLLECTION).insertOne(wallObj)
             //         resolve(data.insertedId)
             //     })
-            //     response.status = true
             //     resolve(response)
             // }
 
@@ -86,6 +93,11 @@ module.exports = {
                     console.log("otp res", resp1);
                     if (resp1.valid) {
                         db.get().collection(collection.USER_COLLECTION).insertOne(signupData).then((data) => {
+                            let wallObj={
+                                userId:objectId(data.insertedId),
+                                wallet:parseInt(0)
+                            }
+                            db.get().collection(collection.WALLET_COLLECTION).insertOne(wallObj)
                             resolve(data.insertedId)
                         })
                         console.log('otp verified successfully');
@@ -324,6 +336,7 @@ module.exports = {
                     name: addressFinder.name,
                     mobile: addressFinder.mobile,
                     pincode: addressFinder.pincode,
+                    locality: addressFinder.locality,
                     state: addressFinder.state,
                     address: addressFinder.address
                 },
@@ -624,6 +637,13 @@ module.exports = {
             })
         })
     },
+    getWallet: (userId) => {
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.WALLET_COLLECTION).findOne({userId: objectId(userId)}).then((response)=>{
+                resolve(response)
+            })
+        })
+    },
     deleteTheOrder: (orderId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION).deleteOne({ _id: objectId(orderId) }).then(() => {
@@ -792,8 +812,8 @@ module.exports = {
                 userId = referralCheck._id
                 await db
                     .get()
-                    .collection(collection.USER_COLLECTION)
-                    .updateOne({ _id: objectId(userId) }, { $inc: { wallet: 100 } })
+                    .collection(collection.WALLET_COLLECTION)
+                    .updateOne({ userId: objectId(userId) }, { $inc: { wallet: 1000 } })
             }
             resolve()
         })
@@ -801,28 +821,73 @@ module.exports = {
     cancelAmountWallet: (userId,total)=>{
         total=parseInt(total)
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.USER_COLLECTION)
-            .updateOne({ _id: objectId(userId) }, { $inc: { wallet: total } })
+            db.get().collection(collection.WALLET_COLLECTION)
+            .updateOne({ userId: objectId(userId) }, { $inc: { wallet: total }})
             resolve()
+        })
+    },
+    updateWalletCredit:(userId,orderId,totalPrice,walletAction)=>{
+        return new Promise((resolve,reject)=>{
+            let walletHistory={
+                order: objectId(orderId),
+                status:"credited",
+                amount: totalPrice,
+                date1: new Date().toDateString(),
+                action: walletAction
+        }
+        db.get().collection(collection.WALLET_COLLECTION)
+            .updateOne({ userId: objectId(userId) }, { $push:{walletHistory:walletHistory} })
+            resolve()
+        })
+    },
+    updateWalletCreditReferral:(userData,walletAction)=>{
+        totalPrice=parseInt(1000)
+        return new Promise(async(resolve,reject)=>{
+            let referralCheck = await db
+                .get()
+                .collection(collection.USER_COLLECTION)
+                .findOne({ yourReferralCode: userData.referralcode })
+                if(referralCheck){
+                    userId = referralCheck._id
+                    let walletHistory={
+                        order: "referral",
+                        status:"credited",
+                        amount: totalPrice,
+                        date1: new Date().toDateString(),
+                        action: walletAction
+                }
+               await db.get().collection(collection.WALLET_COLLECTION)
+                    .updateOne({ userId: objectId(userId) }, { $push:{walletHistory:walletHistory} })
+                }
+                resolve()
         })
     },
     getWalletBalance: (userId)=>{
         return new Promise((resolve,reject)=>{
-           db.get().collection(collection.USER_COLLECTION)
-            .findOne({_id:objectId(userId)}).then((response)=>{
+           db.get().collection(collection.WALLET_COLLECTION)
+            .findOne({userId:objectId(userId)}).then((response)=>{
                 response=response.wallet
                 resolve(response)
             })
             
         })
     },
-    updateWallet: (userId,walletMoney)=>{
+    updateWallet: (userId,walletMoney,orderId,totalPrice)=>{
+        totalPrice=parseInt(totalPrice)
+        let walletHistory=[{
+            order: objectId(orderId),
+            status:"debited",
+            amount: totalPrice,
+            date1: new Date().toDateString(),
+            action: "Product purchase"
+    }]
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.USER_COLLECTION)
-                .updateOne({ _id: objectId(userId) },
+            db.get().collection(collection.WALLET_COLLECTION)
+                .updateOne({ userId: objectId(userId) },
                 {
                     $set: {
-                        wallet: walletMoney
+                        wallet: walletMoney,
+                        walletHistory: walletHistory
                     }
                 }
             ).then(() => {
@@ -877,8 +942,9 @@ module.exports = {
         products.map(async (pro) => {
           data = {
             item: pro.Name[0],
-            description: pro.Category[0],
-            quantity: pro.quantity,
+            // description: pro.Category[0],
+            description: '',
+            quantity: pro.quantity,    
             price: pro.Price[0],
             tax: '0%',
           };
@@ -888,12 +954,12 @@ module.exports = {
             shipping: {
               name: orders.deliveryDetails.name,
               address: orders.deliveryDetails.address,
-              city: orders.deliveryDetails.city,
+              city: orders.deliveryDetails.locality,
               state: orders.deliveryDetails.state,
               country: 'India',
               postal_code: orders.deliveryDetails.pincode,
             },
-            items: [data],
+            items: [data],       
             subtotal: orders.totalAmount,
             total: orders.totalAmount,
             order_number: orders._id,
@@ -924,6 +990,11 @@ module.exports = {
             resolve(address)
         })
       },
-     
+      getWalletDetails:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+           let wallet= await db.get().collection(collection.WALLET_COLLECTION).findOne({userId:objectId(userId)})
+            resolve(wallet)
+        })
+      }
 
 }

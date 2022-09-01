@@ -23,7 +23,7 @@
                             <tr>
                                 <td>{{inc @index}}</td>
                                 <td>{{this.date1}}</td>
-                                <td>{{this.deliveryDetails.address}},{{this.deliveryDetails.name}}</td>
+                                <td>{{this.deliveryDetails.name}}, {{this.deliveryDetails.address}}</td>
                                 <td>{{this.totalAmount}}</td>
                                 <td>{{this.paymentMethod}}</td>
                                 <td>{{this.status}}</td>
@@ -49,8 +49,10 @@
                                                 onclick="statusShipped('{{this._id}}')">Shipped</button>
                                             <button class="dropdown-item" onclick="statusOut('{{this._id}}')">Out For
                                                 Delivery</button>
+                                                {{!-- {{if_eq adminDeliveryStatus "Out For Delivery"}} --}}
                                             <button class="dropdown-item"
                                                 onclick="statusDelivered('{{this._id}}')">Delivered</button>
+                                                {{!-- {{if_eq}} --}}
                                             <button class="dropdown-item"
                                                 onclick="statusCancelled('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.userId}}')">Cancel</button>
                                             {{/if}}

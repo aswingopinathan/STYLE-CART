@@ -138,7 +138,7 @@ router.post('/signup', (req, res) => {
     //additional key status1 send to db
   req.body.status1 = true
   //referral code
-  req.body.wallet=parseInt(0)
+  // req.body.wallet=parseInt(0)
   let number = parseInt(req.body.Mobile) 
   let newReferralCode = number.toString(16)
   req.body.yourReferralCode=newReferralCode 
@@ -153,6 +153,7 @@ router.post('/signup', (req, res) => {
       req.session.signErr = false
     } else {
       res.redirect('/otp-page')
+      // res.redirect('/login')
     }
   })
   }catch(error)
@@ -175,17 +176,18 @@ router.get('/otp-page', (req, res) => {
 })
 
 router.post('/otp-verify', (req, res, next) => {
+  walletAction="Referral credit"
   try{
     userHelpers.otpVerify(req.body.otp, signupData).then((response) => {
       if (response.status) {
         //////////referral
-        console.log("req.session.referral",req.session.referral);
         userHelpers.referralUpdate( req.session.referral)
+        userHelpers.updateWalletCreditReferral(req.session.referral,walletAction)
         res.redirect('/login')
       } else {
         req.session.otpsignErr = "invalid otp"
         res.redirect('/otp-page')
-      }
+      }   
     }) 
   }catch(error)
   {
@@ -371,7 +373,7 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
       res.json({walletLow:true})
      }else{
       wallet=walletBalance-totalPrice
-      userHelpers.updateWallet(userlog._id,wallet)
+      userHelpers.updateWallet(userlog._id,wallet,orderId,totalPrice)
       userHelpers.stockManagement(products)
       userHelpers.userAppliedCoupon(userlog._id,req.session.coupondata)
       userHelpers.cartClearing(userlog._id)
@@ -477,8 +479,6 @@ router.get('/orders',verifyLogin,async(req,res)=>{
     console.log(error); 
   res.send("Something went wrong")
   }
-    
-    
 })
 ///working on 29monday
 let viewOrder;
@@ -526,11 +526,14 @@ userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
 })
  
 ///cancellled order amount moved to wallet
+let walletAction;
 router.post('/cancel-order',async(req,res)=>{
+  walletAction="Product cancelled"
   try{
     if(req.body.payment!= "COD"){
       await userHelpers.cancelAmountWallet(userlog._id,req.body.amount)
-      userHelpers.increaseStock(req.body.orId)
+      await userHelpers.updateWalletCredit(userlog._id,req.body.orId,req.body.amount,walletAction)
+      await userHelpers.increaseStock(req.body.orId)
       await userHelpers.cancelOrder(req.body.orId).then((response)=>{
         res.json(response)
       })
@@ -547,11 +550,12 @@ router.post('/cancel-order',async(req,res)=>{
   
 })
 
-router.get('/profile',verifyLogin,((req,res)=>{
+router.get('/profile',verifyLogin,(async(req,res)=>{
   try{
-    userHelpers.getProfile(userlog._id).then((profiledata)=>{
-      res.render('user/profile',{userhead:true,cartCount,profiledata,userlog})
-    })
+   let profiledata=await userHelpers.getProfile(userlog._id)
+   let walletDetails=await userHelpers.getWallet(userlog._id)
+  //  console.log("walletDetails",walletDetails);
+  res.render('user/profile',{userhead:true,cartCount,profiledata,userlog,walletDetails})
   }catch(error)
   {
     console.log(error); 
@@ -767,6 +771,18 @@ router.post('/invoice',async(req,res)=>{
     res.json(response) 
 }) 
 
+
+router.get('/show-wallet',verifyLogin,async(req,res)=>{ 
+  try{
+   let walletDetails=await userHelpers.getWalletDetails(userlog._id)
+   console.log("walletDetails",walletDetails);
+    res.render('user/show-wallet',{userhead:true,walletDetails,userlog,cartCount})
+  }catch(error)
+  {
+    console.log(error); 
+  res.send("Something went wrong")
+  }
+})
 //development env
 router.get('/devel',verifyLogin,async(req,res)=>{
   res.render('user/invoice')

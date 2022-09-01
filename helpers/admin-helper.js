@@ -774,9 +774,22 @@ module.exports = {
     },
     getBannerDetails:(bannerId)=>{
         return new Promise(async(resolve,reject)=>{
-            await db.get().collection(collection.BANNER_COLLECTION).findOne({_id:objectId(bannerId)})
-            resolve()
+           let banner= await db.get().collection(collection.BANNER_COLLECTION).findOne({_id:objectId(bannerId)})
+            resolve(banner)
         })
-      }
-   
+      },
+      updateBanner: (bannerId, bannerDetails) => {
+        return new Promise(async (resolve, reject) => {
+            db.get().collection(collection.BANNER_COLLECTION).updateOne({ _id: objectId(bannerId) }, {
+                $set: {
+                    Name: bannerDetails.Name,
+                    Description: bannerDetails.Description,
+                    Images: bannerDetails.Images,
+                }
+            }).then((response) => {
+                console.log(response)
+                resolve()
+            })
+        })
+    }
 }
