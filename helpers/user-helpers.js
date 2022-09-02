@@ -469,29 +469,20 @@ module.exports = {
             resolve(cart.products)
         })
     },
-    //real getUserOrders
-    // getUserOrders: (userId) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         console.log(userId);
-    //         let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-    //             {
-    //                 $match: { userId: objectId(userId) }
-    //             },
-    //             {
-    //                 $sort:{
-    //                     date1:1
-    //                 }
-    //             }
-
-    //         ]).toArray()
-    //         resolve(orders)
-    //     })
-    // },
-    //testing pagination
     getUserOrders: (userId) => {
         return new Promise(async (resolve, reject) => {
             console.log(userId);
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).find().sort({date1:1}).toArray()
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: { userId: objectId(userId) }
+                },
+                {
+                    $sort:{
+                        date1:1
+                    }
+                }
+
+            ]).toArray()
             resolve(orders)
         })
     },

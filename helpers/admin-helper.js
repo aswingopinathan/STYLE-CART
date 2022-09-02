@@ -106,13 +106,53 @@ module.exports = {
             })
         })
     },
-    getAllOrders: () => {
-        return new Promise(async (resolve, reject) => {
-            let orders = await db.get().collection(collection.ORDER_COLLECTION)
-                .find().sort({date:-1}).toArray()
-            resolve(orders)
+    // getAllOrders: () => {
+    //     return new Promise(async (resolve, reject) => {
+    //         let orders = await db.get().collection(collection.ORDER_COLLECTION)
+    //             .find().sort({date:-1}).toArray()
+    //         resolve(orders)
+    //     })
+    // },
+
+    getAllOrders: (pageno=1,limit=5) => {
+        
+    pageno=parseInt(pageno)
+    limit=parseInt(limit)
+    let skip=limit*(pageno-1)
+    if(skip<=0) skip=0;
+    console.log("skip,limit",skip,limit)
+
+        return new Promise(async(resolve,reject)=>{
+    let orders =await db.get().collection(collection.ORDER_COLLECTION)
+        .find().sort({date:-1}).skip(skip).limit(limit).toArray()
+        orders.pageno=pageno
+
+        orders.count= await db.get().collection(collection.ORDER_COLLECTION)
+        .find().count()
+        
+        // orders.count=Math.floor(orders.count/limit)
+        orders.count=Math.ceil(orders.count/limit)
+        orders.pageNos=[]
+       if ( orders.count<1){
+        orders.pageNos=[{ pageno: 1, currentPage: true}]
+       }else{
+        for(i=1;i<= orders.count;i++){
+          if(pageno==i){
+            orders.pageNos.push({
+              pageno:i,
+              currentPage:true
+            })
+          }else{
+            orders.pageNos.push({
+              pageno:i,
+              currentPage:false
+            })
+          }
+        } }
+     resolve(orders);
         })
-    }, getOrderProductsAdmin: (orderId) => {
+    },
+     getOrderProductsAdmin: (orderId) => {
         return new Promise(async (resolve, reject) => {
             let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {

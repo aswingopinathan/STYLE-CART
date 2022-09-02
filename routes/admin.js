@@ -341,17 +341,28 @@ router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
   res.render('admin/page404')
   }
 })
+//chekinggggggggggg
 
 router.get('/show-orders',verifyAdminLogin,async (req, res) => {
   try{
-    let orders = await adminHelpers.getAllOrders()
-    // let adminDeliveryStatus =await adminHelpers.getDeliveryStatusAdmin(adminViewOrderId)
-    res.render('admin/show-orders', { admin: true,order:orders })
+      let orders = await adminHelpers.getAllOrders()
+      // console.log("orders",orders);
+    res.render('admin/show-orders', { admin: true,orders })
   }catch(error){
     console.log(error); 
   res.render('admin/page404')
   }
 }) 
+
+router.get('/show-orders/:pageno',verifyAdminLogin,async (req, res) => {
+  try{
+      let orders = await adminHelpers.getAllOrders(req.params.pageno)
+    res.render('admin/show-orders', { admin: true,orders })
+  }catch(error){
+    console.log(error); 
+  res.render('admin/page404')
+  }
+})
 
 // let adminViewOrderId;
 router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{

@@ -520,7 +520,7 @@ router.get('/order-success',verifyCartCount,(req,res)=>{
   }
 }) 
 
-router.get('/orders',verifyLogin,async(req,res)=>{ 
+router.get('/orders',verifyLogin,async(req,res)=>{  
   try{
     userHelpers.deletePending().then(async()=>{
       let orders=await userHelpers.getUserOrders(userlog._id)
