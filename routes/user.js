@@ -46,7 +46,7 @@ router.get('/', async function (req, res, next) {
   } 
  }catch(error){ 
   console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
  } 
 })
 
@@ -68,7 +68,7 @@ router.get('/allproducts', verifyCartCount, function (req, res, next) {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -86,7 +86,7 @@ router.get('/login', (req, res, next) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -111,7 +111,7 @@ router.post('/login', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -127,7 +127,7 @@ router.get('/signup', function (req, res) {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -159,19 +159,31 @@ router.post('/signup', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
 
+///Otp updating on 2 september
 router.get('/otp-page', (req, res) => {
   try{
     res.render('user/otp-page', { otpsignErr: req.session.otpsignErr, Mobile: signupData.Mobile })
-
+    // res.render('user/otp-page')
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
+  }
+})
+
+///Otp updating on 2 september
+router.get('/resend-otp',(req,res)=>{
+  try{
+    userHelpers.resendOtp(signupData)
+  res.render('user/otp-page', { otpsignErr: req.session.otpsignErr, Mobile: signupData.Mobile })
+  }catch(error){
+    console.log(error); 
+  res.render('user/page404',{userhead:true})
   }
 })
 
@@ -192,7 +204,7 @@ router.post('/otp-verify', (req, res, next) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
    
 })
@@ -205,7 +217,7 @@ router.get('/category-wise/:id', verifyCartCount, (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
  
 })  
@@ -220,7 +232,7 @@ router.get('/product-view/:id', verifyCartCount, (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -233,7 +245,7 @@ router.get('/logout', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -248,9 +260,26 @@ router.get('/add-to-cart/:id',async (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
-  
+})
+
+//wishlist
+router.get('/add-to-wishlist/:id',async (req, res) => {
+  try{
+    console.log('wishlist api call');
+  console.log("req.params.id",req.params.id);
+  userHelpers.addToWishlist(req.params.id, userlog._id).then(() => {
+    console.log("response",response);
+    res.json(response)
+    response.status=false
+    response.exist=false
+  })
+  }catch(error)
+  {
+    console.log(error); 
+  res.render('user/page404',{userhead:true})
+  }
 })
 
 router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
@@ -266,10 +295,21 @@ router.get('/cart', verifyLogin, verifyCartCount, async (req, res, next) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
-  
 })
+
+router.get('/wishlist', verifyLogin, verifyCartCount, async (req, res, next) => {
+  try{
+    let products = await userHelpers.getWishlistProducts(userlog._id)
+    res.render('user/wishlist', { userhead: true, products, userlog, cartCount})
+  }catch(error)
+  {
+    console.log(error); 
+  res.render('user/page404',{userhead:true})
+  }
+})
+
 //working on 22082022
 router.post('/change-product-quantity', (req, res) => {
   try{
@@ -290,7 +330,7 @@ router.post('/change-product-quantity', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -303,7 +343,20 @@ router.post('/delete-cartproduct', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
+  }
+  
+})
+///wishlist
+router.post('/delete-wishlistproduct', (req, res) => {
+  try{
+    userHelpers.deleteWishlistProduct(req.body.wishlist, req.body.product).then((response) => {
+      res.json(response)
+    })
+  }catch(error)
+  {
+    console.log(error); 
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -321,7 +374,7 @@ router.get('/place-order',verifyLogin,verifyCartCount,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 }) 
@@ -389,7 +442,7 @@ router.post('/place-order',verifyLogin,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -435,7 +488,7 @@ router.get('/success/:id', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
    
@@ -450,7 +503,7 @@ router.get('/cancel', (req, res) => {
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
   
@@ -463,7 +516,7 @@ router.get('/order-success',verifyCartCount,(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
 }) 
 
@@ -477,7 +530,7 @@ router.get('/orders',verifyLogin,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
 })
 ///working on 29monday
@@ -495,7 +548,7 @@ router.get('/view-order-products/:id',verifyLogin,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -520,7 +573,7 @@ userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
 
 })
@@ -545,7 +598,7 @@ router.post('/cancel-order',async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -559,7 +612,7 @@ router.get('/profile',verifyLogin,(async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 }))
@@ -584,7 +637,7 @@ router.post('/change-password',((req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
  
 }))
@@ -595,7 +648,7 @@ router.get('/add-address',verifyLogin,(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -609,7 +662,7 @@ router.post('/add-address',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -622,7 +675,7 @@ router.get('/show-address',verifyLogin,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -636,7 +689,7 @@ router.get('/edit-profile',verifyLogin,(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -650,7 +703,7 @@ router.post('/edit-profile/:id',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
  
 })
@@ -686,7 +739,7 @@ router.post('/coupon',async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
  
 }) 
@@ -699,7 +752,7 @@ router.post('/save-address',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -713,7 +766,7 @@ router.get('/edit-address/:id',async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -725,7 +778,7 @@ router.post('/edit-address/:id',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
 })
@@ -737,7 +790,7 @@ router.get('/delete-address/:id',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
   
  })
@@ -753,7 +806,7 @@ router.post('/balance-check',(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
 }) 
 
@@ -780,12 +833,12 @@ router.get('/show-wallet',verifyLogin,async(req,res)=>{
   }catch(error)
   {
     console.log(error); 
-  res.send("Something went wrong")
+  res.render('user/page404',{userhead:true})
   }
 })
 //development env
-router.get('/devel',verifyLogin,async(req,res)=>{
-  res.render('user/invoice')
+router.get('/devel',(req,res)=>{
+  res.render('user/page404',{userhead:true})
   // res.send("ok")   
 })
 

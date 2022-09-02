@@ -4,6 +4,7 @@
             <div class="card m-b-30">
                 <div class="card-body">
                     <h4 class="mt-0 header-title mb-4 text-center">WALLET HISTORY</h4>
+                     {{#if walletDetails.walletHistory}}
                     <div class="table-responsive">
                         <table class="table table-hover" id="productsTable">
                             <thead>
@@ -26,39 +27,19 @@
                                 <tr>
                                     <td>{{inc @index}}</td>
                                     <td style="width: 200px">{{this.date1}}</td>
-                                    {{!-- <td>{{this.deliveryDetails.name}}</td> --}}
                                     <td>{{this.order}}</td>
-                                    {{!-- <td>{{this.deliveryDetails.pincode}}</td> --}}
-                                    {{!-- <td>{{this.deliveryDetails.mobile}}</td> --}}
                                     <td>{{this.action}}</td>
                                     <td>{{this.amount}}</td>
                                     <td>{{this.status}}</td>
-                                    {{!-- <td><img style="width: 50px;height: 50px"
-                                            src="/product-images/{{this.Images.[0]}}">
-                                    </td> --}}
-                                    {{!-- <td>
-                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View ...
-                                            
-                                        </a><br><br>
-
-                                        {{#if cancel}}
-                                       
-                                        {{else}}
-                                        {{#if_eq this.status "Delivered"}}
-                                        
-                                        {{else}}
-                                        <button class="btn btn-warning btn-sm"
-                                            onclick="cancelProduct('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}')">Cancel </button>
-                                        {{/if_eq}}
-                                        {{/if}}
-
-                                    </td> --}}
                                 </tr>
                                 {{/each}}
                                 <hr>
                             </tbody>
                         </table>
                     </div>
+                    {{else}}
+                    <h5 class="text-center">No Transactions Occured</h5><br>
+                    {{/if}}
                 </div>
             </div>
         </div>

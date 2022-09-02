@@ -82,6 +82,19 @@ module.exports = {
 
         })
     },
+    resendOtp: (userData)=>{
+        return new Promise((resolve,reject)=>{
+            client.verify
+            .services(process.env.SERVICE_SID)
+            .verifications.create({
+                to: `+91${userData.Mobile}`,
+                channel: 'sms'
+            }).then((resp1) => {
+                console.log("response1", resp1);
+            })
+            resolve(response)
+        })
+    },
     otpVerify: (otp, signupData) => {
         return new Promise((resolve, reject) => {
             client.verify
@@ -174,6 +187,45 @@ module.exports = {
             }
         })
     },
+    //wishlist
+    addToWishlist: (proId, userId) => {
+        let proObj = {
+            item: objectId(proId)
+        }
+        return new Promise(async (resolve, reject) => {
+            let userWishlist = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({ user: objectId(userId) })
+            if (userWishlist) {
+                let proExist = userWishlist.products.findIndex(product => product.item == proId)
+                console.log(proExist);
+                if (proExist != -1) {
+                    //increase quantity
+                    // db.get().collection(collection.WISHLIST_COLLECTION)
+                    //     .updateOne({ user: objectId(userId), 'products.item': objectId(proId) })
+                    response.exist=true
+                    resolve(response)
+                } else {
+                    db.get().collection(collection.WISHLIST_COLLECTION)
+                        .updateOne({ user: objectId(userId) },
+                            {
+                                $push: { products: proObj }
+                            }).then(() => {
+                                response.status=true
+                                resolve(response)
+                            })
+                }
+            } else {
+                //schema
+                let wishlistObj = {
+                    user: objectId(userId),
+                    products: [proObj]
+                }
+                db.get().collection(collection.WISHLIST_COLLECTION).insertOne(wishlistObj).then(() => {
+                    response.status=true
+                    resolve(response)
+                })
+            }
+        })
+    },
     getCartProducts: (userId) => {
         return new Promise(async (resolve, reject) => {
             let cartItems = await db.get().collection(collection.CART_COLLECTION).aggregate([
@@ -224,6 +276,46 @@ module.exports = {
                 console.log(count);
             }
             resolve(count)
+        })
+    },
+    getWishlistProducts: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let wishlistItems = await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
+                {
+                    $match: { user: objectId(userId) }
+                },
+                {
+                    $unwind: '$products'
+                },
+                {
+                    $project: {
+                        item: '$products.item'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.BRAND_COLLECTION,
+                        localField: 'product.Brands',
+                        foreignField: '_id',
+                        as: 'Brands'
+                    }
+                },
+                {
+                    $project: {
+                        item: 1, product: { $arrayElemAt: ['$product', 0] }, Brands: '$Brands.Name'
+                    }
+                }
+            ]).toArray()
+            console.log(wishlistItems);
+            resolve(wishlistItems)
         })
     },
     //////////////working on 22082022
@@ -278,6 +370,20 @@ module.exports = {
             db.get()
                 .collection(collection.CART_COLLECTION)
                 .updateOne({ _id: objectId(cartId) },
+                    {
+                        $pull: { products: { item: objectId(proId) } }
+                    }).then((response) => {
+                        response.removed = true
+                        resolve(response)
+                    })
+        })
+    },
+    ////wishlist
+    deleteWishlistProduct: (wishlistId, proId) => {
+        return new Promise((resolve, reject) => {
+            db.get()
+                .collection(collection.WISHLIST_COLLECTION)
+                .updateOne({ _id: objectId(wishlistId) },
                     {
                         $pull: { products: { item: objectId(proId) } }
                     }).then((response) => {
@@ -363,20 +469,29 @@ module.exports = {
             resolve(cart.products)
         })
     },
+    //real getUserOrders
+    // getUserOrders: (userId) => {
+    //     return new Promise(async (resolve, reject) => {
+    //         console.log(userId);
+    //         let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+    //             {
+    //                 $match: { userId: objectId(userId) }
+    //             },
+    //             {
+    //                 $sort:{
+    //                     date1:1
+    //                 }
+    //             }
+
+    //         ]).toArray()
+    //         resolve(orders)
+    //     })
+    // },
+    //testing pagination
     getUserOrders: (userId) => {
         return new Promise(async (resolve, reject) => {
             console.log(userId);
-            let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-                {
-                    $match: { userId: objectId(userId) }
-                },
-                {
-                    $sort:{
-                        date1:-1
-                    }
-                }
-
-            ]).toArray()
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).find().sort({date1:1}).toArray()
             resolve(orders)
         })
     },

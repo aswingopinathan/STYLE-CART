@@ -17,14 +17,14 @@
 
                     <div class="form-group">
                         <label>OTP</label>
-                        <input type="text" class="form-control" name="otp" placeholder="Enter otp">
+                        <input type="text" class="form-control" name="otp" placeholder="Enter otp"><br>
+                        <p><a href="/resend-otp"> Resend OTP </a>in <span id="countdowntimer">30 </span> Seconds</p>
                     </div>
 
                     <!--<a href="/signup" class="sign sign-info mt-5 "
                         style="width: fit-content; text-decoration: none;">Create new account</a>
                      -->
                     <div class="mx-auto mt-3" style=" width: fit-content;">
-
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
 
@@ -42,3 +42,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+    <script>
+        var timeleft = 30;
+    var downloadTimer = setInterval(function(){
+    timeleft--;
+    document.getElementById("countdowntimer").textContent = timeleft;
+    if(timeleft <= 0)
+        clearInterval(downloadTimer);
+    },1000);
+    </script>

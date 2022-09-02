@@ -19,6 +19,25 @@ function addToCart(proId) {
     })
 }
 
+function addToWishlist(proId) {
+    $.ajax({
+        url: '/add-to-wishlist/' + proId,
+        method: 'get',
+        success: (response) => {
+            if (response.exist) {
+                swal("Info!", "Item already exist in  wishlist", "warning").then(()=>{
+
+                })
+            }else if(response.status){
+                swal("Success!", "Item added to wishlist", "success").then(()=>{
+                    
+                })
+            }
+          
+        }
+    })
+}
+
 
 
 
