@@ -8,7 +8,6 @@ Handlebars.registerHelper("inc", function (value, options) {
 });
 
 module.exports = {
-   
     getAllProducts: () => {
         return new Promise(async (resolve, reject) => {
             let products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
@@ -48,23 +47,20 @@ module.exports = {
                         Images: 1
                     }
                 }
-
             ]).toArray()
-            console.log(products)
             resolve(products)
         })
     },
     addproduct: (body) => {
-        console.log(body);
-        Stock=parseInt(body.Stock)
-        body.Stock=Stock
+        Stock = parseInt(body.Stock)
+        body.Stock = Stock
         return new Promise(async (resolve, reject) => {
             let Category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ Name: body.Category })
             console.log(Category);
             let SubCategory = await db.get().collection(collection.SUB_CATEGORY_COLLECTION).findOne({ Name: body.SubCategory })
             console.log(SubCategory);
             let Brands = await db.get().collection(collection.BRAND_COLLECTION).findOne({ Name: body.Brands })
-            console.log(Brands); 
+            console.log(Brands);
             let proObj = {
                 Name: body.Name,
                 Category: objectId(Category._id),
@@ -75,8 +71,8 @@ module.exports = {
                 Cutprice: body.Cutprice,
                 Description: body.Description,
                 Images: body.Images,
-                discountpercentage:["5"],
-                offername:[""]
+                discountpercentage: ["5"],
+                offername: [""]
 
             }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(proObj).then(() => {
@@ -146,23 +142,19 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log(product);
             resolve(product)
         })
     },
     updateProduct: (proId, proDetails) => {
         return new Promise(async (resolve, reject) => {
             let Category = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ Name: proDetails.Category })
-            console.log(Category);
             let SubCategory = await db.get().collection(collection.SUB_CATEGORY_COLLECTION).findOne({ Name: proDetails.SubCategory })
-            console.log(SubCategory);
             let Brands = await db.get().collection(collection.BRAND_COLLECTION).findOne({ Name: proDetails.Brands })
-            console.log(Brands);
             db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ _id: objectId(proId) }, {
                 $set: {
                     Name: proDetails.Name,
                     Price: proDetails.Price,
-                    Cutprice:proDetails.Cutprice,
+                    Cutprice: proDetails.Cutprice,
                     Description: proDetails.Description,
                     Images: proDetails.Images,
                     Category: objectId(Category._id),
@@ -170,8 +162,7 @@ module.exports = {
                     SubCategory: objectId(SubCategory._id),
                     Stock: proDetails.Stock,
                 }
-            }).then((response) => {
-                console.log(response)
+            }).then(() => {
                 resolve()
             })
         })
@@ -197,19 +188,28 @@ module.exports = {
                 },
                 {
 
-                    $project: { Name: 1, Category: '$Category.Name', Brands: '$Brands.Name', Stock: 1,Cutprice:1, Price: 1, Images: 1,discountprice:1,discountpercentage:1 }
+                    $project: {
+                        Name: 1,
+                        Category: '$Category.Name',
+                        Brands: '$Brands.Name',
+                        Stock: 1,
+                        Cutprice: 1,
+                        Price: 1,
+                        Images: 1,
+                        discountprice: 1,
+                        discountpercentage: 1
+                    }
 
-                } 
+                }
             ]).toArray()
-
-            resolve(productlist) 
+            resolve(productlist)
         })
     },
     getSpecificCategory: (catId) => {
         return new Promise(async (resolve, reject) => {
             let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                 {
-                    $match:{ Category:objectId(catId)}
+                    $match: { Category: objectId(catId) }
                 },
                 {
                     $project: {
@@ -220,7 +220,9 @@ module.exports = {
                         Stock: 1,
                         Price: 1,
                         Description: 1,
-                        Images: 1
+                        Images: 1,
+                        discountprice: 1,
+                        discountpercentage: 1
                     }
                 },
                 {
@@ -256,11 +258,11 @@ module.exports = {
                         Stock: 1,
                         Price: 1,
                         Description: 1,
-                        Images: 1
+                        Images: 1,discountprice: 1,
+                        discountpercentage: 1
                     }
                 }
             ]).toArray()
-            console.log(productlist);
             resolve(productlist)
         })
     },
@@ -270,5 +272,4 @@ module.exports = {
             resolve(productview)
         })
     }
-   
 }

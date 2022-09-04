@@ -109,19 +109,24 @@
                                                         <h6 class="product-title"><a>Stock  {{this.Stock}}</a></h6>
                                                 <h3 class="pro-price">₹{{this.Price}}</h3>
                                                 <ul class="action-button">
-                                                            {{!-- <li>
-                                                                <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a>
-                                                            </li> --}}
-                                                            {{!-- <li>
-                                                                <a href="#" data-bs-toggle="modal"  data-bs-target="#productModal" title="Quickview"><i class="zmdi zmdi-zoom-in"></i></a>
+                                                            
+                                                            <li>
+                                                                {{#if ../userlog}}
+                                                                <a onclick="addToWishlist('{{this._id}}')" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                {{else}}
+                                                                {{!-- <a href="/login" class="btn btn-primary">Add to cart</a> --}}
+                                                                <a href="/login" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                {{/if}}
+                                                                {{!-- <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a> --}}
                                                             </li>
+                                                           
                                                             <li>
-                                                                <a href="#" title="Compare"><i class="zmdi zmdi-refresh"></i></a>
-                                                            </li> --}}
-                                                            <li>
-                                                                {{!-- <a href="/add-to-cart/{{this._id}}" title="Add to cart"><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
-                                                                {{#if userlog}}
-                                                                <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                                                                {{!-- <a href="/login" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
+                                                                {{#if ../userlog}}
+                                                                <a onclick="addToCart('{{this._id}}')" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+                                                                {{else}}
+                                                                {{!-- <a href="/login" class="btn btn-primary">Add to cart</a> --}}
+                                                                <a href="/login" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a>
                                                                 {{/if}}
                                                             </li>
                                                         </ul>

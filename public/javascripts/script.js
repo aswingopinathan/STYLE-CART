@@ -29,7 +29,7 @@ function addToWishlist(proId) {
 
                 })
             }else if(response.status){
-                swal("Success!", "Item added to wishlist", "success").then(()=>{
+                swal("Success!", "Added to your Wishlist", "success").then(()=>{
                     
                 })
             }

@@ -1,3 +1,5 @@
+
+
 <div class="container">
     <div class="row">
         <div class="col-xl-12">
@@ -5,7 +7,7 @@
                 <div class="card-body">
                     <h4 class="mt-0 header-title mb-4 text-center">ORDERS</h4>
                     <div class="table-responsive">
-                        <table class="table table-hover" id="productsTable">
+                        <table class="table table-hover" id="prouctsTable">
                             <thead>
                                 <tr>
                                     <th scope="col">Index</th>
@@ -37,18 +39,20 @@
                                             src="/product-images/{{this.Images.[0]}}">
                                     </td> --}}
                                     <td>
-                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View ...
-                                            
+                                        <a href="/view-order-products/{{this._id}}" class="btn btn-primary btn-sm"> View
+                                            ...
+
                                         </a><br><br>
 
                                         {{#if cancel}}
-                                       
+
                                         {{else}}
                                         {{#if_eq this.status "Delivered"}}
-                                        
+
                                         {{else}}
                                         <button class="btn btn-warning btn-sm"
-                                            onclick="cancelProduct('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}')">Cancel </button>
+                                            onclick="cancelProduct('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}')">Cancel
+                                        </button>
                                         {{/if_eq}}
                                         {{/if}}
 
@@ -58,6 +62,20 @@
                                 <hr>
                             </tbody>
                         </table>
+                        
+                            {{!--  --}}
+                        <div class="col-lg-12">
+                            <!-- shop-pagination start -->
+                            <ul class="shop-pagination box-shadow text-end ptblr-10-30">
+                                <li><a href="#"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                                 {{#each orders.pageNos}}
+                                <li class="active"><a href="/orders/{{this.pageno}}">{{this.pageno}}</a></li>
+                                 {{/each}}
+                                <li><a href="#"><i class="zmdi zmdi-chevron-right"></i></a></li>
+                            </ul>
+                            <!-- shop-pagination end -->
+                        </div>
+                            {{!--  --}}
                     </div>
                 </div>
             </div>
@@ -297,9 +315,9 @@
 <!-- END QUICKVIEW PRODUCT -->
 
 <script>
-    function cancelProduct(orderId,total,paymentType) {
+    function cancelProduct(orderId, total, paymentType) {
         console.log("cancel from orders");
-        console.log("paymentType",paymentType);
+        console.log("paymentType", paymentType);
         swal({
             title: "Are you sure?",
             text: "Product will be cancelled from orders",
@@ -314,7 +332,7 @@
                         data: {
                             orId: orderId,
                             amount: total,
-                            payment:paymentType
+                            payment: paymentType
 
                         },
                         method: "post",

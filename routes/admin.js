@@ -4,11 +4,10 @@ var productHelpers = require('../helpers/product-helpers');
 var adminHelpers = require('../helpers/admin-helper');
 var multer = require("multer");
 const { response } = require('express');
+var ObjectID = require('mongodb').ObjectId
 
 let userName = "admin@gmail.com"
 let Pin = "1234"
-
-/* GET users listing. */
 
 const verifyAdminLogin = (req, res, next) => {
   if (req.session.isadmin) {
@@ -18,6 +17,15 @@ const verifyAdminLogin = (req, res, next) => {
   }
 }
 
+const properId = (req,res,next) => {
+  if (ObjectID.isValid(req.params.id)) {
+    next()
+  } else {
+    res.redirect('/admin/adminpage404')
+  } 
+}
+
+/* GET users listing. */
 router.get('/', function (req, res, next) {
   try{
     if (req.session.isadmin) {
@@ -28,7 +36,7 @@ router.get('/', function (req, res, next) {
   }catch(error)
   {
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 });
 
@@ -36,8 +44,11 @@ let yearValue=2022;
 router.get('/adminindex',verifyAdminLogin,async function (req, res, next) {
 try{
   let cod = await adminHelpers.getPaymentMethodNums('COD')
+
   let razorpay = await adminHelpers.getPaymentMethodNums('ONLINE-RAZOR')
+
   let paypal = await adminHelpers.getPaymentMethodNums('ONLINE-PAYPAL')
+
   let wallet = await adminHelpers.getPaymentMethodNums('WALLET')
 
   let chartData= await adminHelpers.getChartData(yearValue)
@@ -57,7 +68,7 @@ try{
   res.render('admin/index', { admin: true,cod, razorpay, paypal,wallet,chartData,monthlySalesReport,yearValue,listedYears,userCount,productCount,ordersCount,totalRevenue});
 }catch(error){
   console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
 }
 });
 
@@ -77,7 +88,7 @@ router.post('/adminindex', (req, res, next) => {
   }
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -88,7 +99,7 @@ router.get('/show-user',verifyAdminLogin, (req, res, next) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -99,7 +110,7 @@ router.get('/show-products',verifyAdminLogin, (req, res, next) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -111,7 +122,7 @@ router.get('/add-product',verifyAdminLogin, async function (req, res, next) {
   res.render('admin/add-product', { admin: true, getcategory, getsubcategory, brands });
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 });
 
@@ -138,21 +149,20 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
-  
 })
 
-  router.get('/edit-product/:id',verifyAdminLogin, async (req, res) => {
+  router.get('/edit-product/:id',verifyAdminLogin,properId, async (req, res) => {
     try{
-    let editproduct = await productHelpers.getproductDetails(req.params.id)
-    let getcategory = await adminHelpers.getAllCategory()
-    let getsubcategory = await adminHelpers.getAllSubCategory()
-    let getbrands = await adminHelpers.getAllBrands()
-    res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
+      let editproduct = await productHelpers.getproductDetails(req.params.id)
+      let getcategory = await adminHelpers.getAllCategory()
+      let getsubcategory = await adminHelpers.getAllSubCategory()
+      let getbrands = await adminHelpers.getAllBrands()
+      res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
   }catch{
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
   })
 
@@ -168,7 +178,7 @@ router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   }) 
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 }) 
 
@@ -181,7 +191,7 @@ router.get('/delete-product/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -194,7 +204,7 @@ router.get('/block/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -207,7 +217,7 @@ router.get('/unblock/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -218,7 +228,7 @@ router.get('/show-category',verifyAdminLogin, (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -227,7 +237,7 @@ router.get('/add-category',verifyAdminLogin, (req, res) => {
     res.render('admin/add-category', { admin: true })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -238,7 +248,7 @@ router.post('/add-category', (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -250,7 +260,7 @@ router.get('/delete-category/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -261,7 +271,7 @@ router.get('/show-sub-category',verifyAdminLogin, (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -270,7 +280,7 @@ router.get('/add-sub-category',verifyAdminLogin, (req, res) => {
     res.render('admin/add-sub-category', { admin: true })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -281,7 +291,7 @@ router.post('/add-sub-category', (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -293,11 +303,10 @@ router.get('/delete-sub-category/:id',verifyAdminLogin, (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
-//brands section start
 router.get('/show-brands',verifyAdminLogin, (req, res) => {
   try{
     adminHelpers.getAllBrands().then((brands) => {
@@ -305,7 +314,7 @@ router.get('/show-brands',verifyAdminLogin, (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -314,7 +323,7 @@ router.get('/add-brands',verifyAdminLogin, (req, res) => {
     res.render('admin/add-brands', { admin: true })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -325,7 +334,7 @@ router.post('/add-brands', (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -338,19 +347,17 @@ router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
-//chekinggggggggggg
 
 router.get('/show-orders',verifyAdminLogin,async (req, res) => {
   try{
       let orders = await adminHelpers.getAllOrders()
-      // console.log("orders",orders);
     res.render('admin/show-orders', { admin: true,orders })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 }) 
 
@@ -360,22 +367,20 @@ router.get('/show-orders/:pageno',verifyAdminLogin,async (req, res) => {
     res.render('admin/show-orders', { admin: true,orders })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
-// let adminViewOrderId;
-router.get('/view-order-products/:id',verifyAdminLogin,async(req,res)=>{
+router.get('/view-order-products/:id',verifyAdminLogin,properId,async(req,res)=>{
   try{
-    // adminViewOrderId=req.params.id
-    let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
-  let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
-  let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
-  console.log("products",products);
-  res.render('admin/view-order-products',{admin:true,products,orders,deliverystatusadmin})
+   let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
+      let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
+      let deliverystatusadmin = await adminHelpers.getDeliveryStatusAdmin(req.params.id)
+      console.log("products",products);
+      res.render('admin/view-order-products',{admin:true,products,orders,deliverystatusadmin})
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -386,7 +391,7 @@ router.get('/logout', (req, res) => {
     res.redirect('/admin')
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
  
 })
@@ -406,7 +411,7 @@ router.post('/admin-cancel-order',async(req,res)=>{
     }
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -417,7 +422,7 @@ router.get('/show-banner',verifyAdminLogin,(req,res)=>{
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -426,7 +431,7 @@ router.get('/add-banner',verifyAdminLogin,(req,res)=>{
     res.render('admin/add-banner',{admin:true})
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }   
 })
 
@@ -441,42 +446,44 @@ router.post('/add-banner', upload.array('Images'), (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
-///working on 31wednesday
-router.get('/edit-banner/:id',async(req,res)=>{
-  let bannerDetails=await adminHelpers.getBannerDetails(req.params.id)
-  console.log("bannerDetails",bannerDetails);
-  res.render('admin/edit-banner',{admin:true,bannerDetails})
+router.get('/edit-banner/:id',verifyAdminLogin,properId,async(req,res)=>{
+  try{
+    let bannerDetails=await adminHelpers.getBannerDetails(req.params.id)
+      res.render('admin/edit-banner',{admin:true,bannerDetails})
+  }catch(error){   
+    console.log(error); 
+  res.redirect('/admin/adminpage404')
+  }
 })
 
 router.post('/edit-banner/:id',upload.array('Images', 4),async(req,res)=>{
-  var filenames = req.files.map(function (file) {
-    return file.filename;
-  });
-  req.body.Images = filenames;
-  adminHelpers.updateBanner(req.params.id, req.body).then(() => {
-    res.redirect('/admin/show-banner')
-  }) 
+  try{
+    var filenames = req.files.map(function (file) {
+      return file.filename;
+    });
+    req.body.Images = filenames;
+    adminHelpers.updateBanner(req.params.id, req.body).then(() => {
+      res.redirect('/admin/show-banner')
+    }) 
+  }catch(error){   
+    console.log(error); 
+  res.redirect('/admin/adminpage404')
+  }
 })
 
 router.post('/delete-banner',verifyAdminLogin, (req, res) => {
   try{
-    // let banner = req.params.id
   adminHelpers.deleteBanner(req.body.id).then(() => {
     res.redirect('/admin/show-banner')
   })
   }catch(error){   
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
-})
-
-//testing
-router.get('/sample',(req,res)=>{
-  res.render('admin/page404')
 })
 
 router.get('/show-coupon',verifyAdminLogin, (req, res) => {
@@ -486,7 +493,7 @@ router.get('/show-coupon',verifyAdminLogin, (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -495,7 +502,7 @@ router.get('/add-coupon',verifyAdminLogin, (req, res) => {
     res.render('admin/add-coupon', { admin: true })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -506,7 +513,7 @@ router.post('/add-coupon', (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -518,7 +525,7 @@ router.get('/delete-coupon/:id',verifyAdminLogin, (req, res) => {
   })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -528,17 +535,17 @@ router.get('/show-offer-category',verifyAdminLogin,async (req, res) => {
  res.render('admin/show-offer-category', { admin: true,category })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
-router.get('/add-offer-category/:id',verifyAdminLogin, (req, res) => {
+router.get('/add-offer-category/:id',verifyAdminLogin,properId, (req, res) => {
   try{
     req.session.catId=req.params.id
   res.render('admin/add-offer-category', { admin: true }) 
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -549,7 +556,7 @@ router.post('/add-offer-category', (req, res) => {
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -560,7 +567,7 @@ router.post('/change-status',(req,res)=>{
     }) 
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -573,7 +580,7 @@ router.post('/offer-activate',(req,res)=>{
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -586,7 +593,7 @@ router.post('/offer-deactivate',(req,res)=>{
     })
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -597,7 +604,7 @@ router.post('/change-year',(req,res)=>{
   res.json(response)
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -607,7 +614,7 @@ router.get('/sales-yearly',async(req,res)=>{
   res.render('admin/sales-yearly',{admin: true,yearlySalesReport,yearValue})
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -618,7 +625,7 @@ router.get('/sales-weekly',async(req,res)=>{
   res.render('admin/sales-weekly',{admin: true,weeklySalesReport,listedYears,yearValue})
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
 })
 
@@ -629,9 +636,12 @@ router.get('/sales-monthly',async(req,res)=>{
   res.render('admin/sales-monthly',{admin: true,monthlySalesReport,listedYears,yearValue})
   }catch(error){
     console.log(error); 
-  res.render('admin/page404')
+  res.redirect('/admin/adminpage404')
   }
-  
+})
+
+router.get('/adminpage404',(req,res)=>{
+  res.render('admin/page404')
 })
 
 module.exports = router;

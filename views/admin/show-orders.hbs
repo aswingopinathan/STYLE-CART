@@ -171,24 +171,12 @@
                                 </svg>
                                 <span class="arrow:text">Previous</span>
                             </div>
+                            
                             {{#each orders.pageNos}}
                             <div class="pagination:number">
-                                {{!-- <li {{#if this.currentPage}} class="active"{{else}}  {{/if}}><a href="/productsVeiwSubCata/?subcata={{../orders.subCata}}&pageno={{this.pageno}}">{{this.pageno}}</a></li> --}}
                                <a href="/admin/show-orders/{{this.pageno}}" style="color: white;">{{this.pageno}}</a>
-                                    
                             </div>
                              {{/each}}
-                            {{!-- <div class="pagination:number">
-                                <a href="#" style="color: white;">2</a>
-                            </div>
-
-                            <div class="pagination:number pagination:active">
-                                <a href="#" style="color: white;">3</a>
-                            </div>
-
-                            <div class="pagination:number">
-                                <a href="#" style="color: white;">4</a>
-                            </div> --}}
 
                             <div class="pagination:number arrow">
                                 <svg width="18" height="18">

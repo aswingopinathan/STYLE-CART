@@ -78,9 +78,6 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.SUB_CATEGORY_COLLECTION).deleteOne({ _id: objectId(subId) }).then(() => {
                 resolve()
-                // db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ SubCategory: objectId(subId) }).then(() => {
-                //     resolve()
-                // })
             })
         })
     },
@@ -106,21 +103,12 @@ module.exports = {
             })
         })
     },
-    // getAllOrders: () => {
-    //     return new Promise(async (resolve, reject) => {
-    //         let orders = await db.get().collection(collection.ORDER_COLLECTION)
-    //             .find().sort({date:-1}).toArray()
-    //         resolve(orders)
-    //     })
-    // },
-
-    getAllOrders: (pageno=1,limit=5) => {
+    getAllOrders: (pageno=1,limit=10) => {
         
     pageno=parseInt(pageno)
     limit=parseInt(limit)
     let skip=limit*(pageno-1)
     if(skip<=0) skip=0;
-    console.log("skip,limit",skip,limit)
 
         return new Promise(async(resolve,reject)=>{
     let orders =await db.get().collection(collection.ORDER_COLLECTION)
@@ -130,7 +118,6 @@ module.exports = {
         orders.count= await db.get().collection(collection.ORDER_COLLECTION)
         .find().count()
         
-        // orders.count=Math.floor(orders.count/limit)
         orders.count=Math.ceil(orders.count/limit)
         orders.pageNos=[]
        if ( orders.count<1){
@@ -220,7 +207,6 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log(orderItems);
             resolve(orderItems)
         })
     },
@@ -327,26 +313,6 @@ module.exports = {
                     }
                 ]
             ).toArray();
-            resolve(response);
-        })
-    },
-    //not used
-    getRevenue: (unit, count) => {
-        return new Promise(async (resolve, reject) => {
-            let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-                {
-                    $match:
-                    {
-                        $expr: {
-                            $gt: ["$date", {
-                                $dateSubtract:
-                                    { startDate: "$$NOW", unit: unit, amount: count }
-                            }]
-                        }
-                    }
-                },
-                { $group: { _id: null, sum: { $sum: '$totalAmount' } } },
-            ]).toArray()
             resolve(response);
         })
     },
@@ -505,7 +471,6 @@ module.exports = {
             } resolve()
         });
     },
-    //working on admin cancel fund to wallet no userid
     AdminCancelAmountWallet: (userId, total) => {
         console.log("userId", userId);
         total = parseInt(total)
@@ -560,7 +525,6 @@ module.exports = {
             }
         ]).toArray()
 
-        // console.log(data, '++++++++++++test data ', data.length, data[0].year)
         if (data.length < 12) {
 
             for (let i = 1; i <= 12; i++) {
@@ -588,14 +552,10 @@ module.exports = {
             linChartData.push(a)
 
         })
-        // console.log("linechartdata", linChartData);
         return linChartData
     },
-   
     getMonthlySalesReport: async (yearValue) => {
-        // console.log("yearValuechange3",yearValue);
         yearValue=parseInt(yearValue)
-
         let report = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
             {
                 $match: {
@@ -638,22 +598,17 @@ module.exports = {
                 }
             }
         ]).toArray()
-        // console.log("report11111",report);
         if (report.length < 12) {
-
             for (let i = 1; i <= 12; i++) {
                 let datain = true;
                 for (let j = 0; j < report.length; j++) {
                     if (report[j].month === i) {
                         datain = null;
                     }
-
                 }
-
                 if (datain) {
                     report.push({ grandTotal: 0, month: i })
                 }
-
             }
         }
         await report.sort(function (a, b) {
@@ -680,8 +635,7 @@ module.exports = {
     },
     getUserCount:()=>{
         return new Promise(async(resolve,reject)=>{
-          let userCount= await db.get().collection(collection.USER_COLLECTION).count()
-            // console.log("userCount",userCount);
+          let userCount= await db.get().collection(collection.USER_COLLECTION).find({status1:true}).count()
             resolve(userCount)
         })
     },
@@ -719,7 +673,6 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log("totalRevenue",totalRevenue);
             resolve(totalRevenue)
         })
     },
@@ -760,7 +713,6 @@ module.exports = {
                 }
             }
         ]).toArray()
-        // console.log("report1",report);
         return report;
     },
     getWeeklySalesReport: async (yearValue) => {
@@ -809,7 +761,6 @@ module.exports = {
                 }
             }
         ]).toArray()
-        console.log("report1",report);
         return report;
     },
     getBannerDetails:(bannerId)=>{
@@ -826,8 +777,7 @@ module.exports = {
                     Description: bannerDetails.Description,
                     Images: bannerDetails.Images,
                 }
-            }).then((response) => {
-                console.log(response)
+            }).then(() => {
                 resolve()
             })
         })
