@@ -126,14 +126,19 @@
                                     </button>
                                     {{else}}
                                     <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" onclick="statusCheck('{{this._id}}')"
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
                                             Update Status
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {{!--  --}}
+                                        <div class="dropdown-menu" id="unknown" aria-labelledby="dropdownMenuButton">
+                                            {{#if_eq statusCheck "Order Confirmed"}}
+                                            
+                                            {{else}}
                                             <button class="dropdown-item"
                                                 onclick="statusOrderConfirmed('{{this._id}}')">Order Confirmed</button>
+                                                {{/if_eq}}
                                             <button class="dropdown-item"
                                                 onclick="statusShipped('{{this._id}}')">Shipped</button>
                                             <button class="dropdown-item" onclick="statusOut('{{this._id}}')">Out For
@@ -294,7 +299,22 @@
                     });
                 }
             });
+    }
 
-
+    function statusCheck(orderId) {
+        console.log("working")
+        $.ajax({
+            url: "/admin/status-check",
+            data: {
+                order: orderId,
+                
+            },
+            method: "post",
+            success: (statusCheck) => {
+                //location.reload();
+                console.log("statusCheck",statusCheck)
+                 //document.getElementById('unknown').innerHTML = statusCheck
+            },
+        });
     }
 </script>

@@ -65,21 +65,7 @@
                         <div class="col-lg-9 order-lg-2 order-1">
                             <div class="shop-content">
                                 <!-- shop-option start -->
-                                <div class="shop-option box-shadow mb-30 clearfix">
-                                    <!-- Nav tabs -->
-                                    <ul class="nav shop-tab f-left" role="tablist">
-                                        <li>
-                                            <a class="active" href="#grid-view" data-bs-toggle="tab"><i class="zmdi zmdi-view-module"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#list-view" data-bs-toggle="tab"><i class="zmdi zmdi-view-list-alt"></i></a>
-                                        </li>
-                                    </ul>
-                                    <!-- short-by -->
-                                   
-                                    <!-- showing -->
-                                                                      
-                                </div>
+                                
                                 <!-- shop-option end -->
                                 <!-- Tab Content start -->
                                 <div class="tab-content">
@@ -142,43 +128,50 @@
                                 </div>
                                 <!-- Tab Content end -->
                                 <!-- shop-pagination start -->
-                                <ul class="shop-pagination box-shadow text-center ptblr-10-30">
-                                    <li><a href="#"><i class="zmdi zmdi-chevron-left"></i></a></li>
-                                    <li><a href="#">01</a></li>
-                                    <li><a href="#">02</a></li>
-                                    <li><a href="#">03</a></li>
-                                    <li><a href="#">...</a></li>
-                                    <li><a href="#">05</a></li>
-                                    <li class="active"><a href="#"><i class="zmdi zmdi-chevron-right"></i></a></li>
-                                </ul>
+                                {{!--  --}}
+                                <div class="col-lg-12">
+                            <!-- shop-pagination start -->
+                            <ul class="shop-pagination box-shadow text-end ptblr-10-30">
+                                <li><a href="#"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                                 {{#each productlist.pageNos}}
+                                <li ><a href="/allproducts/{{this.pageno}}">{{this.pageno}}</a></li>
+                                 {{/each}}
+                                <li><a href="#"><i class="zmdi zmdi-chevron-right"></i></a></li>
+                            </ul>
+                            <!-- shop-pagination end -->
+                        </div>
+                                {{!--  --}}
                                 <!-- shop-pagination end -->
                             </div>
                         </div>
                         <div class="col-lg-3 order-lg-1 order-2">
                             <!-- widget-search -->
-                            <aside class="widget-search mb-30">
+                            {{!--  --}}
+                            {{!-- <aside class="widget-search mb-30">
                                 <form action="#">
                                     <input type="text" placeholder="Search here...">
                                     <button type="submit"><i class="zmdi zmdi-search"></i></button>
                                 </form>
-                            </aside>
+                            </aside> --}}
+                            {{!--  --}}
                             <!-- widget-categories -->
                             <aside class="widget widget-categories box-shadow mb-30">
+                                <h6 class="widget-title border-left mb-20"><a href="/allproducts">All Products</a></h6>
                                 <h6 class="widget-title border-left mb-20">Categories</h6>
                                 
                                 <div id="cat-treeview" class="product-cat">
                                     <ul>
                                         {{#each mycategory}}
-                                        <li class="closed"><a href="/category-wise/{{this._id}}" >{{this.Name}}</a>
-                                         <!--    <ul>
-                                                <li><a href="#"></a>formal shoe</li>
-                                                <li><a href="#"></a>casual shoe</li>
-                                                <li><a href="#">sport shoe</a></li>
-                                               
-                                            </ul> -->
-                                        </li> 
+                                        <h6><li class="closed"><a href="/category-wise/{{this._id}}">{{this.Name}}</a></li></h6>
                                         {{/each}}                                      
-                                       
+                                    </ul>
+                                </div>
+                                <h6 class="widget-title border-left mb-20">Sub-Categories</h6>
+                                <div id="cat-treeview" class="product-cat">
+                                    <ul>
+                                        {{#each mysubcategory}}
+                                        <h6><li class="closed"><a href="/sub-category-wise/{{this._id}}">{{this.Name}}</a></li></h6>
+                                        {{/each}}                                      
                                     </ul>
                                 </div>
                             </aside>

@@ -31,7 +31,7 @@ const properId = (req,res,next) => {
   } else {
     res.redirect('/user/page404')
   } 
-}
+}    
 
 /* GET home page. */
 let userlog;
@@ -55,26 +55,39 @@ router.get('/', async function (req, res, next) {
     res.redirect('/user/page404')
   }
 })
-
-let categoryHelper;
-router.get('/allproducts', verifyCartCount, function (req, res, next) {
+//
+router.get('/allproducts', verifyCartCount, async (req, res, next)=> {
   try {
-    productHelpers.getProductList().then((productlist) => {
-      userHelpers.getAllCategory().then((mycategory) => {
-        categoryHelper = mycategory
+    let mysubcategory = await userHelpers.getAllSubCategory()
+    let productlist=await productHelpers.getProductList()
+     let mycategory=await userHelpers.getAllCategory()
         if (req.session.loggedIn) {
-          res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory: categoryHelper })
+          res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
         } else {
-          res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory: categoryHelper })
+          res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
         }
-      })
-    })
   } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
   }
 })
-
+//
+router.get('/allproducts/:pageno', verifyCartCount, async (req, res, next)=> {
+  try {
+    let mysubcategory = await userHelpers.getAllSubCategory()
+    let productlist=await productHelpers.getProductList( req.params.pageno)
+     let mycategory=await userHelpers.getAllCategory()
+        if (req.session.loggedIn) {
+          res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
+        } else {
+          res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
+        }
+  } catch (error) {
+    console.log(error);
+    res.redirect('/user/page404')
+  }
+})
+//
 router.get('/login', (req, res, next) => {
   try {
     if (req.session.loggedIn) {
@@ -190,17 +203,35 @@ router.post('/otp-verify', (req, res, next) => {
     res.redirect('/user/page404')
   }
 })
-
+//
 router.get('/category-wise/:id',properId, verifyCartCount,async (req, res) => {
   try {
     let productlist = await productHelpers.getSpecificCategory(req.params.id)
-      res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog, mycategory: categoryHelper })
+    let mysubcategory = await userHelpers.getAllSubCategory()
+    let mycategory=await userHelpers.getAllCategory()
+    if (req.session.loggedIn) {
+      res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
+    } else {
+      res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
+    }
   } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
   }
 })
-
+// 
+router.get('/sub-category-wise/:id',properId, verifyCartCount,async (req, res) => {
+  try {
+    let productlist = await productHelpers.getSpecificSubCategory(req.params.id)
+    let mysubcategory = await userHelpers.getAllSubCategory()
+    let mycategory=await userHelpers.getAllCategory()
+      res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog,mycategory, mysubcategory})
+  } catch (error) {
+    console.log(error);
+    res.redirect('/user/page404')
+  }
+})
+// 
 router.get('/product-view/:id',properId, async (req, res) => {
   try {
     let productview = await productHelpers.productview(req.params.id)

@@ -439,7 +439,7 @@ module.exports = {
 
          pageno = parseInt(pageno)
          limit = parseInt(limit)
-        let skip = limit * (pageno - 1)
+        let skip = limit * (pageno - 1)    
         if (skip <= 0) skip = 0;
         console.log("skip,limit", skip, limit)
 
@@ -755,6 +755,12 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let category = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
             resolve(category)
+        })
+    },
+    getAllSubCategory: () => {
+        return new Promise(async (resolve, reject) => {
+            let subCategory = await db.get().collection(collection.SUB_CATEGORY_COLLECTION).find().toArray()
+            resolve(subCategory)
         })
     },
     deletePending: () => {

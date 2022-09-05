@@ -156,7 +156,9 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
   router.get('/edit-product/:id',verifyAdminLogin,properId, async (req, res) => {
     try{
       let editproduct = await productHelpers.getproductDetails(req.params.id)
+      console.log("editproduct",editproduct);
       let getcategory = await adminHelpers.getAllCategory()
+      console.log("getcategory",getcategory);
       let getsubcategory = await adminHelpers.getAllSubCategory()
       let getbrands = await adminHelpers.getAllBrands()
       res.render('admin/edit-product', { admin: true, editproduct, getcategory, getsubcategory, getbrands })
@@ -182,13 +184,11 @@ router.post('/edit-product/:id', upload.array('Images', 4), (req, res) => {
   }
 }) 
 
-router.get('/delete-product/:id',verifyAdminLogin, (req, res) => {
+router.post('/delete-product',verifyAdminLogin, (req, res) => {
   try{
-    let proId = req.params.id
-  console.log(proId);
-  productHelpers.deleteProduct(proId).then((response) => {
-    res.redirect('/admin/show-products')
-  })
+    let proId = req.body.order
+  productHelpers.deleteProduct(proId)
+    res.json(response)     
   }catch(error){
     console.log(error); 
   res.redirect('/admin/adminpage404')
@@ -642,6 +642,17 @@ router.get('/sales-monthly',async(req,res)=>{
 
 router.get('/adminpage404',(req,res)=>{
   res.render('admin/page404')
+})
+
+router.post('/status-check',async(req,res)=>{
+  try{
+    let statusCheck = await adminHelpers.getDeliveryStatusAdmin(req.body.order)
+    // response.statusCheck=statusCheck
+    res.json(statusCheck)
+  }catch(error){
+    console.log(error); 
+  res.redirect('/admin/adminpage404')
+  }
 })
 
 module.exports = router;

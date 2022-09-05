@@ -11,7 +11,8 @@
                         <div class="form-group col-md-4">
                             <label for="inputState">Category</label>
                             <select id="inputState" name="Category" class="form-control"
-                                value="{{editproduct.Category}}">
+                                value="">
+                                <option>{{editproduct.[0].Category.[0]}}</option>
                                 {{#each getcategory}}
                                 <option>{{this.Name}}</option>
                                 {{/each}}
@@ -21,7 +22,8 @@
                         <div class="form-group col-md-4">
                             <label for="inputState">Sub Category</label>
                             <select id="inputState" name="SubCategory" class="form-control"
-                                value="{{editproduct.SubCategory}}">
+                                value="">
+                                <option>{{editproduct.[0].SubCategory.[0]}}</option>
                                 {{#each getsubcategory}}
                                 <option>{{this.Name}}</option>
                                 {{/each}}
@@ -30,7 +32,8 @@
 
                         <div class="form-group col-md-4">
                             <label for="inputState">Brands</label>
-                            <select id="inputState" name="Brands" class="form-control" value="{{editproduct.Brands}}">
+                            <select id="inputState" name="Brands" class="form-control" value="">
+                                <option>{{editproduct.[0].Brands.[0]}}</option>
                                 {{#each getbrands}}
                                 <option>{{this.Name}}</option>
                                 {{/each}}
@@ -39,8 +42,10 @@
                     </div>
                     <label>Price</label>
                     <input type="text" name="Price" class="form-control" value="{{editproduct.[0].Price}}"><br>
+
                     <label>Cutprice</label>
-                    <input type="text" name="Cutprice" class="form-control" value="{{editproduct.[0].Price}}"><br>
+                    <input type="text" name="Cutprice" class="form-control" value="{{editproduct.[0].Cutprice}}"><br>
+                    
                     <label>Stock</label>
                     <input type="text" name="Stock" class="form-control" value="{{editproduct.[0].Stock}}"><br>
                     <label>Description</label>

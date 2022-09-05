@@ -67,8 +67,8 @@ module.exports = {
                 Brands: objectId(Brands._id),
                 SubCategory: objectId(SubCategory._id),
                 Stock: body.Stock,
-                Price: body.Price,
-                Cutprice: body.Cutprice,
+                Price: parseInt(body.Price) ,
+                Cutprice: parseInt(body.Cutprice) ,
                 Description: body.Description,
                 Images: body.Images,
                 discountpercentage: ["5"],
@@ -82,7 +82,7 @@ module.exports = {
     },
     deleteProduct: (proId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ _id: objectId(proId) }).then((response) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ _id: objectId(proId) }).then(() => {
                 resolve()
             })
         })
@@ -102,7 +102,8 @@ module.exports = {
                         Stock: 1,
                         Price: 1,
                         Description: 1,
-                        Images: 1
+                        Images: 1,
+                        Cutprice:1
                     }
                 },
                 {
@@ -138,10 +139,12 @@ module.exports = {
                         Stock: 1,
                         Price: 1,
                         Description: 1,
-                        Images: 1
+                        Images: 1,
+                        Cutprice:1
                     }
                 }
             ]).toArray()
+            console.log("product1",product);
             resolve(product)
         })
     },
@@ -153,21 +156,66 @@ module.exports = {
             db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ _id: objectId(proId) }, {
                 $set: {
                     Name: proDetails.Name,
-                    Price: proDetails.Price,
-                    Cutprice: proDetails.Cutprice,
+                    Price: parseInt(proDetails.Price) ,
+                    Cutprice: parseInt(proDetails.Cutprice) ,
                     Description: proDetails.Description,
                     Images: proDetails.Images,
                     Category: objectId(Category._id),
                     Brands: objectId(Brands._id),
                     SubCategory: objectId(SubCategory._id),
-                    Stock: proDetails.Stock,
+                    Stock: parseInt(proDetails.Stock) ,
                 }
             }).then(() => {
                 resolve()
             })
         })
     },
-    getProductList: () => {
+    // getProductList: () => {
+    //     return new Promise(async (resolve, reject) => {
+    //         let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+    //             {
+    //                 $lookup: {
+    //                     from: collection.BRAND_COLLECTION,
+    //                     localField: 'Brands',
+    //                     foreignField: '_id',
+    //                     as: 'Brands'
+    //                 }
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: collection.CATEGORY_COLLECTION,
+    //                     localField: 'Category',
+    //                     foreignField: '_id',
+    //                     as: 'Category'
+    //                 }
+    //             },
+    //             {
+
+    //                 $project: {
+    //                     Name: 1,
+    //                     Category: '$Category.Name',
+    //                     Brands: '$Brands.Name',
+    //                     Stock: 1,
+    //                     Cutprice: 1,
+    //                     Price: 1,
+    //                     Images: 1,
+    //                     discountprice: 1,
+    //                     discountpercentage: 1
+    //                 }
+
+    //             }
+    //         ]).toArray()
+    //         resolve(productlist)
+    //     })
+    // },
+    getProductList: (pageno=1,limit=6) => {
+
+        pageno = parseInt(pageno)
+         limit = parseInt(limit)
+        let skip = limit * (pageno - 1)
+        if (skip <= 0) skip = 0;
+        console.log("skip,limit", skip, limit)
+
         return new Promise(async (resolve, reject) => {
             let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                 {
@@ -201,7 +249,30 @@ module.exports = {
                     }
 
                 }
-            ]).toArray()
+            ]).skip(skip).limit(limit).toArray()
+
+            productlist.pageno = pageno
+            productlist.count = await db.get().collection(collection.PRODUCT_COLLECTION)
+                .find().count()
+            productlist.count = Math.ceil(productlist.count / limit)
+            productlist.pageNos = []
+            if (productlist.count < 1) {
+                productlist.pageNos = [{ pageno: 1, currentPage: true }]
+            } else {
+                for (i = 1; i <= productlist.count; i++) {
+                    if (pageno == i) {
+                        productlist.pageNos.push({
+                            pageno: i,
+                            currentPage: true
+                        })
+                    } else {
+                        productlist.pageNos.push({
+                            pageno: i,
+                            currentPage: false
+                        })
+                    }
+                }
+            }
             resolve(productlist)
         })
     },
@@ -263,6 +334,68 @@ module.exports = {
                     }
                 }
             ]).toArray()
+            resolve(productlist)
+        })
+    },
+    getSpecificSubCategory: (subCatId) => {
+        return new Promise(async (resolve, reject) => {
+            let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                {
+                    $match: { SubCategory: objectId(subCatId) }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Category: 1,
+                        SubCategory: 1,
+                        Brands: 1,
+                        Stock: 1,
+                        Price: 1,
+                        Description: 1,
+                        Images: 1,
+                        discountprice: 1,
+                        discountpercentage: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.CATEGORY_COLLECTION,
+                        localField: 'Category',
+                        foreignField: '_id',
+                        as: 'Category'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.BRAND_COLLECTION,
+                        localField: 'Brands',
+                        foreignField: '_id',
+                        as: 'Brands'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.SUB_CATEGORY_COLLECTION,
+                        localField: 'SubCategory',
+                        foreignField: '_id',
+                        as: 'SubCategory'
+                    }
+                },
+                {
+                    $project: {
+                        Name: 1,
+                        Category: '$Category.Name',
+                        SubCategory: '$SubCategory.Name',
+                        Brands: '$Brands.Name',
+                        Stock: 1,
+                        Price: 1,
+                        Description: 1,
+                        Images: 1,discountprice: 1,
+                        discountpercentage: 1
+                    }
+                }
+            ]).toArray()
+            console.log("aswinproductlist",productlist);
             resolve(productlist)
         })
     },

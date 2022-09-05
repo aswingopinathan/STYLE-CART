@@ -39,8 +39,8 @@
                                     <div>
                                         <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary btn-sm"> Edit
                                         </a>
-                                        <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Do you want to delete {{this.Name}} ?')">Delete</a>
+                                        <button  class="btn btn-danger btn-sm"
+                                            onclick="deleteProduct('{{this._id}}')">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -52,3 +52,30 @@
         </div>
     </div>
 </div>
+<script>
+     function deleteProduct(orderId) {
+       console.log("working")
+        swal({
+            title: "Are you sure?",
+            text: "Product will be deleted",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "/admin/delete-product",
+                        data: {
+                            order: orderId
+                        },
+                        method: "post",
+                        success: (response) => {
+                            location.reload();
+                            
+                        },
+                    });
+                }
+            });
+    }
+</script>
