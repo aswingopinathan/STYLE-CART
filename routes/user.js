@@ -29,22 +29,34 @@ const properId = (req,res,next) => {
   if (ObjectID.isValid(req.params.id)) {
     next()
   } else {
-    res.redirect('/user/page404')
+    res.redirect('/page404')
   } 
 }    
 
 /* GET home page. */
 let userlog;
-router.get('/', async function (req, res, next) {
+router.get('/', async (req, res, next)=> {
   try {
-    userlog = req.session.user;
+     userlog = req.session.user;
     if (req.session.loggedIn) {
       cartCount = await userHelpers.getCartCount(req.session.user._id)
       banner = await userHelpers.getBanners()
-      let productlist = await productHelpers.getProductList()
-      res.render('user/index', { userhead: true, userlog, productlist, cartCount, bannershow: banner })
+      let productlist = await productHelpers.getAllProductList()
+      let wishCheck = await userHelpers.wishCheck(userlog._id)
+      if(wishCheck){
+        for(var i=0;i<wishCheck.products.length;i++){
+          for(var j=0;j<productlist.length;j++){
+            if(productlist[j]._id.toString() == wishCheck.products[i].item.toString()){
+              console.log("working1");
+              productlist[j].wishlist=true
+              break;
+            }
+          }
+        }
+      }
+      res.render('user/index', { userhead: true, userlog, productlist, cartCount, bannershow: banner})
     } else {
-      productHelpers.getProductList().then((productlist) => {
+      productHelpers.getAllProductList().then((productlist) => {
         userHelpers.getBanners().then((banner) => {
           res.render('user/index', { userhead: true, productlist, bannershow: banner })
         })
@@ -57,11 +69,25 @@ router.get('/', async function (req, res, next) {
 })
 //
 router.get('/allproducts', verifyCartCount, async (req, res, next)=> {
+
   try {
+   // req.query////
     let mysubcategory = await userHelpers.getAllSubCategory()
     let productlist=await productHelpers.getProductList()
      let mycategory=await userHelpers.getAllCategory()
         if (req.session.loggedIn) {
+          let wishCheck = await userHelpers.wishCheck(userlog._id)
+      if(wishCheck){
+        for(var i=0;i<wishCheck.products.length;i++){
+          for(var j=0;j<productlist.length;j++){
+            if(productlist[j]._id.toString() == wishCheck.products[i].item.toString()){
+              console.log("working1");
+              productlist[j].wishlist=true
+              break;
+            }
+          }
+        }
+      }
           res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
         } else {
           res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
@@ -72,12 +98,26 @@ router.get('/allproducts', verifyCartCount, async (req, res, next)=> {
   }
 })
 //
+
+//
 router.get('/allproducts/:pageno', verifyCartCount, async (req, res, next)=> {
   try {
     let mysubcategory = await userHelpers.getAllSubCategory()
     let productlist=await productHelpers.getProductList( req.params.pageno)
      let mycategory=await userHelpers.getAllCategory()
         if (req.session.loggedIn) {
+          let wishCheck = await userHelpers.wishCheck(userlog._id)
+      if(wishCheck){
+        for(var i=0;i<wishCheck.products.length;i++){
+          for(var j=0;j<productlist.length;j++){
+            if(productlist[j]._id.toString() == wishCheck.products[i].item.toString()){
+              console.log("working1");
+              productlist[j].wishlist=true
+              break;
+            }
+          }
+        }
+      }
           res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
         } else {
           res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
@@ -155,6 +195,10 @@ router.post('/signup', (req, res) => {
         req.session.signErr = "account already exist"
         res.render('user/signup', { signerr: req.session.signErr })
         req.session.signErr = false
+      }else if(response.referral){
+        req.session.refErr = "invaild referral code"
+        res.render('user/signup', { referr: req.session.refErr })
+        req.session.refErr = false
       } else {
         res.redirect('/otp-page')
         // res.redirect('/login')
@@ -210,6 +254,18 @@ router.get('/category-wise/:id',properId, verifyCartCount,async (req, res) => {
     let mysubcategory = await userHelpers.getAllSubCategory()
     let mycategory=await userHelpers.getAllCategory()
     if (req.session.loggedIn) {
+      let wishCheck = await userHelpers.wishCheck(userlog._id)
+      if(wishCheck){
+        for(var i=0;i<wishCheck.products.length;i++){
+          for(var j=0;j<productlist.length;j++){
+            if(productlist[j]._id.toString() == wishCheck.products[i].item.toString()){
+              console.log("working1");
+              productlist[j].wishlist=true
+              break;
+            }
+          }
+        }
+      }
       res.render('user/category-wise', { userhead: true, userlog, productlist, cartCount, mycategory,mysubcategory })
     } else {
       res.render('user/category-wise', { userhead: true, userlog, productlist, mycategory,mysubcategory })
@@ -225,7 +281,24 @@ router.get('/sub-category-wise/:id',properId, verifyCartCount,async (req, res) =
     let productlist = await productHelpers.getSpecificSubCategory(req.params.id)
     let mysubcategory = await userHelpers.getAllSubCategory()
     let mycategory=await userHelpers.getAllCategory()
+    if(req.session.loggedIn){
+      let wishCheck = await userHelpers.wishCheck(userlog._id)
+      if(wishCheck){
+        for(var i=0;i<wishCheck.products.length;i++){
+          for(var j=0;j<productlist.length;j++){
+            if(productlist[j]._id.toString() == wishCheck.products[i].item.toString()){
+              console.log("working1");
+              productlist[j].wishlist=true
+              break;
+            }
+          }
+        }
+      }
       res.render('user/category-wise', { userhead: true, productlist, cartCount, userlog,mycategory, mysubcategory})
+    }else{
+      res.render('user/category-wise', { userhead: true, productlist, userlog,mycategory, mysubcategory})
+    }
+      
   } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
@@ -337,7 +410,7 @@ router.post('/delete-cartproduct', (req, res) => {
   } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
-  }
+  }    
 })
 
 router.post('/delete-wishlistproduct', (req, res) => {
@@ -346,11 +419,22 @@ router.post('/delete-wishlistproduct', (req, res) => {
       res.json(response)
     })
   } catch (error) {
+    console.log(error); 
+    res.redirect('/user/page404')    
+  }    
+})
+//dd
+router.post('/delete-wishlistproduct1', (req, res) => {
+  try {
+    userHelpers.deleteWishlistProduct1(userlog._id, req.body.product).then((response) => {
+      res.json(response)
+    })
+  } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
   }
 })
-
+//
 router.get('/place-order', verifyLogin, verifyCartCount, async (req, res) => {
   try {
     if (cartCount != 0) {
@@ -557,7 +641,7 @@ router.post('/verify-payment', (req, res) => {
 let walletAction;
 router.post('/cancel-order', async (req, res) => {
   walletAction = "Product cancelled"
-  try {
+  try {  
     if (req.body.payment != "COD") {
       await userHelpers.cancelAmountWallet(userlog._id, req.body.amount)
       await userHelpers.updateWalletCredit(userlog._id, req.body.orId, req.body.amount, walletAction)
@@ -772,6 +856,17 @@ router.get('/show-wallet', verifyLogin, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.redirect('/user/page404')
+  }
+})
+
+router.post('/change-status',(req,res)=>{
+  try{
+    userHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
+      res.json(response)
+    }) 
+  }catch(error){
+    console.log(error); 
+  res.redirect('/admin/adminpage404')
   }
 })
 

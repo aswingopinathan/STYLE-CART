@@ -8,20 +8,19 @@
                     <thead>
                         <tr>
                             <th>Years</th>
-                            {{#each yearlySalesReport}}
-                            <th>{{this.year}}</th>
-                            {{/each}}
+                            <th>Revenue</th>
+            
                            
                         </tr>
                     </thead>
 
                     <tbody>
+                        {{#each yearlySalesReport}}
                         <tr>
-                            <td>Revenue</td>
-                            {{#each yearlySalesReport}}
+                            <td>{{this.year}}</td>
                             <td>{{this.grandTotal}}</td>
-                            {{/each}}
                         </tr>
+                         {{/each}}
 
                     </tbody>
                 </table>

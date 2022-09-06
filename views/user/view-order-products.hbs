@@ -111,7 +111,7 @@
                     </div>
                     {{/if}}
                     <div class="d-flex justify-content-end mb-1">
-                      {{!-- <a href="/Return-Item/{{this._id}}">Return Item</a> --}}
+                      <button onclick="returnItem('{{orders._id}}')" style="color:blue ;">Return Item</button>
                     </div>
 
                   </div>
@@ -421,6 +421,23 @@
             }
         })    
     }
+
+function returnItem(orderId) {
+
+        $.ajax({
+            url: "/change-status",
+            data: {
+                order: orderId,
+                status: "Return requested"
+            },
+            method: "post",
+            success: (response) => {
+                location.href='/orders'
+            },
+        });
+    }
+     
 </script>
+   
    
 

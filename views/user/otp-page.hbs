@@ -18,7 +18,9 @@
                     <div class="form-group">
                         <label>OTP</label>
                         <input type="text" class="form-control" name="otp" placeholder="Enter otp"><br>
-                        <p><a href="/resend-otp"> Resend OTP </a>in <span id="countdowntimer">30 </span> Seconds</p>
+                        {{!-- <p><a href="/resend-otp"> Resend OTP </a>in <span id="countdowntimer">30 </span> Seconds</p> --}}
+                        <span id="resend" class="text-dark"></span>
+                        <div id="timer-full">Resend OTP in <span id="timer"></span></div>
                     </div>
 
                     <!--<a href="/signup" class="sign sign-info mt-5 "
@@ -43,11 +45,33 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
     <script>
-        var timeleft = 30;
-    var downloadTimer = setInterval(function(){
-    timeleft--;
-    document.getElementById("countdowntimer").textContent = timeleft;
-    if(timeleft <= 0)
-        clearInterval(downloadTimer);
-    },1000);
+         let timerOn = true;
+
+  function timer(remaining) {
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    document.getElementById('timer').innerHTML = m + ':' + s;
+    remaining -= 1;
+
+    if (remaining >= 0 && timerOn) {
+      setTimeout(function () {
+        timer(remaining);
+      }, 1000);
+      return;
+    }
+
+    if (!timerOn) {
+      // Do validate stuff here
+      return;
+    }
+
+    // Do timeout stuff here
+    document.getElementById('resend').innerHTML = '<a href="/resend-otp">Resent Otp</a>'
+    document.getElementById('timer-full').innerHTML = ''
+  }
+
+  timer(60);
     </script>

@@ -33,8 +33,7 @@
                                 <td>
                                     <div>
                                         <a href="/admin/edit-banner/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
-                                        {{!-- <a href="/admin/delete-banner/{{this._id}}" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Do you want to delete {{this.Name}} ?')">Delete</a> --}}
+                                       
                                             <button  class="btn btn-danger btn-sm"
                                             onclick="confirmDelete('{{this._id}}')">Delete</button>
                                     </div>
@@ -49,7 +48,7 @@
     </div>
 </div>
 <script>
-   function confirmDelete(bannerId,name) {
+   function confirmDelete(bnrId) {
         swal({
             title: "Are you sure?",
             text: "Banner will be removed",
@@ -62,7 +61,7 @@
                     $.ajax({
                         url: "/admin/delete-banner",
                         data: {
-                            id: bannerId
+                            bannerId: bnrId
                         },
                         method: "post",
                         success: (response) => {

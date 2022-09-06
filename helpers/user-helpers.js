@@ -45,6 +45,12 @@ module.exports = {
             //     resolve(response)
             // } 
             else {
+                if(userData.referralcode){
+                    let referralCheck = await db
+                .get()
+                .collection(collection.USER_COLLECTION)
+                .findOne({ yourReferralCode: userData.referralcode })
+            if (referralCheck) {
                 userData.Password = await bcrypt.hash(userData.Password, 10)
                 client.verify
                     .services(process.env.SERVICE_SID)
@@ -54,7 +60,24 @@ module.exports = {
                     }).then((resp1) => {
                         console.log("response1", resp1);
                     })
+                    resolve(response)
+               }else{
+                response.referral=true
                 resolve(response)
+               }
+                }else{
+                    userData.Password = await bcrypt.hash(userData.Password, 10)
+                client.verify
+                    .services(process.env.SERVICE_SID)
+                    .verifications.create({
+                        to: `+91${userData.Mobile}`,
+                        channel: 'sms'
+                    }).then((resp1) => {
+                        console.log("response1", resp1);
+                    })
+                    resolve(response)
+                }
+               
             }
         })
     },
@@ -351,6 +374,19 @@ module.exports = {
             db.get()
                 .collection(collection.WISHLIST_COLLECTION)
                 .updateOne({ _id: objectId(wishlistId) },
+                    {
+                        $pull: { products: { item: objectId(proId) } }
+                    }).then((response) => {
+                        response.removed = true
+                        resolve(response)
+                    })
+        })
+    },
+    deleteWishlistProduct1: (userId, proId) => {
+        return new Promise((resolve, reject) => {
+            db.get()
+                .collection(collection.WISHLIST_COLLECTION)
+                .updateOne({ user: objectId(userId) },
                     {
                         $pull: { products: { item: objectId(proId) } }
                     }).then((response) => {
@@ -666,7 +702,21 @@ module.exports = {
                         resolve(response)
                     })
         })
-    }, changePassword: (passData, userId) => {
+    },
+    returnItem: (orderId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION)
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: {
+                            status: 'Returned', cancel: true
+                        }
+                    }).then((response) => {
+                        resolve(response)
+                    })
+        })
+    },
+     changePassword: (passData, userId) => {
 
         return new Promise(async (resolve, reject) => {
             newPassword = await bcrypt.hash(passData.Password, 10)
@@ -1091,6 +1141,23 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let wallet = await db.get().collection(collection.WALLET_COLLECTION).findOne({ userId: objectId(userId) })
             resolve(wallet)
+        })
+    },
+    wishCheck: (userId) => {
+        return new Promise(async(resolve,reject)=>{
+            let wishcheck = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({ user: objectId(userId)})
+            resolve(wishcheck)
+        })
+    },
+    changeDeliveryStatus: (orderId, status) => {
+        return new Promise((resolve, reject) => {
+            db.get()
+                .collection(collection.ORDER_COLLECTION)
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: { status: status }
+                    })
+            resolve()
         })
     }
 }

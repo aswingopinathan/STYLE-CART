@@ -17,7 +17,7 @@ const verifyAdminLogin = (req, res, next) => {
   }
 }
 
-const properId = (req,res,next) => {
+const properIdAdmin = (req,res,next) => {
   if (ObjectID.isValid(req.params.id)) {
     next()
   } else {
@@ -153,7 +153,7 @@ router.post('/add-product', upload.array('Images'), (req, res) => {
   }
 })
 
-  router.get('/edit-product/:id',verifyAdminLogin,properId, async (req, res) => {
+  router.get('/edit-product/:id',verifyAdminLogin,properIdAdmin, async (req, res) => {
     try{
       let editproduct = await productHelpers.getproductDetails(req.params.id)
       console.log("editproduct",editproduct);
@@ -338,12 +338,13 @@ router.post('/add-brands', (req, res) => {
   }
 })
 
-router.get('/delete-brands/:id',verifyAdminLogin, (req, res) => {
+router.post('/delete-brands',verifyAdminLogin, (req, res) => {
   try{
-    let brandId = req.params.id
-  console.log(brandId);
-  adminHelpers.deleteBrands(brandId).then(() => {
-    res.redirect('/admin/show-brands')
+    // let brandId = req.params.id
+  console.log("req.body.brandId",req.body.brandId);
+  adminHelpers.deleteBrands(req.body.brandId).then(() => {
+    // res.redirect('/admin/show-brands')
+    res.json(response)
   })
   }catch(error){
     console.log(error); 
@@ -371,7 +372,7 @@ router.get('/show-orders/:pageno',verifyAdminLogin,async (req, res) => {
   }
 })
 
-router.get('/view-order-products/:id',verifyAdminLogin,properId,async(req,res)=>{
+router.get('/view-order-products/:id',verifyAdminLogin,properIdAdmin,async(req,res)=>{
   try{
    let products=await adminHelpers.getOrderProductsAdmin(req.params.id)
       let orders=await adminHelpers.getCurrentOrderAdmin(req.params.id)
@@ -393,14 +394,16 @@ router.get('/logout', (req, res) => {
     console.log(error); 
   res.redirect('/admin/adminpage404')
   }
- 
 })
 
+let walletAction;
 router.post('/admin-cancel-order',async(req,res)=>{
+  walletAction = "Product cancelled"
   try{
     if(req.body.payment!= "COD"){
-      await adminHelpers.AdminCancelAmountWallet(req.body.userId,req.body.amount)
+      await adminHelpers.AdminTransferAmountWallet(req.body.userId,req.body.amount)
       await adminHelpers.adminIncreaseStock(req.body.order)
+      await adminHelpers.updateWalletCredit(userlog._id, req.body.orId, req.body.amount, walletAction)
       await adminHelpers.adminCancelOrder(req.body.order).then((response)=>{
         res.json(response)
       })
@@ -450,7 +453,7 @@ router.post('/add-banner', upload.array('Images'), (req, res) => {
   }
 })
 
-router.get('/edit-banner/:id',verifyAdminLogin,properId,async(req,res)=>{
+router.get('/edit-banner/:id',verifyAdminLogin,properIdAdmin,async(req,res)=>{
   try{
     let bannerDetails=await adminHelpers.getBannerDetails(req.params.id)
       res.render('admin/edit-banner',{admin:true,bannerDetails})
@@ -477,7 +480,7 @@ router.post('/edit-banner/:id',upload.array('Images', 4),async(req,res)=>{
 
 router.post('/delete-banner',verifyAdminLogin, (req, res) => {
   try{
-  adminHelpers.deleteBanner(req.body.id).then(() => {
+  adminHelpers.deleteBanner(req.body.bannerId).then(() => {
     res.redirect('/admin/show-banner')
   })
   }catch(error){   
@@ -517,11 +520,12 @@ router.post('/add-coupon', (req, res) => {
   }
 })
 
-router.get('/delete-coupon/:id',verifyAdminLogin, (req, res) => {
+router.post('/delete-coupon',verifyAdminLogin, (req, res) => {
   try{
-    let couponId = req.params.id
-  adminHelpers.deleteCoupon(couponId).then(() => {
-    res.redirect('/admin/show-coupon')
+    // let couponId = req.params.id
+  adminHelpers.deleteCoupon(req.body.couponId).then(() => {
+    // res.redirect('/admin/show-coupon')
+    res.json(response)
   })
   }catch(error){
     console.log(error); 
@@ -539,7 +543,7 @@ router.get('/show-offer-category',verifyAdminLogin,async (req, res) => {
   }
 })
 
-router.get('/add-offer-category/:id',verifyAdminLogin,properId, (req, res) => {
+router.get('/add-offer-category/:id',verifyAdminLogin,properIdAdmin, (req, res) => {
   try{
     req.session.catId=req.params.id
   res.render('admin/add-offer-category', { admin: true }) 
@@ -644,15 +648,30 @@ router.get('/adminpage404',(req,res)=>{
   res.render('admin/page404')
 })
 
-router.post('/status-check',async(req,res)=>{
+
+///approved-status
+router.post('/approved-status',(req,res)=>{
   try{
-    let statusCheck = await adminHelpers.getDeliveryStatusAdmin(req.body.order)
-    // response.statusCheck=statusCheck
-    res.json(statusCheck)
+    if(req.body.payment!= "COD"){
+
+      walletAction = "Product returned"
+      adminHelpers.updateWalletCredit(req.body.userId, req.body.order, req.body.amount, walletAction)
+
+      adminHelpers.returnStatus(req.body.order,req.body.status).then(()=>{
+        adminHelpers.AdminTransferAmountWallet(req.body.userId,req.body.amount)
+        res.json(response)
+      }) 
+    }else{
+      adminHelpers.changeDeliveryStatus(req.body.order,req.body.status).then(()=>{
+        res.json(response)
+      })
+    }
   }catch(error){
     console.log(error); 
   res.redirect('/admin/adminpage404')
   }
 })
+
+
 
 module.exports = router;

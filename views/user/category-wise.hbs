@@ -98,12 +98,15 @@
                                                             
                                                             <li>
                                                                 {{#if ../userlog}}
-                                                                <a onclick="addToWishlist('{{this._id}}')" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                 {{#if this.wishlist}}
+                                                                 <a onclick="deleteWishProduct1('{{this._id}}')" title=""><i class="zmdi zmdi-favorite" style="color:red ;"></i></a>
+                                                                 {{else}}
+                                                                <a onclick="addToWishlist('{{this._id}}')" title=""><i class="zmdi zmdi-favorite" style="color:blue ;"></i></a>
+                                                                 {{/if}}
+                                                                
                                                                 {{else}}
-                                                                {{!-- <a href="/login" class="btn btn-primary">Add to cart</a> --}}
-                                                                <a href="/login" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                <a href="/login" title=""><i class="zmdi zmdi-favorite" ></i></a>
                                                                 {{/if}}
-                                                                {{!-- <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a> --}}
                                                             </li>
                                                            
                                                             <li>

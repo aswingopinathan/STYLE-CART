@@ -102,8 +102,8 @@
                                 <th scope="col">Address</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Payment</th>
-                                <th scope="col">Status</th>
                                 <th scope="col">Delivery Status</th>
+                                <th scope="col">Delivery Actions</th>
                                 <th scope="col">Details</th>
                             </tr>
                         </thead>
@@ -122,31 +122,34 @@
                                     <button class="btn btn-secondary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
-                                        Cancelled
+                                        Expired
                                     </button>
                                     {{else}}
                                     <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" onclick="statusCheck('{{this._id}}')"
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" 
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
                                             Update Status
                                         </button>
                                         {{!--  --}}
                                         <div class="dropdown-menu" id="unknown" aria-labelledby="dropdownMenuButton">
-                                            {{#if_eq statusCheck "Order Confirmed"}}
                                             
-                                            {{else}}
-                                            <button class="dropdown-item"
-                                                onclick="statusOrderConfirmed('{{this._id}}')">Order Confirmed</button>
-                                                {{/if_eq}}
+                                            {{#if_eq this.status "Order Confirmed"}}
                                             <button class="dropdown-item"
                                                 onclick="statusShipped('{{this._id}}')">Shipped</button>
+                                                {{/if_eq}}
+                                                {{#if_eq this.status "Shipped"}}
                                             <button class="dropdown-item" onclick="statusOut('{{this._id}}')">Out For
                                                 Delivery</button>
-                                            {{!-- {{if_eq adminDeliveryStatus "Out For Delivery"}} --}}
+                                                {{/if_eq}}
+                                            {{#if_eq this.status "Out For Delivery"}}
                                             <button class="dropdown-item"
                                                 onclick="statusDelivered('{{this._id}}')">Delivered</button>
-                                            {{!-- {{if_eq}} --}}
+                                            {{/if_eq}}
+                                             {{#if_eq this.status "Delivered"}}
+                                            <button class="dropdown-item"
+                                                onclick="statusApproved('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.userId}}')">Return Approved</button>
+                                            {{/if_eq}}
                                             <button class="dropdown-item"
                                                 onclick="statusCancelled('{{this._id}}','{{this.totalAmount}}','{{this.paymentMethod}}','{{this.userId}}')">Cancel</button>
                                             {{/if}}
@@ -271,6 +274,24 @@
         });
     }
 
+    function statusApproved(orderId, total, paymentType, usrId) {
+
+        $.ajax({
+            url: "/admin/approved-status",
+            data: {
+                order: orderId,
+                status: "Return Approved",
+                amount: total,
+                payment: paymentType,
+                userId: usrId
+            },
+            method: "post",
+            success: (response) => {
+                location.reload();
+            },
+        });
+    }
+
     function statusCancelled(orderId, total, paymentType, usrId) {
         console.log("usrId", usrId)
         console.log("paymentType", paymentType)
@@ -301,6 +322,7 @@
             });
     }
 
+//not used
     function statusCheck(orderId) {
         console.log("working")
         $.ajax({

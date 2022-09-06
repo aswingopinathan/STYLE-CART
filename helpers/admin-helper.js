@@ -299,6 +299,19 @@ module.exports = {
             resolve()
         })
     },
+    returnStatus: (orderId,status) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION)
+                .updateOne({ _id: objectId(orderId) },
+                    {
+                        $set: {
+                            status: status, cancel: true
+                        }
+                    }).then((response) => {
+                        resolve(response)
+                    })
+        })
+    },
     getPaymentMethodNums: (paymentMethod) => {
         return new Promise(async (resolve, reject) => {
             let response = await db.get().collection(collection.ORDER_COLLECTION).aggregate(
@@ -471,12 +484,12 @@ module.exports = {
             } resolve()
         });
     },
-    AdminCancelAmountWallet: (userId, total) => {
+    AdminTransferAmountWallet: (userId, total) => {
         console.log("userId", userId);
         total = parseInt(total)
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.USER_COLLECTION)
-                .updateOne({ _id: objectId(userId) }, { $inc: { wallet: total } })
+            db.get().collection(collection.WALLET_COLLECTION)
+                .updateOne({ userId: objectId(userId) }, { $inc: { wallet: total } })
             resolve()
         })
     },
@@ -780,6 +793,20 @@ module.exports = {
             }).then(() => {
                 resolve()
             })
+        })
+    },
+    updateWalletCredit: (userId, orderId, totalPrice, walletAction) => {
+        return new Promise((resolve, reject) => {
+            let walletHistory = {
+                order: objectId(orderId),
+                status: "credited",
+                amount: totalPrice,
+                date1: new Date().toDateString(),
+                action: walletAction
+            }
+            db.get().collection(collection.WALLET_COLLECTION)
+                .updateOne({ userId: objectId(userId) }, { $push: { walletHistory: walletHistory } })
+            resolve()
         })
     }
 }

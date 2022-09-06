@@ -147,10 +147,15 @@
                                                 <ul class="action-button">
                                                             <li>
                                                                  {{#if ../userlog}}
-                                                                <a onclick="addToWishlist('{{this._id}}')" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                 {{#if this.wishlist}}
+                                                                 <a onclick="deleteWishProduct1('{{this._id}}')" title=""><i class="zmdi zmdi-favorite" style="color:red ;"></i></a>
+                                                                 {{else}}
+                                                                <a onclick="addToWishlist('{{this._id}}')" title=""><i class="zmdi zmdi-favorite" style="color:blue ;"></i></a>
+                                                                 {{/if}}
+                                                                
                                                                 {{else}}
                                                                 {{!-- <a href="/login" class="btn btn-primary">Add to cart</a> --}}
-                                                                <a href="/login" title=""><i class="zmdi zmdi-favorite"></i></a>
+                                                                <a href="/login" title=""><i class="zmdi zmdi-favorite" ></i></a>
                                                                 {{/if}}
                                                                 {{!-- <a href="#" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a> --}}
                                                             </li>
@@ -163,10 +168,10 @@
                                                             <li>
                                                                 {{!-- <a href="/login" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a> --}}
                                                                 {{#if ../userlog}}
-                                                                <a onclick="addToCart('{{this._id}}')" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+                                                                <a onclick="addToCart('{{this._id}}')" title=""><i class="zmdi zmdi-shopping-cart-plus" style="color:black;"></i></a>
                                                                 {{else}}
                                                                 {{!-- <a href="/login" class="btn btn-primary">Add to cart</a> --}}
-                                                                <a href="/login" title=""><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+                                                                <a href="/login" title=""><i class="zmdi zmdi-shopping-cart-plus" ></i></a>
                                                                 {{/if}}
                                                             </li>
                                                         </ul>
@@ -441,3 +446,40 @@
     <!--style-customizer end -->
 </div>
 <!-- Body main wrapper end -->
+<script>
+    function deleteWishProduct1( proId) {
+            console.log("delete from wish");
+            swal({
+                title: "Are you sure?",
+                text: "Product will be removed from wishlist!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: "/delete-wishlistproduct1",
+                            data: {
+                               // wishlist: wishlistId,
+                                product: proId,
+                            },
+                            method: "post",
+                            success: (response) => {
+                                if (response.removed) {
+                                    //alert("Product Removed from cart")
+                                    swal("Success!", "Product removed from wishlist", "success").then(() => {
+                                        location.reload();
+                                    })
+
+                                }
+                            },
+                        })
+                    } else {
+                        //swal("Your imaginary file is safe!");
+                    }
+                });
+
+
+        }
+</script>

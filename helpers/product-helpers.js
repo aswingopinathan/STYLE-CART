@@ -170,44 +170,44 @@ module.exports = {
             })
         })
     },
-    // getProductList: () => {
-    //     return new Promise(async (resolve, reject) => {
-    //         let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
-    //             {
-    //                 $lookup: {
-    //                     from: collection.BRAND_COLLECTION,
-    //                     localField: 'Brands',
-    //                     foreignField: '_id',
-    //                     as: 'Brands'
-    //                 }
-    //             },
-    //             {
-    //                 $lookup: {
-    //                     from: collection.CATEGORY_COLLECTION,
-    //                     localField: 'Category',
-    //                     foreignField: '_id',
-    //                     as: 'Category'
-    //                 }
-    //             },
-    //             {
+    getAllProductList: () => {
+        return new Promise(async (resolve, reject) => {
+            let productlist = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                {
+                    $lookup: {
+                        from: collection.BRAND_COLLECTION,
+                        localField: 'Brands',
+                        foreignField: '_id',
+                        as: 'Brands'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.CATEGORY_COLLECTION,
+                        localField: 'Category',
+                        foreignField: '_id',
+                        as: 'Category'
+                    }
+                },
+                {
 
-    //                 $project: {
-    //                     Name: 1,
-    //                     Category: '$Category.Name',
-    //                     Brands: '$Brands.Name',
-    //                     Stock: 1,
-    //                     Cutprice: 1,
-    //                     Price: 1,
-    //                     Images: 1,
-    //                     discountprice: 1,
-    //                     discountpercentage: 1
-    //                 }
+                    $project: {
+                        Name: 1,
+                        Category: '$Category.Name',
+                        Brands: '$Brands.Name',
+                        Stock: 1,
+                        Cutprice: 1,
+                        Price: 1,
+                        Images: 1,
+                        discountprice: 1,
+                        discountpercentage: 1
+                    }
 
-    //             }
-    //         ]).toArray()
-    //         resolve(productlist)
-    //     })
-    // },
+                }
+            ]).toArray()
+            resolve(productlist)
+        })
+    },
     getProductList: (pageno=1,limit=6) => {
 
         pageno = parseInt(pageno)

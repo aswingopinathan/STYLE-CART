@@ -16,22 +16,20 @@
                     <thead>
                         <tr>
                             <th>Weeks in {{weeklySalesReport.[0].year}}</th>
-                            {{#each weeklySalesReport}}
-                            <th>week {{this.week}}</th>
-                            {{/each}}
+                            <th>Revenue</th>
                            
                         </tr>
                     </thead>
 
                     <tbody>
+                        {{#each weeklySalesReport}}
                         <tr>
-                            <td>Revenue</td>
-                            {{#each weeklySalesReport}}
+                            <td>week {{this.week}}</td>
                             <td>{{this.grandTotal}}</td>
-                            {{/each}}
                         </tr>
-
+                        {{/each}}
                     </tbody>
+                    
                 </table>
 
             </div>

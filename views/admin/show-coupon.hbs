@@ -32,8 +32,8 @@
                                 <td>{{this.percentage}}</td>
                                 <td>
                                     <div>
-                                        <a href="/admin/delete-coupon/{{this._id}}" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Do you want to delete {{this.couponname}} ?')">Delete</a>
+                                        <button  class="btn btn-danger btn-sm"
+                                            onclick="deleteCoupon('{{this._id}}')">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -45,3 +45,29 @@
         </div>
     </div>
 </div>
+<script>
+    function deleteCoupon(coupId) {
+        
+        swal({
+            title: "Are you sure?",
+            text: "Coupon will be deleted",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "/admin/delete-coupon",
+                        data: {
+                            couponId: coupId,
+                        },
+                        method: "post",
+                        success: (response) => {
+                            location.reload();
+                        },
+                    });
+                }
+            });
+    }
+</script>

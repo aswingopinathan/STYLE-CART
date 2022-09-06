@@ -5,7 +5,6 @@ function addToCart(proId) {
         url: '/add-to-cart/' + proId,
         method: 'get',
         success: (response) => {
-           // alert("Item added to cart")
            swal("Success!", "Item added to cart", "success").then(()=>{
             if (response.status) {
                 let count = $('#cart-count').html()
@@ -26,16 +25,51 @@ function addToWishlist(proId) {
         success: (response) => {
             if (response.exist) {
                 swal("Info!", "Item already exist in  wishlist", "warning").then(()=>{
-
+                    
                 })
             }else if(response.status){
                 swal("Success!", "Added to your Wishlist", "success").then(()=>{
-                    
+                   location.reload()
                 })
             }
-          
         }
     })
+}
+
+function deleteWishProduct1( proId) {
+    console.log("delete from wish");
+    swal({
+        title: "Are you sure?",
+        text: "Product will be removed from wishlist!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/delete-wishlistproduct1",
+                    data: {
+                       // wishlist: wishlistId,
+                        product: proId,
+                    },
+                    method: "post",
+                    success: (response) => {
+                        if (response.removed) {
+                            //alert("Product Removed from cart")
+                            swal("Success!", "Product removed from wishlist", "success").then(() => {
+                                location.reload();
+                            })
+
+                        }
+                    },
+                })
+            } else {
+                //swal("Your imaginary file is safe!");
+            }
+        });
+
+
 }
 
 
