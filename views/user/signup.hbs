@@ -1,74 +1,132 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<div class="row m-0">
-    <div class="col-md-6 m-auto">
-        <div class="container mt-5 pl-5">
-            <h2 class="text-center">Sign Up</h2>
-            <form id="submit-form" action="/signup" method="post">
-                {{#if signerr}}
-                <p class="error text-center" style="color: red;">{{signerr}}</p>
-                {{/if}}
-                {{#if referr}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta content="Responsive admin theme build on top of Bootstrap 4" name="description" />
+    <meta content="Themesdesign" name="author" />
+
+    <link href="../plugins/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/metismenu.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div class="accountbg"></div>
+    <div class="home-btn d-none d-sm-block">
+        <a href="/" class="text-white"><i class="fas fa-home h2"></i></a>
+    </div>
+    <div class="wrapper-page">
+        <div class="card card-pages shadow-none">
+
+            <div class="card-body">
+                <div class="text-center m-t-0 m-b-15">
+                    <h4>SIGN IN</h4>
+                </div>
+                {{!-- <h5 class="font-18 text-center">LOG IN</h5> --}}
+
+                <form class="form-horizontal m-t-30" action="/signup" method="POST">
+                    {{#if signerr}}
+                    <p class="error text-center" style="color: red;">{{signerr}}</p>
+                    {{/if}}
+                    {{#if referr}}
                 <p class="error text-center" style="color: red;">{{referr}}</p>
                 {{/if}}
                 <span id="submit-error" class="text-danger my-auto"></span>
 
-                <div class="form-group">
-                    <label><strong>Username</strong></label>
-                    <input type="text" class="form-control" name="Username" id="firstName" onkeyup="validateName()" placeholder="Enter your name" required>
-                </div>
-                 <span id="firstName-error" class="text-danger my-auto"></span>
+                  {{!--  --}}
+                    <div class="form-group">
+                        <div class="col-12">
+                            <label>Username</label>
+                            <input type="text" class="form-control" name="Username" placeholder="Enter username" id="firstName" onkeyup="validateName()" required>
+                        </div>
+                    </div>
+                    <span id="firstName-error" class="text-danger my-auto"></span>
+                    {{!--  --}}
 
-                <div class="form-group">
-                    {{emailError}}
-                    <label><strong>Email</strong></label>
-                    <input type="text" class="form-control" name="Email" id="email" onkeyup="validateEmail()" placeholder="Enter email" id="contact-email"
-                        required>
-                </div>
-                <span id="email-error" class="text-danger my-auto"></span>
+                    <div class="form-group">
+                        <div class="col-12">
+                          {{emailError}}
+                            <label>Email</label>
+                            <input type="text" class="form-control" name="Email" placeholder="Enter email" id="email" onkeyup="validateEmail()" required>
+                        </div>
+                    </div>
+                    <span id="email-error" class="text-danger my-auto"></span>
 
-                <div class="form-group">
-                    <label><strong>Mobilenumber</strong></label>
-                    <input type="number" class="form-control" id="phoneNumber" onkeyup="validatePhoneNumber()" value="" name="Mobile"
-                        placeholder="Enter mobile number" required>
-                </div>
-                <span id="phoneNumber-error" class="text-danger my-auto"></span>
+                    <div class="form-group">
+                        <div class="col-12">
+                            <label>Mobilenumber</label>
+                            <input type="number" class="form-control" name="Mobile" placeholder="Enter mobile" id="phoneNumber" onkeyup="validatePhoneNumber()" required>
+                        </div>
+                    </div>
+                    <span id="phoneNumber-error" class="text-danger my-auto"></span>
 
-                <div class="form-group">
-                    <label><strong>Password</strong></label>
-                    <input type="password" id="password" onkeyup="validatePassword()" value="" class="form-control" name="Password"
-                        placeholder="Enter password" required>
-                </div>
-                <span id="password-error" class="text-danger my-auto"></span>
+                      <div class="form-group">
+                        <div class="col-12">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="Password" placeholder="Enter password" id="password" onkeyup="validatePassword()" required>
+                        </div>
+                    </div>
+                    <span id="password-error" class="text-danger my-auto"></span>
 
-                <div class="form-group">
-                    <label><strong>Confirm Password</strong></label>
-                    <input type="password" id="confirmPassword" onkeyup="validateConfirmPassword()" value="" class="form-control" placeholder="Confirm Password"
-                        required>
-                </div>
-                <span id="confirmPassword-error" class="text-danger my-auto"></span>
+                    <div class="form-group">
+                        <div class="col-12">
+                            <label>Confirm Password</label>
+                            <input type="password" class="form-control"  placeholder="Re-enter password" id="confirmPassword" onkeyup="validateConfirmPassword()" required>
+                        </div>
+                    </div>
+                    <span id="confirmPassword-error" class="text-danger my-auto"></span>
 
-                <div class="form-group">
-                    <label><strong>Referral Code</strong></label>
-                    <input type="text" id=""  value="" name="referralcode" class="form-control" placeholder="">
-                </div>
+                    <div class="form-group">
+                        <div class="col-12">
+                            <label>Referral Code</label>
+                            <input type="text" class="form-control" name="referralcode"  placeholder="Enter referral code if any" >
+                        </div>
+                    </div>
+                    
 
-                {{!-- <div class="form-group">
-                    <input type="text"  value="" name="wallet" class="form-control" hidden>
-                </div> --}}
+                    {{!-- <div class="form-group">
+                        <div class="col-12">
+                            <div class="checkbox checkbox-primary">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="custom-control-label" for="customCheck1"> Remember me</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
 
+                    <div class="form-group text-center m-t-20">
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-block btn-lg waves-effect waves-light" onclick="return validateForm()" type="submit" >Sign
+                                In</button>
+                        </div>
+                    </div>
 
-                <a href="/login" class="sign sign-info mt-5 " style="width: fit-content; text-decoration: none;">Already
+                    <div class="form-group row m-t-30 m-b-0">
+                        <div class="col-sm-6">
+                            <a href="/login" class=" ml-3">Already
                     have account ?</a>
-                <div class="mx-auto mt-3" style=" width: fit-content;">
-                    <button type="submit" onclick="return validateForm()" value="Submit"
-                        class="btn btn-primary">Signup</button>
-                </div>
-            </form>
+                        </div>
+                        {{!-- <div class="col-sm-6 text-right">
+                            <a href="/signup" >Create an account</a>
+                        </div> --}}
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
-</div>
-<script>
+    <!-- END wrapper -->
+
+    <script>
     var FirstNameError = document.getElementById('firstName-error');
     
     var emailError = document.getElementById('email-error');
@@ -89,7 +147,7 @@
         FirstNameError.innerHTML = "Only letters";
         return false;
       }
-      if (FirstName.length < 3) {
+      if (FirstName.length < 4) {
         FirstNameError.innerHTML = "Enter a valid name";
         return false;
       }
@@ -114,7 +172,7 @@
         function validatePhoneNumber() {
       var phone = document.getElementById('phoneNumber').value
       if (phone.length < 10) {
-        phoneNumberError.innerHTML = "Phone number is required"
+        phoneNumberError.innerHTML = "Mobile number should be 10-digit"
         return false
       }
       if (phone.match(/^([A-Za-z])+$/)) {
@@ -167,9 +225,19 @@
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+    <script src="/stylesheets/admin/js/jquery.min.js"></script>
+    <script src="/stylesheets/admin/js/bootstrap.bundle.min.js"></script>
+    <script src="/stylesheets/admin/js/metismenu.min.js"></script>
+    <script src="/stylesheets/admin/js/jquery.slimscroll.js"></script>
+    <script src="/stylesheets/admin/js/waves.min.js"></script>
+
+    <!-- Bootstrap rating js -->
+    <script src="../plugins/bootstrap-rating/bootstrap-rating.min.js"></script>
+    <script src="/stylesheets/admin/pages/rating-init.js"></script>
+
+    <!-- App js -->
+    <script src="/stylesheets/admin/js/app.js"></script>
+
+</body>
+
+</html>

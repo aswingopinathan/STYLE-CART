@@ -76,9 +76,139 @@
     {{/if}}
 
     {{{body}}}
-
+   
     {{#if userhead}}
     
+ <!-- START FOOTER AREA -->
+    <footer id="footer" class="footer-area section">
+        <div class="footer-top">
+            <div class="container-fluid">
+                <div class="plr-185">
+                    <div class="footer-top-inner gray-bg">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-5 col-md-5">
+                                <div class="single-footer footer-about">
+                                    <div class="footer-logo">
+                                       <!-- <img src="images/user/img/logo/logo.png" alt=""> -->
+                                    </div>
+                                    <div class="footer-brief">
+                                        <p>All garments are subjected to the following tests Fabric dimensional stability test and quality inspection for colours and wash fastness. To maintain the Color please dry in shades.</p>
+                                        <p> Usual Machine wash or Regular wash is preferable.; Machine wash cold with similar colors, gentle cycle, only non-chlorine bleach (when needed), tumble dry low, warm iron if needed, do not iron on print.</p>
+                                    </div>
+                                    <ul class="footer-social">
+                                        <li>
+                                            <a class="facebook" href="" title="Facebook"><i
+                                                    class="zmdi zmdi-facebook"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="google-plus" href="" title="Google Plus"><i
+                                                    class="zmdi zmdi-google-plus"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="twitter" href="" title="Twitter"><i
+                                                    class="zmdi zmdi-twitter"></i></a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 d-block d-xl-block d-lg-none d-md-none">
+                                <div class="single-footer">
+                                    <h4 class="footer-title border-left">Shipping</h4>
+                                    <ul class="footer-menu">
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>New Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Discount
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Best Sell
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Popular
+                                                    Products</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Manufacturers</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Suppliers</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="zmdi zmdi-circle"></i><span>Special
+                                                    Products</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-3 col-md-3">
+                                <div class="single-footer">
+                                    <h4 class="footer-title border-left">my account</h4>
+                                    <ul class="footer-menu">
+                                        <li>
+                                            {{#if userlog}}
+                                            <a href="/profile"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Account</span></a>
+                                                 {{else}}
+                                                  <a href="/login"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Account</span></a>  
+                                                    {{/if}}
+                                        </li>
+                                        <li>
+                                            {{#if userlog}}
+                                            <a href="/wishlist"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Wishlist</span></a>
+                                                    {{else}}
+                                                    <a href="/login"><i class="zmdi zmdi-circle"></i><span>My
+                                                    Wishlist</span></a>
+                                                    {{/if}}
+                                        </li>
+                                        <li>
+                                            {{#if userlog}}
+                                            <a href="/cart"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                            {{else}}
+                                            <a href="/login"><i class="zmdi zmdi-circle"></i><span>My Cart</span></a>
+                                            {{/if}}
+                                        </li>
+                                        <li>
+                                            {{#if userlog}}
+                                            {{else}}
+                                            <a href="/login"><i class="zmdi zmdi-circle"></i><span>Log
+                                                    In</span></a>
+                                                    {{/if}}
+                                        </li>
+                                        <li>
+                                            <a href="/signup"><i
+                                                    class="zmdi zmdi-circle"></i><span>Sign In</span></a>
+                                        </li>
+                                        <li>
+                                            {{!-- <a href="checkout.html"><i class="zmdi zmdi-circle"></i><span>Check
+                                                    out</span></a> --}}
+                                        </li>
+                                        <li>
+                                            {{#if userlog}}
+                                            <a href="/orders"><i class="zmdi zmdi-circle"></i><span>Oders
+                                                    </span></a>
+                                                    {{else}}
+                                                    <a href="/login"><i class="zmdi zmdi-circle"></i><span>Oders
+                                                    </span></a>
+                                                    {{/if}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER AREA -->
+
     {{!-- swal cdn --}}
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 

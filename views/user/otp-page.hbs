@@ -1,77 +1,135 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<div class="row m-0">
-    <div class="col-md-6 m-auto">
-        <div class="container mt-5 pl-5 pt-5">
-            <div class="container mt-5 pl-5 pt-3">
-                <h2 class="text-center">OTP Login</h2>
+<!DOCTYPE html>
+<html lang="en">
 
-                <form action="/otp-verify" method="POST">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta content="Responsive admin theme build on top of Bootstrap 4" name="description" />
+    <meta content="Themesdesign" name="author" />
+
+    <link href="../plugins/bootstrap-rating/bootstrap-rating.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/metismenu.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/admin/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div class="accountbg"></div>
+    <div class="home-btn d-none d-sm-block">
+        <a href="/" class="text-white"><i class="fas fa-home h2"></i></a>
+    </div>
+    <div class="wrapper-page">
+        <div class="card card-pages shadow-none">
+
+            <div class="card-body">
+                <div class="text-center m-t-0 m-b-15">
+                    <h4>OTP VERIFICATION</h4>
+                </div>
+                {{!-- <h5 class="font-18 text-center">LOG IN</h5> --}}
+
+                <form class="form-horizontal m-t-30" action="/otp-verify" method="POST">
                     {{#if otpsignErr}}
                     <p class="error text-center" style="color: red;">{{otpsignErr}}</p>
                     {{/if}}
-
                     <div class="form-group text-center">
-                        <label>Otp sent to mobile number {{Mobile}}</label>
+                        <div class="col-12">
+                            <label>Otp sent to mobile number {{Mobile}}</label><br>
+                            <span id="otp-error" class="text-danger my-auto"></span>
+                            <input type="number" class="form-control" name="otp" placeholder="Enter otp" id="otpcheck"
+                                onkeyup="validateOTP()" required>
+                            <span id="resend" class="text-dark"></span>
+                            <div id="timer-full">Resend OTP in <span id="timer"></span></div>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label>OTP</label>
-                        <input type="text" class="form-control" name="otp" placeholder="Enter otp"><br>
-                        {{!-- <p><a href="/resend-otp"> Resend OTP </a>in <span id="countdowntimer">30 </span> Seconds</p> --}}
-                        <span id="resend" class="text-dark"></span>
-                        <div id="timer-full">Resend OTP in <span id="timer"></span></div>
-                    </div>
-
-                    <!--<a href="/signup" class="sign sign-info mt-5 "
-                        style="width: fit-content; text-decoration: none;">Create new account</a>
-                     -->
-                    <div class="mx-auto mt-3" style=" width: fit-content;">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-
             </div>
+
+
+
+            <div class="form-group text-center m-t-20">
+                <div class="col-12">
+                    <button class="btn btn-primary btn-block btn-lg waves-effect waves-light"
+                        type="submit">Verify</button>
+                </div>
+            </div>
+
+
             </form>
         </div>
+
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+    </div>
+    <!-- END wrapper -->
+
+    <script src="/stylesheets/admin/js/jquery.min.js"></script>
+    <script src="/stylesheets/admin/js/bootstrap.bundle.min.js"></script>
+    <script src="/stylesheets/admin/js/metismenu.min.js"></script>
+    <script src="/stylesheets/admin/js/jquery.slimscroll.js"></script>
+    <script src="/stylesheets/admin/js/waves.min.js"></script>
+
+    <!-- Bootstrap rating js -->
+    <script src="../plugins/bootstrap-rating/bootstrap-rating.min.js"></script>
+    <script src="/stylesheets/admin/pages/rating-init.js"></script>
+
+    <!-- App js -->
+    <script src="/stylesheets/admin/js/app.js"></script>
+
     <script>
-         let timerOn = true;
+        let timerOn = true;
 
-  function timer(remaining) {
-    var m = Math.floor(remaining / 60);
-    var s = remaining % 60;
+        function timer(remaining) {
+            var m = Math.floor(remaining / 60);
+            var s = remaining % 60;
 
-    m = m < 10 ? '0' + m : m;
-    s = s < 10 ? '0' + s : s;
-    document.getElementById('timer').innerHTML = m + ':' + s;
-    remaining -= 1;
+            m = m < 10 ? '0' + m : m;
+            s = s < 10 ? '0' + s : s;
+            document.getElementById('timer').innerHTML = m + ':' + s;
+            remaining -= 1;
 
-    if (remaining >= 0 && timerOn) {
-      setTimeout(function () {
-        timer(remaining);
-      }, 1000);
-      return;
-    }
+            if (remaining >= 0 && timerOn) {
+                setTimeout(function () {
+                    timer(remaining);
+                }, 1000);
+                return;
+            }
 
-    if (!timerOn) {
-      // Do validate stuff here
-      return;
-    }
+            if (!timerOn) {
+                // Do validate stuff here
+                return;
+            }
 
-    // Do timeout stuff here
-    document.getElementById('resend').innerHTML = '<a href="/resend-otp">Resent Otp</a>'
-    document.getElementById('timer-full').innerHTML = ''
-  }
+            // Do timeout stuff here
+            document.getElementById('resend').innerHTML = '<a href="/resend-otp">Resent OTP</a>'
+            document.getElementById('timer-full').innerHTML = ''
+        }
 
-  timer(60);
+        timer(60);
+
+        var phoneNumberError = document.getElementById('otp-error')
+        function validateOTP() {
+            var phone = document.getElementById('otpcheck').value
+            if (phone.length < 6) {
+                phoneNumberError.innerHTML = "OTP should be 6-digit"
+                return false
+            }
+            if (phone.match(/^([A-Za-z])+$/)) {
+                LphoneNumberError.innerHTML = "Only numbers";
+                return false;
+            }
+            if (!phone.match(/^\d{6}$/)) {
+                phoneNumberError.innerHTML = "OTP is invalid"
+                return false
+            }
+
+            phoneNumberError.innerHTML = ""
+            return true
+        }
     </script>
+
+</body>
+
+</html>

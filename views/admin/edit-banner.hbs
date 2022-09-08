@@ -6,8 +6,12 @@
                 <form action="/admin/edit-banner/{{bannerDetails._id}}" method="post" enctype="multipart/form-data">
                     <label>Name</label>
                     <input type="text" name="Name" class="form-control" value="{{bannerDetails.Name}}"><br>
+                    {{!-- <label>Description</label>
+                    <input type="text" name="Description" class="form-control" value="{{bannerDetails.Description}}"><br> --}}
+
                     <label>Description</label>
-                    <input type="text" name="Description" class="form-control" value="{{bannerDetails.Description}}"><br>
+                    <textarea type="text" name="Description" class="form-control" value="">{{bannerDetails.Description}}</textarea><br>
+
                     <label>Image</label>
                     <img src="/product-images/{{bannerDetails.Images.[0]}}" alt="" style="width: 100px;height: 100px">
                     <input type="file" name="Images" class="form-control" multiple>
